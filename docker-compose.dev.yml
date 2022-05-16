@@ -1,0 +1,61 @@
+version: '3.7'
+# used for local testing
+# note only have either mfcs_export or mnt not both for conversions or hyrax.
+services:
+  hyrax:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    container_name: wvu_hyrax
+    env_file:
+      - './env/.env.dev.hyrax'       
+    restart: on-failure           
+    depends_on:
+      - fcrepo
+      - db
+      - solr
+    ports:
+      - 3000:3000
+    volumes:
+      - ./hyrax:/home/hyrax 
+      - ./mfcs_export:/mfcs_export  
+      #- ./mnt:/mnt                     
+
+  fcrepo:
+    image: ghcr.io/samvera/fcrepo4:4.7.5
+    container_name: wvu_fcrepo
+    restart: on-failure    
+    volumes:
+      - ./fedora/data:/data:cached
+    ports:
+      - "8080:8080"  
+      
+  solr:
+    image: solr:8.11.1
+    container_name: wvu_solr
+    restart: on-failure
+    ports:
+      - 8983:8983
+    command:
+      - sh
+      - "-c"
+      - "solr-precreate hyrax_dev /opt/solr/server/configsets/hyraxconf"
+    volumes:
+      - ./solr/data:/var/solr/data:cached
+      - ./hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf    
+
+  db:
+    container_name: hyrax_db
+    image: postgres:14-alpine
+    ports:
+      - "5432:5432"
+    env_file:
+      - './env/.env.dev.db'       
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+        test: pg_isready -U postgres -h postgres
+        interval: 30s
+        timeout: 3s
+        retries: 3  
