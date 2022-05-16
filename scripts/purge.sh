@@ -1,6 +1,13 @@
-# delete all saved docker volumes
-docker volume rm $(docker volume ls -q)
-# delete data folder contents
-rm -rf ./data/*
+#!/bin/bash
+
+# remove fedora data folder
+rm -rf fedora 
+
+# remove postgres data folder
+rm -rf postgres
+
+# remove solr data folder
+rm -rf solr/data
+
 # delete all logs
-rm -rf ./log/*.log
+rm -rf ./hyrax/log/*.log

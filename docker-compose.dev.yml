@@ -17,9 +17,38 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./hyrax:/home/hyrax 
-      - ./mfcs_export:/mfcs_export  
-      #- ./mnt:/mnt                     
+      - ./hyrax:/home/hyrax   
+
+  sidekiq:
+    container_name: hyrax_sidekiq
+    links:
+      - 'postgres'
+      - 'redis'
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    env_file:
+      - './env/.env.dev.hyrax'     
+    restart: always      
+    volumes:
+      - ./hyrax:/home/hyrax          
+    depends_on:
+      - db
+      - redis
+
+  redis:
+    image: redis:alpine
+    container_name: hyrax_redis
+    command: redis-server
+    volumes:
+      - ./redis:/var/lib/redis/data
+    restart: unless-stopped  
+    healthcheck:
+      test: redis-cli -h redis ping
+      interval: 30s
+      timeout: 3s
+      retries: 3                               
 
   fcrepo:
     image: ghcr.io/samvera/fcrepo4:4.7.5
@@ -59,3 +88,4 @@ services:
         interval: 30s
         timeout: 3s
         retries: 3  
+
