@@ -1,0 +1,21 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: hyrax_db
+  username: postgres
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+
+development:
+  <<: *default
+  database: hyrax_dev
+  
+test:
+  <<: *default
+  database: hyrax_test
+
+production:
+  <<: *default
+  database: hyrax
+  username: hyrax_user
+  password: <%= ENV['DATABASE_PASSWORD'] %>
