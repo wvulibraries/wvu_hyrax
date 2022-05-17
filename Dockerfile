@@ -3,7 +3,7 @@ FROM ruby:2.7
 ENV BUNDLER_VERSION=2.2.27
 ENV RAILS_VERSION=5.2.6
 
-RUN mkdir -p /home/hyrax
+RUN mkdir -p /home/hyrax/
 WORKDIR /home/hyrax
 ADD ./hyrax /home/hyrax
 
@@ -25,8 +25,7 @@ RUN \
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y nodejs
 
-ADD ./scripts/setup.sh /usr/bin/
-RUN chmod -v +x /usr/bin/setup.sh
+ADD ./scripts/setup.sh /home/hyrax/setup.sh
 ADD ./startup.sh /usr/bin/
 RUN chmod -v +x /usr/bin/startup.sh
 ENTRYPOINT ["/usr/bin/startup.sh"]

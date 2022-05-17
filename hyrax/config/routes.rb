@@ -28,5 +28,13 @@ Rails.application.routes.draw do
       delete 'clear'
     end
   end
+
+  # require 'sidekiq/web'
+  # require 'sidekiq/cron/web'
+  mount Sidekiq::Web => '/sidekiq'
+  # config/routes.rb
+  # authenticate :user, lambda { |u| u.admin? } do
+  #   mount Sidekiq::Web => '/sidekiq'
+  # end  
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
