@@ -1,25 +1,17 @@
 
-  <div class="alert alert-success" role="alert">
-    <p class="wvu_work_description"><%= t('hyrax.homepage.beta.welcome_html') %>
+  # <div class="alert alert-success" role="alert">
+  #   <p class="wvu_work_description"><%= t('hyrax.homepage.beta.welcome_html') %>
+  # </div>
 
-  </div>
-
-
-<ul class="nav nav-pills" role="tablist">
-  <li class="active">
-  <%= link_to t('hyrax.homepage.admin_sets.link'),
-              main_app.search_catalog_path(f: { human_readable_type_sim: ["Collection"]}),
-              class: 'btn btn-default' %>
-  </li>
-</ul>
-
-
-
-
+  <ul class="nav nav-pills" role="tablist">
+    <li class="active">
+    <%= link_to t('hyrax.homepage.admin_sets.link'),
+                main_app.search_catalog_path(f: { human_readable_type_sim: ["Collection"]}),
+                class: 'btn btn-default' %>
+    </li>
+  </ul>
 
   <%= render 'explore_collections', collections: @presenter.collections %>
-
-
 
   <ul id="homeTabs" class="nav nav-pills">
     <li class="active"><a href="#featured_container" data-toggle="tab" role="tab" id="featureTab"><%= t('hyrax.homepage.featured_works.tab_label') %></a></li>
