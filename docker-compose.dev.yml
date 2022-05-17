@@ -18,6 +18,7 @@ services:
       - 3000:3000
     volumes:
       - ./hyrax:/home/hyrax
+      - ./scripts:/home/hyrax/scripts
       - hyrax_tmp:/home/hyrax/tmp
     networks:
       - hyrax   

@@ -25,7 +25,6 @@ RUN \
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y nodejs
 
-ADD ./scripts/setup.sh /home/hyrax/setup.sh
 ADD ./startup.sh /usr/bin/
 RUN chmod -v +x /usr/bin/startup.sh
 ENTRYPOINT ["/usr/bin/startup.sh"]
