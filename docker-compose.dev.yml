@@ -77,15 +77,15 @@ services:
       - hyrax 
       
   solr:
+    container_name: hyrax_solr  
     image: solr:8.11.1
-    container_name: wvu_solr
     restart: on-failure
     ports:
       - 8983:8983
     command:
       - sh
       - "-c"
-      - "solr-precreate hyrax_dev /opt/solr/server/configsets/hyraxconf"
+      - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax_dev /opt/solr/server/configsets/hyraxconf"
     volumes:
       - solr:/var/solr/data:cached
       - ./hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf
