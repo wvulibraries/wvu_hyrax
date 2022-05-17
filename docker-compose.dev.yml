@@ -1,6 +1,5 @@
 version: '3.7'
 # used for local testing
-# note only have either mfcs_export or mnt not both for conversions or hyrax.
 services:
   hyrax:
     build: 
