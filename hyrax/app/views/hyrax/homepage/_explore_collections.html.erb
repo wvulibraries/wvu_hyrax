@@ -1,17 +1,27 @@
-
-<div class="wvu-flex-container">
-  <% collections.reverse.each do |collection| %>
-    <% col_rec = Collection.find(collection.id) %>
-    <div class="wvu-flex-item">
-        <%= link_to [hyrax, collection],  'aria-hidden' => true do %>
-          <img src="/<%= col_rec.flex_image ? col_rec.flex_image : 'default_flex_img.jpg' %>" alt=<%= collection.title_or_label %> class="wvu-image">
-
-          <div class="wvu-overlay">
-            <div class="wvu-text"><%= collection.title_or_label %></div>
+<table class="table table-striped collection-highlights">
+  <tbody>
+    <% collections.each do |collection| %>
+      <tr>
+        <td>
+          <div class="media">
+            <div class="media-body">
+              <div class="media-heading">
+                <%= link_to [hyrax, collection] do %>
+                  <%= render_thumbnail_tag(collection, { class: 'hidden-xs file_listing_thumbnail', alt: "#{collection.title_or_label} #{ t('hyrax.homepage.admin_sets.thumbnail')}" },
+                                           { suppress_link: true }) + collection.title_or_label %>
+                <% end %>
+              </div>
+            </div>
           </div>
-        <% end %>
-    </div>
-  <% end %>
-</div>
-
-<div>&nbsp;</div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<ul class="list-inline collection-highlights-list">
+  <li>
+    <%= link_to t('hyrax.homepage.admin_sets.link'),
+                main_app.search_catalog_path(f: { human_readable_type_sim: ["Collection"]}),
+                class: 'btn btn-default' %>
+  </li>
+</ul>
