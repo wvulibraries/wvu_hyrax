@@ -15,7 +15,7 @@ services:
       - solr
       - memcached      
     ports:
-      - 3002:3000
+      - 3000:3000
     volumes:
       - ./hyrax:/home/hyrax
       - ./scripts:/home/hyrax/scripts
