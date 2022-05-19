@@ -15,3 +15,5 @@ solr/data
 solr/data/*
 fedora
 fedora/*
+dassie
+dassie/*

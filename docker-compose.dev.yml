@@ -15,7 +15,7 @@ services:
       - solr
       - memcached      
     ports:
-      - 3000:3000
+      - 3002:3000
     volumes:
       - ./hyrax:/home/hyrax
       - ./scripts:/home/hyrax/scripts
@@ -46,7 +46,7 @@ services:
     image: bitnami/memcached
     container_name: hyrax_memcached
     ports:
-      - '11211:11211'
+      - "11211"
     networks:
       - hyrax
 
@@ -81,7 +81,7 @@ services:
     image: solr:8.11.1
     restart: on-failure
     ports:
-      - 8983:8983
+      - "8983"
     command:
       - sh
       - "-c"
@@ -96,7 +96,7 @@ services:
     container_name: hyrax_db
     image: postgres:14-alpine
     ports:
-      - "5432:5432"
+      - "5432"
     env_file:
       - './env/.env.dev.db'       
     volumes:
