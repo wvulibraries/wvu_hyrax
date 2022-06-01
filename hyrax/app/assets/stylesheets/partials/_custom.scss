@@ -1,3 +1,5 @@
+@import "variables";
+
 /*********************************************************************
     480px or less
 **********************************************************************/
@@ -394,9 +396,9 @@ html, body, form, nav, ul, div {
 	.tbwrap {
 	    width: 90%;
 	}
-	.collection-header {
+	.hyrax-header {
 		margin-bottom: 0;
-		.collection-header-title {
+		.hyrax-header-title {
 			display: inline-block;
 			float: left;
 			margin-left: 60px;
