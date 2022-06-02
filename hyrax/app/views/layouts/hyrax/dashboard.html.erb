@@ -28,6 +28,9 @@
     <link type="text/css" rel="stylesheet" href="https://fast.fonts.net/cssapi/36d8cd92-7cc7-499b-b169-0eed9d670283.css"></link>
     <link href="https://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" type="text/css" rel="stylesheet">
 
+    <!-- JavaScripts -->
+    <%= javascript_include_tag "application" %>
+
     <!-- Hydra Code -->
     <%= stylesheet_link_tag "application", media: "all" %>
     <%= csrf_meta_tags %>
@@ -54,9 +57,6 @@
             <%= yield %>
         </div>
     </div>
-
-    <!-- JavaScripts -->
-    <%= javascript_include_tag "application" %>
 
     <%= render "shared/builtby_footer" %>
   </body>
