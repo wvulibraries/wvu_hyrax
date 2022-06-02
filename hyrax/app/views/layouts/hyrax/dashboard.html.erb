@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <!-- nagios check -->
 <html lang="en" class="no-js">
-
-<html lang="en" class="no-js">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -34,31 +32,32 @@
     <%= stylesheet_link_tag "application", media: "all" %>
     <%= csrf_meta_tags %>
     <%= yield :head %>
-
-    </head>
+  </head>
     
-    <body class="<%= render_body_class %>"><a name="top"></a>
+  <body class="<%= render_body_class %>"><a name="top"></a>
 
-      <%= render "shared/wvu_header" %> 
+    <%= render "shared/wvu_header" %> 
 
-      <!-- Hydra Piece -->
-      <%= render partial: 'shared/ajax_modal' %>
-      <div id="content-wrapper" role="main">
-          <% flash.each do |key, value| %>
-              <div class="alert alert-<%= key %>"><%= value %></div>
-          <% end %>
+    <!-- Hydra Piece -->
+    <%= render partial: 'shared/ajax_modal' %>
+    <div id="content-wrapper" role="main">
+        <% flash.each do |key, value| %>
+            <div class="alert alert-<%= key %>"><%= value %></div>
+        <% end %>
 
-          <div class="sidebar maximized">
-            <%= render 'hyrax/dashboard/sidebar' %>
-          </div>
+        <!-- Hyrax sidebar -->
+        <div class="sidebar maximized">
+          <%= render 'hyrax/dashboard/sidebar' %>
+        </div>
 
-          <div class="row">
-              <%= yield %>
-          </div>
-      </div>
+        <div class="row">
+            <%= yield %>
+        </div>
+    </div>
 
-      <!-- JavaScripts -->
-      <%= javascript_include_tag "application" %>
+    <!-- JavaScripts -->
+    <%= javascript_include_tag "application" %>
 
-    </body>
+    <%= render "shared/builtby_footer" %>
+  </body>
 </html>
