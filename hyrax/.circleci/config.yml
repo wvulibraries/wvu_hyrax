@@ -19,18 +19,18 @@ jobs:
           POSTGRES_USER: root
           POSTGRES_DB: circle_test
           POSTGRES_PASSWORD: circleci        
-      - image: ghcr.io/samvera/fcrepo4:4.7.5
-        command:
-          - sh
-          - "-c"
-          - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf;"
-      - image: solr:8.11.1
-        environment:
-          SOLR_HEAP: "512m"
-          SOLR_HOME: /opt/solr
-          SOLR_LOGS: /opt/solr/logs
-          SOLR_PID: /opt/solr/solr.pid
-          SOLR_PORT: 8983
+      # - image: ghcr.io/samvera/fcrepo4:4.7.5
+      #   command:
+      #     - sh
+      #     - "-c"
+      #     - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf;"
+      # - image: solr:8.11.1
+      #   environment:
+      #     SOLR_HEAP: "512m"
+      #     SOLR_HOME: /opt/solr
+      #     SOLR_LOGS: /opt/solr/logs
+      #     SOLR_PID: /opt/solr/solr.pid
+      #     SOLR_PORT: 8983
       - image: circleci/redis # redis image  
     steps:
       - checkout
