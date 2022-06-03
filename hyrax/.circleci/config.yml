@@ -138,12 +138,12 @@ jobs:
     docker:
       - image: cimg/ruby:2.7.2-node
     environment:
-       CC_TEST_REPORTER_ID: eb58b59e9b4910607d1a8fbc2b5c179188627f4d7502dedae51c6929e1500af1
-    working_directory: ~/circleci-mfcs
+       CC_TEST_REPORTER_ID: 
+    working_directory: ~/circleci-wvu-hyrax
 
     steps:
       - attach_workspace:
-          at: ~/circleci-mfcs
+          at: ~/circleci-wvu-hyrax
       - run:
           name: Install Code Climate Test Reporter
           command: |
