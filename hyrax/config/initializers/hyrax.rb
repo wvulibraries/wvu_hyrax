@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 Hyrax.config do |config|
+  # Injected via `rails g hyrax:work Image`
+  config.register_curation_concern :image
+  # Injected via `rails g hyrax:work MovingImage`
+  config.register_curation_concern :moving_image
+  # Injected via `rails g hyrax:work Audio`
+  config.register_curation_concern :audio
+  # Injected via `rails g hyrax:work Pdf`
+  config.register_curation_concern :pdf
   # Register roles that are expected by your implementation.
   # @see Hyrax::RoleRegistry for additional details.
   # @note there are magical roles as defined in Hyrax::RoleRegistry::MAGIC_ROLES
