@@ -27,7 +27,7 @@ jobs:
       - image: solr:8.11.1
         environment:
           SOLR_HEAP: "512m"
-          SOLR_HOME: /opt/solr
+          SOLR_HOME: ./solr
           SOLR_LOGS: /opt/solr/logs
           SOLR_PID: /opt/solr/solr.pid
           SOLR_PORT: 8983
