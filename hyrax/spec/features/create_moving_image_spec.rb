@@ -7,14 +7,14 @@ include Warden::Test::Helpers
 RSpec.feature 'Create a MovingImage', js: false do
   context 'a logged in user' do
     let(:user_attributes) do
-      { email: 'test@example.com' }
+      { email: Faker::Internet.email }
     end
     let(:user) do
       User.new(user_attributes) { |u| u.save(validate: false) }
     end
     let(:admin_set_id) { Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s }
     let(:permission_template) { Hyrax::PermissionTemplate.find_or_create_by!(source_id: admin_set_id) }
-    let(:workflow) { Sipity::Workflow.create!(active: true, name: 'test-workflow', permission_template: permission_template) }
+    let(:workflow) { Sipity::Workflow.create!(active: true, name: 'moving-image-workflow', permission_template: permission_template) }
 
     before do
       # Create a single action that can be taken
@@ -29,6 +29,10 @@ RSpec.feature 'Create a MovingImage', js: false do
       )
       login_as user
     end
+
+    after do
+      Sipity::Workflow.find_each(&:destroy)
+    end  
 
     scenario do
       pending 'Changes may be required for this test to pass.  See TODO in test.'
