@@ -1,3 +1,21 @@
+GIT
+  remote: https://github.com/samvera-labs/bulkrax
+  revision: 7e0701ba61d8f153441d085fe7949066bd09cefc
+  specs:
+    bulkrax (3.2.0)
+      bagit (~> 0.4)
+      coderay
+      iso8601 (~> 0.9.0)
+      kaminari
+      language_list (~> 1.2, >= 1.2.1)
+      libxml-ruby (~> 3.1.0)
+      loofah (>= 2.2.3)
+      oai (>= 0.4, < 2.x)
+      rack (>= 2.0.6)
+      rails (>= 5.1.6)
+      rdf (>= 2.0.2, < 4.0)
+      simple_form
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -98,6 +116,9 @@ GEM
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
+    bagit (0.4.4)
+      docopt (~> 0.5.0)
+      validatable (~> 1.6)
     bcp47 (0.3.3)
       i18n
     bcrypt (3.1.17)
@@ -163,6 +184,7 @@ GEM
       archive-zip (~> 0.10)
       nokogiri (~> 1.8)
     clipboard-rails (1.7.1)
+    coderay (1.1.3)
     coffee-rails (4.2.2)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0)
@@ -194,6 +216,7 @@ GEM
       declarative-option (< 0.2.0)
       representable (>= 2.4.0, <= 3.1.0)
       uber (< 0.2.0)
+    docopt (0.5.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     draper (4.0.2)
@@ -274,6 +297,8 @@ GEM
       multipart-post (>= 1.2, < 3)
     faraday-encoding (0.0.5)
       faraday
+    faraday_middleware (0.14.0)
+      faraday (>= 0.7.4, < 1.0)
     fcrepo_wrapper (0.9.0)
       ruby-progressbar
     ffi (1.15.5)
@@ -457,6 +482,7 @@ GEM
     iiif_manifest (1.1.1)
       activesupport (>= 4)
     io-like (0.3.1)
+    iso8601 (0.9.1)
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -501,6 +527,7 @@ GEM
     kaminari-core (1.2.2)
     kaminari_route_prefix (0.1.1)
       kaminari (~> 1.0)
+    language_list (1.2.1)
     ld-patch (3.2.0)
       ebnf (~> 2.2)
       rdf (~> 3.2)
@@ -523,6 +550,7 @@ GEM
       rdf (~> 3.0)
     legato (0.7.0)
       multi_json
+    libxml-ruby (3.1.0)
     link_header (0.0.8)
     linkeddata (3.2.0)
       json-ld (~> 3.2)
@@ -592,6 +620,10 @@ GEM
       noid (~> 0.9)
     nokogiri (1.13.6-x86_64-linux)
       racc (~> 1.4)
+    oai (1.1.0)
+      builder (>= 3.1.0)
+      faraday
+      faraday_middleware
     oauth (0.5.10)
     oauth2 (1.4.9)
       faraday (>= 0.17.3, < 3.0)
@@ -895,6 +927,7 @@ GEM
       unf_ext
     unf_ext (0.0.8.1)
     unicode-types (1.7.0)
+    validatable (1.6.7)
     valkyrie (2.2.0)
       activemodel
       activesupport
@@ -930,6 +963,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.1.0)
   bootstrap-sass (~> 3.0)
+  bulkrax!
   byebug
   capybara (>= 2.15)
   chromedriver-helper
@@ -960,7 +994,6 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   turbolinks (~> 5)
   twitter-typeahead-rails (= 0.11.1.pre.corejavascript)
-  tzinfo-data
   uglifier (>= 1.3.0)
   web-console (>= 3.3.0)
 

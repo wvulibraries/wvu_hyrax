@@ -31,6 +31,18 @@ Rails.application.routes.draw do
     end
   end
 
+  # Import
+  # ========================================================
+  get '/import'              => 'import#index',             as: 'import_index'
+
+  # JSON Imports
+  # ========================================================
+  resources :json_imports, only: [:index, :show, :new, :create]
+  post 'json_imports/preview', as: 'preview_json_import'
+  get 'json_imports/preview', to: redirect('json_imports/new')
+  get 'json_imports/:id/log', to: 'json_imports#log'
+  get 'json_imports/:id/report', to: 'json_imports#report'
+
   # require 'sidekiq/web'
   # require 'sidekiq/cron/web'
   mount Sidekiq::Web => '/sidekiq'
