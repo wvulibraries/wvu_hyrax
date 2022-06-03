@@ -1,0 +1,164 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/circleci-wvu-hyrax
+    parallelism: 4
+    shell: /bin/bash --login
+    environment:
+      RAILS_ENV: test
+      RACK_ENV: test
+      COVERAGE: true
+      TZ: /usr/share/zoneinfo/America/NewYork
+    docker:
+      - image: cimg/ruby:2.7.2-browsers
+        environment:
+          PGHOST: 127.0.0.1
+          PGUSER: root
+      - image: circleci/postgres:11 # database image
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: circle_test
+          POSTGRES_PASSWORD: circleci        
+      - image: ghcr.io/samvera/fcrepo4:4.7.5
+        command:
+          - sh
+          - "-c"
+          - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf;"
+      - image: solr:8.11.1
+        environment:
+          SOLR_HEAP: "512m"
+          SOLR_HOME: /opt/solr
+          SOLR_LOGS: /opt/solr/logs
+          SOLR_PID: /opt/solr/solr.pid
+          SOLR_PORT: 8983
+      - image: circleci/redis # redis image  
+    steps:
+      - checkout
+      - run:
+          name: Configure secrets.yml
+          command: mv config/secrets.ci.yml config/secrets.yml
+      - run:
+          name: Configure database.yml
+          command: mv config/database.ci.yml config/database.yml
+      - run:
+          name: Configure application.yml
+          command: mv config/application.ci.yml config/application.yml              
+      - run:
+          name: apt update
+          command: sudo apt update
+      - run:
+          name: Install Packages
+          command: sudo apt-get install -y graphicsmagick ghostscript ffmpeg  
+      - run:
+          name: Install Tesseract
+          command: sudo apt-get install -y libleptonica-dev libtesseract-dev tesseract-ocr  
+
+      # Restore bundle cache
+      - type: cache-restore
+        key: mfcs-bundle-{{ checksum "Gemfile.lock" }}
+
+      - type: cache-restore
+        key: mfcs-yarn-{{ checksum "yarn.lock" }}       
+
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.6.1
+      # - run:
+      #     name: install system libraries
+      #     command: sudo apt-get update && sudo apt-get -y install postgresql-client
+      - run:
+          name: Force Bundler Version
+          command: |
+            sudo gem update --system
+            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+            source $BASH_ENV
+            gem install bundler
+      - run:
+          name: bundle gems
+          command: bundle install --jobs=4 --retry=3
+      - run:
+          name: Yarn Install
+          command: yarn install --cache-folder ~/.cache/yarn
+      # - run:
+      #     name: Precompile assets
+      #     command: RAILS_ENV=test bundle exec rails webpacker:compile
+      - run:
+          name: Install Code Climate Test Reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          name: Wait for PostgreSQL to start
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      # Store bundle cache
+      - type: cache-save
+        key: mfcs-bundle-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
+
+      # Store yarn cache
+      - type: cache-save
+        key: mfcs-yarn-{{ checksum "yarn.lock" }}
+        paths:
+          - ~/.yarn-cache
+
+      - run:
+          name: Setup Database
+          command: |
+            bundle exec rake db:create db:schema:load
+      - run:
+          name: Run tests
+          command: |
+            mkdir -p test-results/rspec test-artifacts
+            ./cc-test-reporter before-build
+            TESTFILES=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+            bundle exec rspec --profile 10 \
+                              --color \
+                              --order random \
+                              --out test-results/rspec/rspec.xml \
+                              --format progress \
+                              -- ${TESTFILES}
+      - run:
+          name: Code Climate Test Coverage
+          command: |
+            ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+      - persist_to_workspace:
+          root: coverage
+          paths:
+            - codeclimate.*.json
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-artifacts
+
+  upload-coverage:
+    docker:
+      - image: cimg/ruby:2.7.2-node
+    environment:
+       CC_TEST_REPORTER_ID: eb58b59e9b4910607d1a8fbc2b5c179188627f4d7502dedae51c6929e1500af1
+    working_directory: ~/circleci-mfcs
+
+    steps:
+      - attach_workspace:
+          at: ~/circleci-mfcs
+      - run:
+          name: Install Code Climate Test Reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          command: |
+            ./cc-test-reporter sum-coverage --output - codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input -
+
+workflows:
+  version: 2
+
+  commit:
+    jobs:
+      - build
+      - upload-coverage:
+          requires:
+             - build
