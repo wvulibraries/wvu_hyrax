@@ -1,1 +1,1 @@
-# WVU Hyrax Repo
+# WVU Libraries Digital Repository
