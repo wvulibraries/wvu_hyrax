@@ -293,6 +293,13 @@ GEM
     ethon (0.15.0)
       ffi (>= 1.15.0)
     execjs (2.8.1)
+    factory_bot (6.2.1)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
+      railties (>= 5.0.0)
+    faker (2.21.0)
+      i18n (>= 1.8.11, < 2)
     faraday (0.17.5)
       multipart-post (>= 1.2, < 3)
     faraday-encoding (0.0.5)
@@ -970,6 +977,8 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   devise (~> 4.6, >= 4.6.2)
   devise-guests (~> 0.6)
+  factory_bot_rails
+  faker
   fcrepo_wrapper
   hydra-role-management
   hyrax (= 3.4.1)

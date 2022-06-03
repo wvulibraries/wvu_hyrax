@@ -67,9 +67,14 @@ group :test do
   gem 'chromedriver-helper'
 end
 
+
+# Development / Test Items (Primarily debugging)
+# =====================================================================================
 group :development, :test do
   gem 'solr_wrapper', '>= 0.3'  
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]  
+  gem 'factory_bot_rails'
+  gem 'faker'
   gem 'fcrepo_wrapper'
   gem 'rspec-rails'
 end
