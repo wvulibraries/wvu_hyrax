@@ -60,10 +60,10 @@ jobs:
 
       # Restore bundle cache
       - type: cache-restore
-        key: mfcs-bundle-{{ checksum "Gemfile.lock" }}
+        key: hyrax-bundle-{{ checksum "Gemfile.lock" }}
 
       - type: cache-restore
-        key: mfcs-yarn-{{ checksum "yarn.lock" }}       
+        key: hyrax-yarn-{{ checksum "yarn.lock" }}       
 
       - run:
           name: install dockerize
@@ -100,13 +100,13 @@ jobs:
 
       # Store bundle cache
       - type: cache-save
-        key: mfcs-bundle-{{ checksum "Gemfile.lock" }}
+        key: hyrax-bundle-{{ checksum "Gemfile.lock" }}
         paths:
           - vendor/bundle
 
       # Store yarn cache
       - type: cache-save
-        key: mfcs-yarn-{{ checksum "yarn.lock" }}
+        key: hyrax-yarn-{{ checksum "yarn.lock" }}
         paths:
           - ~/.yarn-cache
 
@@ -143,7 +143,7 @@ jobs:
     docker:
       - image: cimg/ruby:2.7.2-node
     environment:
-       CC_TEST_REPORTER_ID: 
+       CC_TEST_REPORTER_ID:  7f1c1c181beba7c0991b78ba797b48670c2a5c34260701c0feb01b40656219a6
     working_directory: ~/circleci-wvu-hyrax
 
     steps:
