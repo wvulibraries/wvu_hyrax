@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/circleci-wvu-hyrax/hyrax
+    working_directory: ~/circleci-wvu-hyrax
     parallelism: 4
     shell: /bin/bash --login
     environment:
@@ -144,11 +144,11 @@ jobs:
       - image: cimg/ruby:2.7.2-node
     environment:
        CC_TEST_REPORTER_ID:  7f1c1c181beba7c0991b78ba797b48670c2a5c34260701c0feb01b40656219a6
-    working_directory: ~/circleci-wvu-hyrax/hyrax
+    working_directory: ~/circleci-wvu-hyrax
 
     steps:
       - attach_workspace:
-          at: ~/circleci-wvu-hyrax/hyrax
+          at: ~/circleci-wvu-hyrax
       - run:
           name: Install Code Climate Test Reporter
           command: |
