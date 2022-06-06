@@ -42,8 +42,8 @@ RSpec.feature 'Create a Pdf', js: false do
       click_link "Add new work"
 
       # TODO: If you generate more than one work uncomment these lines
-      # choose "payload_concern", option: "Pdf"
-      # click_button "Create work"
+      choose "payload_concern", option: "Pdf"
+      click_button "Create work"
 
       expect(page).to have_content "Add New Pdf"
       click_link "Files" # switch tab

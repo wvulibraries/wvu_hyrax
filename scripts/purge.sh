@@ -1,13 +1,16 @@
 #!/bin/bash
 
 # remove fedora data folder
-rm -rf fedora 
+#rm -rf fedora 
 
 # remove postgres data folder
-rm -rf postgres
+#rm -rf postgres
 
 # remove solr data folder
-rm -rf solr/data
+#rm -rf solr/data
 
 # delete all logs
-rm -rf ./hyrax/log/*.log
+#rm -rf ./hyrax/log/*.log
+
+# delete all docker volumes
+docker volume rm $(docker volume ls -q)
