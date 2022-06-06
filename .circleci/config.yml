@@ -39,15 +39,15 @@ jobs:
           MEMCACHED_MAX_CONNS_PER_IP: 1024
     steps:
       - checkout
-      # - run:
-      #     name: Configure secrets.yml
-      #     command: mv config/secrets.ci.yml config/secrets.yml
-      # - run:
-      #     name: Configure database.yml
-      #     command: mv config/database.ci.yml config/database.yml
-      # - run:
-      #     name: Configure application.yml
-      #     command: mv config/application.ci.yml config/application.yml              
+      - run:
+          name: Configure secrets.yml
+          command: mv config/secrets.ci.yml config/secrets.yml
+      - run:
+          name: Configure database.yml
+          command: mv config/database.ci.yml config/database.yml
+      - run:
+          name: Configure application.yml
+          command: mv config/application.ci.yml config/application.yml              
       # - run:
       #     name: apt update
       #     command: sudo apt update
