@@ -654,7 +654,8 @@ GEM
     posix-spawn (0.3.15)
     power_converter (0.1.2)
     public_suffix (4.0.7)
-    puma (3.12.6)
+    puma (4.3.12)
+      nio4r (~> 2.0)
     qa (5.8.1)
       activerecord-import
       deprecation
@@ -988,7 +989,7 @@ DEPENDENCIES
   omniauth (~> 1.9)
   omniauth-cas (~> 1.1, >= 1.1.1)
   pg (>= 0.18, < 2.0)
-  puma (~> 3.11)
+  puma (~> 4.3)
   rails (~> 5.2.6)
   riiif (~> 2.1)
   rsolr (>= 1.0, < 3)
