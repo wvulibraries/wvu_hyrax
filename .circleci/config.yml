@@ -39,15 +39,15 @@ jobs:
     steps:
       - checkout:
           path: ~/circleci-wvu-hyrax
-      # - run:
-      #     name: Configure secrets.yml
-      #     command: mv hyrax/config/secrets.ci.yml hyrax/config/secrets.yml
+      - run:
+          name: Configure secrets.yml
+          command: mv config/secrets.ci.yml config/secrets.yml
       - run:
           name: Configure database.yml
-          command: mv hyrax/config/database.ci.yml hyrax/config/database.yml
+          command: mv config/database.ci.yml config/database.yml
       - run:
           name: Configure application.yml
-          command: mv hyrax/config/application.ci.yml hyrax/config/application.yml              
+          command: mv config/application.ci.yml config/application.yml              
       # - run:
       #     name: apt update
       #     command: sudo apt update
