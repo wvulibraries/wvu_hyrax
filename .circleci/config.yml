@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/circleci-wvu-hyrax
+    working_directory: ~/circleci-wvu-hyrax/hyrax
     shell: /bin/bash --login
     environment:
       RAILS_ENV: test
@@ -38,6 +38,7 @@ jobs:
           MEMCACHED_MAX_CONNS_PER_IP: 1024
     steps:
       - checkout
+        path: ~/circleci-wvu-hyrax
       - run:
           name: Configure secrets.yml
           command: mv hyrax/config/secrets.ci.yml hyrax/config/secrets.yml
