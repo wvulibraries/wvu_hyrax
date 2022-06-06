@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/circleci-wvu-hyrax
+    working_directory: ~/circleci-wvu-hyrax/hyrax
     parallelism: 4
     shell: /bin/bash --login
     environment:
