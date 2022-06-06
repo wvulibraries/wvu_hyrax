@@ -39,9 +39,9 @@ jobs:
     steps:
       - checkout:
           path: ~/circleci-wvu-hyrax
-      - run:
-          name: Configure secrets.yml
-          command: mv hyrax/config/secrets.ci.yml hyrax/config/secrets.yml
+      # - run:
+      #     name: Configure secrets.yml
+      #     command: mv hyrax/config/secrets.ci.yml hyrax/config/secrets.yml
       - run:
           name: Configure database.yml
           command: mv hyrax/config/database.ci.yml hyrax/config/database.yml
