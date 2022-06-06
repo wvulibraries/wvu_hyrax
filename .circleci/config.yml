@@ -37,8 +37,8 @@ jobs:
           MEMCACHED_MAX_CONNS: 1024
           MEMCACHED_MAX_CONNS_PER_IP: 1024
     steps:
-      - checkout
-        path: ~/circleci-wvu-hyrax
+      - checkout:
+          path: ~/circleci-wvu-hyrax
       - run:
           name: Configure secrets.yml
           command: mv hyrax/config/secrets.ci.yml hyrax/config/secrets.yml
