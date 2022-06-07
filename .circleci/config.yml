@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/circleci-wvu-hyrax
+    working_directory: ~/circleci-wvu-hyrax/hyrax
     shell: /bin/bash --login
     environment:
       RAILS_ENV: test
@@ -77,9 +77,9 @@ jobs:
       - run:
           name: bundle gems
           command: bundle install --jobs=4 --retry=3
-      - run:
-          name: Yarn Install
-          command: yarn install --cache-folder ~/.cache/yarn
+      # - run:
+      #     name: Yarn Install
+      #     command: yarn install --cache-folder ~/.cache/yarn
       # - run:
       #     name: Precompile assets
       #     command: RAILS_ENV=test bundle exec rails webpacker:compile
@@ -99,10 +99,10 @@ jobs:
           - vendor/bundle
 
       # Store yarn cache
-      - type: cache-save
-        key: hyrax-yarn-{{ checksum "yarn.lock" }}
-        paths:
-          - ~/.yarn-cache
+      # - type: cache-save
+      #   key: hyrax-yarn-{{ checksum "yarn.lock" }}
+      #   paths:
+      #     - ~/.yarn-cache
 
       - run:
           name: Setup Database
