@@ -56,8 +56,8 @@ jobs:
       - type: cache-restore
         key: hyrax-bundle-{{ checksum "Gemfile.lock" }}
 
-      - type: cache-restore
-        key: hyrax-yarn-{{ checksum "yarn.lock" }}       
+      # - type: cache-restore
+      #   key: hyrax-yarn-{{ checksum "yarn.lock" }}       
 
       - run:
           name: install dockerize
