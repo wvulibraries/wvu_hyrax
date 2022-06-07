@@ -48,15 +48,9 @@ jobs:
       - run:
           name: Configure application.yml
           command: mv config/application.ci.yml config/application.yml              
-      # - run:
-      #     name: apt update
-      #     command: sudo apt update
-      # - run:
-      #     name: Install Packages
-      #     command: sudo apt-get install -y graphicsmagick ghostscript ffmpeg  
-      # - run:
-      #     name: Install Tesseract
-      #     command: sudo apt-get install -y libleptonica-dev libtesseract-dev tesseract-ocr  
+      - run:
+          name: apt update
+          command: sudo apt update
 
       # Restore bundle cache
       - type: cache-restore
