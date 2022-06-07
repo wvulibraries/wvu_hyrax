@@ -53,4 +53,10 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   mount Bulkrax::Engine, at: '/'
+
+  # Catalog Controller Routes
+  # ========================================================  
+  resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog' do
+    concerns :exportable
+  end
 end
