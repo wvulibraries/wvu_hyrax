@@ -48,6 +48,10 @@ gem 'omniauth-cas', '~> 1.1', '>= 1.1.1'
 # =====================================================
 gem 'bulkrax', git: 'https://github.com/samvera-labs/bulkrax'
 
+# Health Check
+# =====================================================
+gem 'okcomputer'
+
 # Development / Test Items (Primarily debugging)
 # =====================================================================================
 group :development do
