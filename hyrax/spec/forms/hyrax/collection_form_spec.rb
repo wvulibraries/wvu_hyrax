@@ -1,8 +1,6 @@
-# Generated via
-#  `rails generate hyrax:work Audio`
 require 'rails_helper'
 
-RSpec.describe Hyrax::AudioForm do
+RSpec.describe Hyrax::Forms::CollectionForm do
   subject { form }
   let(:coll)    { Collection.new }
   let(:ability) { Ability.new(nil) }
