@@ -3,7 +3,7 @@ require 'rails_helper'
 
 RSpec.describe Collection do
   # factory
-  let(:collection) { FactoryBot.create :collection }
+  let(:collection) { FactoryBot.create :admin_set }
 
   # shared examples 
   context 'shared examples' do
