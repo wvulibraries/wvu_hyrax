@@ -3,8 +3,7 @@ require 'rails_helper'
 
 RSpec.describe Collection do
   # factory
-  let(:collection_user_set) { FactoryBot.create :collection }
-  let(:collection_admin_set) { FactoryBot.create :admin_set }
+  let(:collection) { FactoryBot.create :collection }
 
   # shared examples 
   context 'shared examples' do
