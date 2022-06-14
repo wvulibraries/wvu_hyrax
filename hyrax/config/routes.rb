@@ -31,7 +31,6 @@ Rails.application.routes.draw do
     end
   end
 
-  require 'sidekiq/web'
   # Import
   # ========================================================
   get '/import'              => 'import#index',             as: 'import_index'
@@ -44,9 +43,9 @@ Rails.application.routes.draw do
   get 'json_imports/:id/log', to: 'json_imports#log'
   get 'json_imports/:id/report', to: 'json_imports#report'
 
-  # require 'sidekiq/web'
+  require 'sidekiq/web'
   # require 'sidekiq/cron/web'
-  # mount Sidekiq::Web => '/sidekiq'
+  mount Sidekiq::Web => '/sidekiq'
   # config/routes.rb
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
