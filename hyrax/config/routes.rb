@@ -45,7 +45,7 @@ Rails.application.routes.draw do
 
   require 'sidekiq/web'
   # require 'sidekiq/cron/web'
-  mount Sidekiq::Web => '/sidekiq'
+  # mount Sidekiq::Web => '/sidekiq'
   # config/routes.rb
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
