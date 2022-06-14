@@ -1,0 +1,10 @@
+es:
+  hyrax:
+    icons:
+      moving_image:     'fa fa-file-text-o'
+    select_type:
+      moving_image:
+        # TODO: translate `human_name` into Spanish
+        description:        "Moving image trabajos"
+        name:               "Moving Image"
+        # TODO: translate `human_name` into Spanish

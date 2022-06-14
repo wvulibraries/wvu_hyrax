@@ -1,0 +1,10 @@
+zh:
+  hyrax:
+    icons:
+      moving_image:     'fa fa-file-text-o'
+    select_type:
+      moving_image:
+        # TODO: translate `human_name` into Chinese
+        description:        "Moving image 作品"
+        name:               "Moving Image"
+        # TODO: translate `human_name` into Chinese

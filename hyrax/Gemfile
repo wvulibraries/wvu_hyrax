@@ -44,6 +44,14 @@ gem 'devise-guests', '~> 0.6'
 gem 'omniauth', '~> 1.9'
 gem 'omniauth-cas', '~> 1.1', '>= 1.1.1'
 
+# Bulk Import
+# =====================================================
+gem 'bulkrax', git: 'https://github.com/samvera-labs/bulkrax'
+
+# Health Check
+# =====================================================
+gem 'okcomputer'
+
 # Development / Test Items (Primarily debugging)
 # =====================================================================================
 group :development do
@@ -63,11 +71,18 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem 'chromedriver-helper'
+  gem 'simplecov', group: :test
+  gem "simplecov-json" # For CodeClimate
+  gem 'simplecov-console'    
 end
 
+# Development / Test Items (Primarily debugging)
+# =====================================================================================
 group :development, :test do
   gem 'solr_wrapper', '>= 0.3'  
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]  
+  gem 'factory_bot_rails'
+  gem 'faker'
   gem 'fcrepo_wrapper'
   gem 'rspec-rails'
 end

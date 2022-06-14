@@ -9,3 +9,5 @@ production:
   - critical
   - default
   - low
+  - import # added
+  - export # added
