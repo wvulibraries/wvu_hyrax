@@ -999,6 +999,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   fcrepo_wrapper
+  hydra-editor
   hydra-role-management
   hyrax (= 3.4.1)
   jbuilder (~> 2.5)

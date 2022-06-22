@@ -15,12 +15,15 @@ gem 'jquery-rails'
 gem 'jbuilder', '~> 2.5'
 gem 'turbolinks', '~> 5'
 
+# Hydra Dependencies
+# =====================================================
+gem 'hydra-role-management'
+gem 'hydra-editor'
+
 # Hyrax Dependencies
 # =====================================================
 gem 'hyrax', '3.4.1'
-gem 'hydra-role-management'
 gem 'riiif', '~> 2.1'
-
 gem 'rsolr', '>= 1.0', '< 3'
 gem 'bootstrap-sass', '~> 3.0'
 gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript'

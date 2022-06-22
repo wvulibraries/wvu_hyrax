@@ -14,7 +14,7 @@ end
 
 if Rails.env == 'development'
   user = User.first_or_create!(email: 'changeme@mail.wvu.edu', password: 'password')
-  admin = Role.first_or_create!(name: 'admin')
-  admin.users << user
-  admin.save
+  role = Role.first_or_create!(name: 'admin')
+  role.users << user
+  role.save
 end

@@ -1,75 +1,64 @@
 require 'rails_helper'
 
 RSpec.feature "Admin::Collection_Types", type: :feature do
-  # let(:user_attributes) do
-  #   { email: Faker::Internet.email }
-  # end
-  # let(:user) do
-  #   User.new(user_attributes) { |u| u.save(validate: false) }
-  # end
+  # Create User
+  let(:user) { User.first_or_create!(email: Faker::Internet.email, password: Faker::Internet.password)}
 
-  # context "#index" do
-  #   scenario 'index page for admin shows error not authorized' do
-  #     #page.set_rack_session(cas: { user: user.cas_username, email: user.cas_email, extra_attributes: { displayName: "#{user.first_name} #{user.last_name}" } })
-  #     visit '/admin/collection_types'
-  #     expect(page).to have_content('You are not authorized to access this page.')
-  #   end  
+  # Admin Role
+  let(:admin_role) { Role.first_or_create!(name: 'admin') }   
 
-  #   scenario 'index page works and shows 0 collection types' do
-  #     page.set_rack_session(cas: { user: user.cas_username, email: user.cas_email, extra_attributes: { displayName: "#{user.first_name} #{user.last_name}" } })
-  #     visit '/admin/collection_types'
-  #     expect(page).to have_content('0 collection types')
-  #   end
-  # end
-
-  # context "#create" do
-  #   scenario 'successful create' do
-  #     visit '/admin/collection_types/new'
-  #     fill_in 'collection_type[title]', with: 'Test Collection Type'
-  #     fill_in 'collection_type[description]', with: 'Test Collection Type Description'
-  #     click_button 'Save'
-  #     expect(page).to have_content('Collection type was successfully created.')
-  #   end
-
-  #   # scenario 'does not allow creation without title' do
-  #   #   visit '/admin/collection_types/new'
-  #   # end 
-  # end
-
-  context 'a logged in user' do
-    let(:user_attributes) do
-      { email: Faker::Internet.email }
+  context "without logged in user" do
+    scenario 'non admins get error when visiting admin page' do
+      visit '/admin/collection_types'
+      expect(page).to have_content('You are not authorized to access this page.')
     end
-    let(:user) do
-      User.new(user_attributes) { |u| u.save(validate: false) }
-    end
-    let(:admin_set_id) { Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s }
-    let(:permission_template) { Hyrax::PermissionTemplate.find_or_create_by!(source_id: admin_set_id) }
-    let(:workflow) { Sipity::Workflow.create!(active: true, name: 'audio-workflow', permission_template: permission_template) }
+  end
 
+  context "create with user" do
     before do
-      # Create a single action that can be taken
-      Sipity::WorkflowAction.create!(name: 'submit', workflow: workflow)
-
-      # Grant the user access to deposit into the admin set.
-      Hyrax::PermissionTemplateAccess.create!(
-        permission_template_id: permission_template.id,
-        agent_type: 'user',
-        agent_id: user.user_key,
-        access: 'admin'
-      )
+      # set user
       login_as user
     end
 
     after do
-      Sipity::Workflow.find_each(&:destroy)
-    end    
+      # remove created user
+      user.destroy
+    end   
 
-    scenario 'index page works and shows 0 collection types' do
-      visit '/admin/collection_types'
-      expect(page).to have_content('0 collection types')
+    scenario 'get not authorized on create' do
+      visit '/admin/collection_types/new'
+      expect(page).to have_content('You are not authorized to access this page.')
+    end
+  end
+
+  context "create with admin user" do
+    before do
+      # set user in the admin role
+      admin_role.users << user
+      admin_role.save
+      login_as user
     end
 
+    after do
+      # remove last collection that was made from test
+      collection_type = Hyrax::CollectionType.where(title: "Test Collection Type").first
+      collection_type.destroy if collection_type.present?
+
+      # remove created user
+      user.destroy
+
+      # remove created role
+      admin_role.destroy
+    end   
+
+    scenario 'successful create' do
+      visit '/admin/collection_types/new'
+      expect(page).to have_content('Create New Collection Type')
+      fill_in 'collection_type_title', with: 'Test Collection Type'
+      fill_in 'collection_type_description', with: 'Test Collection Type Description'
+      click_button 'Save'
+      expect(page).to have_content('The collection type Test Collection Type has been created.')
+    end
   end
 
 end
