@@ -26,6 +26,9 @@
 
 
 
+    <!-- JavaScripts -->
+    <%= javascript_include_tag "application" %>
+
     <!-- Hydra Code -->
     <%= stylesheet_link_tag "application", media: "all" %>
     <%= csrf_meta_tags %>
@@ -44,7 +47,7 @@
         <% end %>
 
         <!-- Hyrax sidebar -->
-        <div class="sidebar maximized">
+        <div class="sidebar minimized">
           <%= render 'hyrax/dashboard/sidebar' %>
         </div>
 
@@ -52,9 +55,6 @@
             <%= yield %>
         </div>
     </div>
-
-    <!-- JavaScripts -->
-    <%= javascript_include_tag "application" %>
 
     <%= render "shared/builtby_footer" %>
   </body>

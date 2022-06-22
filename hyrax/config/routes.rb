@@ -43,13 +43,13 @@ Rails.application.routes.draw do
   get 'json_imports/:id/log', to: 'json_imports#log'
   get 'json_imports/:id/report', to: 'json_imports#report'
 
-  # require 'sidekiq/web'
+  require 'sidekiq/web'
   # require 'sidekiq/cron/web'
-  mount Sidekiq::Web => '/sidekiq'
+  # mount Sidekiq::Web => '/sidekiq'
   # config/routes.rb
-  # authenticate :user, lambda { |u| u.admin? } do
-  #   mount Sidekiq::Web => '/sidekiq'
-  # end  
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end  
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   mount Bulkrax::Engine, at: '/'

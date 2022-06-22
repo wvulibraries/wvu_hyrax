@@ -49,7 +49,7 @@ gem 'omniauth-cas', '~> 1.1', '>= 1.1.1'
 
 # Bulk Import
 # =====================================================
-gem 'bulkrax', git: 'https://github.com/samvera-labs/bulkrax'
+gem 'bulkrax', git: 'https://github.com/samvera-labs/bulkrax.git', branch: 'main'
 
 # Health Check
 # =====================================================
