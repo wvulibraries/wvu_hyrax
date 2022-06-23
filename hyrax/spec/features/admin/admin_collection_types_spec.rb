@@ -53,7 +53,7 @@ RSpec.feature "Admin::Collection_Types", type: :feature do
 
     scenario 'successful create' do
       visit '/admin/collection_types/new'
-      expect(page).to have_content('Create New Collection Type')
+      expect(page).to have_content('Type name required')
       fill_in 'collection_type_title', with: 'Test Collection Type'
       fill_in 'collection_type_description', with: 'Test Collection Type Description'
       click_button 'Save'
