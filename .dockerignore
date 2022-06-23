@@ -1,0 +1,3 @@
+/scripts/postgres-db-dump/*.sql
+/scripts/docker_images/*.tar
+/hyrax/import/mfcs_data/*
