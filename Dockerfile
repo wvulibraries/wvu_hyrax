@@ -21,6 +21,10 @@ RUN \
   gem install rails -v ${RAILS_VERSION} && \
   bundle install --jobs=4 --retry=3 
 
+# FFMPEG Used to transcode video
+# -------------------------------------------------------------------------------------------------
+RUN apt-get install -y ffmpeg 
+
 # Node.js
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y nodejs

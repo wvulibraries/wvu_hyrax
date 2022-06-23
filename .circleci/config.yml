@@ -1,8 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/circleci-wvu-hyrax
-    parallelism: 4
+    working_directory: ~/circleci-wvu-hyrax/hyrax
     shell: /bin/bash --login
     environment:
       RAILS_ENV: test
@@ -10,7 +9,7 @@ jobs:
       COVERAGE: true
       TZ: /usr/share/zoneinfo/America/NewYork
     docker:
-      - image: cimg/ruby:2.7.2-browsers
+      - image: cimg/ruby:2.7-browsers
         environment:
           PGHOST: 127.0.0.1
           PGUSER: root
@@ -38,32 +37,27 @@ jobs:
           MEMCACHED_MAX_CONNS: 1024
           MEMCACHED_MAX_CONNS_PER_IP: 1024
     steps:
-      - checkout
-      # - run:
-      #     name: Configure secrets.yml
-      #     command: mv config/secrets.ci.yml config/secrets.yml
-      # - run:
-      #     name: Configure database.yml
-      #     command: mv config/database.ci.yml config/database.yml
-      # - run:
-      #     name: Configure application.yml
-      #     command: mv config/application.ci.yml config/application.yml              
-      # - run:
-      #     name: apt update
-      #     command: sudo apt update
-      # - run:
-      #     name: Install Packages
-      #     command: sudo apt-get install -y graphicsmagick ghostscript ffmpeg  
-      # - run:
-      #     name: Install Tesseract
-      #     command: sudo apt-get install -y libleptonica-dev libtesseract-dev tesseract-ocr  
+      - checkout:
+          path: ~/circleci-wvu-hyrax
+      - run:
+          name: Configure secrets.yml
+          command: mv config/secrets.ci.yml config/secrets.yml
+      - run:
+          name: Configure database.yml
+          command: mv config/database.ci.yml config/database.yml
+      - run:
+          name: Configure application.yml
+          command: mv config/application.ci.yml config/application.yml              
+      - run:
+          name: apt update
+          command: sudo apt update
 
       # Restore bundle cache
       - type: cache-restore
-        key: mfcs-bundle-{{ checksum "Gemfile.lock" }}
+        key: hyrax-bundle-{{ checksum "Gemfile.lock" }}
 
-      - type: cache-restore
-        key: mfcs-yarn-{{ checksum "yarn.lock" }}       
+      # - type: cache-restore
+      #   key: hyrax-yarn-{{ checksum "yarn.lock" }}       
 
       - run:
           name: install dockerize
@@ -83,9 +77,9 @@ jobs:
       - run:
           name: bundle gems
           command: bundle install --jobs=4 --retry=3
-      - run:
-          name: Yarn Install
-          command: yarn install --cache-folder ~/.cache/yarn
+      # - run:
+      #     name: Yarn Install
+      #     command: yarn install --cache-folder ~/.cache/yarn
       # - run:
       #     name: Precompile assets
       #     command: RAILS_ENV=test bundle exec rails webpacker:compile
@@ -100,15 +94,15 @@ jobs:
 
       # Store bundle cache
       - type: cache-save
-        key: mfcs-bundle-{{ checksum "Gemfile.lock" }}
+        key: hyrax-bundle-{{ checksum "Gemfile.lock" }}
         paths:
           - vendor/bundle
 
       # Store yarn cache
-      - type: cache-save
-        key: mfcs-yarn-{{ checksum "yarn.lock" }}
-        paths:
-          - ~/.yarn-cache
+      # - type: cache-save
+      #   key: hyrax-yarn-{{ checksum "yarn.lock" }}
+      #   paths:
+      #     - ~/.yarn-cache
 
       - run:
           name: Setup Database
@@ -143,7 +137,7 @@ jobs:
     docker:
       - image: cimg/ruby:2.7.2-node
     environment:
-       CC_TEST_REPORTER_ID: 
+       CC_TEST_REPORTER_ID:  7f1c1c181beba7c0991b78ba797b48670c2a5c34260701c0feb01b40656219a6
     working_directory: ~/circleci-wvu-hyrax
 
     steps:

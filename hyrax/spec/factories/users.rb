@@ -23,7 +23,7 @@ FactoryBot.define do
       ::RSpec::Mocks.allow_message(user.class.group_service, :fetch_groups).with(user: user).and_return(Array.wrap(evaluator.groups))
     end
 
-    factory :admin do
+    factory :admin_user do
       groups { ['admin'] }
 
       after(:create) do |user, _evaluator|

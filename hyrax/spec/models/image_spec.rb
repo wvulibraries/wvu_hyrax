@@ -3,7 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe Image do
-  it "has tests" do
-    skip "Add your tests here"
+  # factory
+  let(:image) { FactoryBot.create :image }
+
+  # shared examples 
+  context 'shared examples' do
+    it_behaves_like 'a valid factory' # factorybot
   end
 end

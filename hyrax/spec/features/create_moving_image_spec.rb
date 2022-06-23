@@ -42,8 +42,8 @@ RSpec.feature 'Create a MovingImage', js: false do
       click_link "Add new work"
 
       # TODO: If you generate more than one work uncomment these lines
-      # choose "payload_concern", option: "MovingImage"
-      # click_button "Create work"
+      choose "payload_concern", option: "MovingImage"
+      click_button "Create work"
 
       expect(page).to have_content "Add New Moving image"
       click_link "Files" # switch tab

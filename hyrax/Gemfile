@@ -15,12 +15,15 @@ gem 'jquery-rails'
 gem 'jbuilder', '~> 2.5'
 gem 'turbolinks', '~> 5'
 
+# Hydra Dependencies
+# =====================================================
+gem 'hydra-role-management'
+gem 'hydra-editor'
+
 # Hyrax Dependencies
 # =====================================================
 gem 'hyrax', '3.4.1'
-gem 'hydra-role-management'
 gem 'riiif', '~> 2.1'
-
 gem 'rsolr', '>= 1.0', '< 3'
 gem 'bootstrap-sass', '~> 3.0'
 gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript'
@@ -46,7 +49,11 @@ gem 'omniauth-cas', '~> 1.1', '>= 1.1.1'
 
 # Bulk Import
 # =====================================================
-gem 'bulkrax', git: 'https://github.com/samvera-labs/bulkrax'
+gem 'bulkrax', git: 'https://github.com/samvera-labs/bulkrax.git', branch: 'main'
+
+# Health Check
+# =====================================================
+gem 'okcomputer'
 
 # Development / Test Items (Primarily debugging)
 # =====================================================================================
@@ -65,8 +72,10 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem 'chromedriver-helper'
+  gem 'simplecov', group: :test
+  gem "simplecov-json" # For CodeClimate
+  gem 'simplecov-console'    
 end
-
 
 # Development / Test Items (Primarily debugging)
 # =====================================================================================
