@@ -9,7 +9,7 @@ jobs:
       COVERAGE: true
       TZ: /usr/share/zoneinfo/America/NewYork
     docker:
-      - image: cimg/ruby:2.7
+      - image: cimg/ruby:2.7-node
         environment:
           PGHOST: 127.0.0.1
           PGUSER: root
