@@ -20,12 +20,14 @@ jobs:
           POSTGRES_PASSWORD: circleci        
       - image: ghcr.io/samvera/fcrepo4:4.7.5
       - image: solr:8.11.1
-        environment:
-          SOLR_HEAP: "512m"
-          SOLR_HOME: ./hyrax/solr
-          SOLR_LOGS: /opt/solr/logs
-          SOLR_PID: /opt/solr/solr.pid
-          SOLR_PORT: 8983
+        # environment:
+        #   SOLR_HEAP: "512m"
+        #   SOLR_HOME: ./hyrax/solr
+        #   SOLR_LOGS: /opt/solr/logs
+        #   SOLR_PID: /opt/solr/solr.pid
+        #   SOLR_PORT: 8983
+        volumes:
+          - ./hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf
         command:
           - sh
           - "-c"
