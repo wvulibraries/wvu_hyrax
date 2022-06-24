@@ -22,16 +22,14 @@ jobs:
       - image: solr:8.11.1
         environment:
           SOLR_HEAP: "512m"
-          SOLR_HOME: ./solr
+          SOLR_HOME: ./hyrax/solr
           SOLR_LOGS: /opt/solr/logs
           SOLR_PID: /opt/solr/solr.pid
           SOLR_PORT: 8983
-        volumes:
-          - ./hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf
         command:
           - sh
           - "-c"
-          - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf"          
+          - "precreate-core hyrax_test /opt/solr/server/configsets/conf"          
       - image: redis # redis image  
       - image: bitnami/memcached
         environment:
