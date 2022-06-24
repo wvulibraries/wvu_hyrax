@@ -26,6 +26,8 @@ jobs:
           SOLR_LOGS: /opt/solr/logs
           SOLR_PID: /opt/solr/solr.pid
           SOLR_PORT: 8983
+        volumes:
+          - ./hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf
         command:
           - sh
           - "-c"
