@@ -113,7 +113,7 @@ jobs:
           command: |
             mkdir -p test-results/rspec test-artifacts
             ./cc-test-reporter before-build
-            TESTFILES=$(circleci tests glob "hyrax/spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+            TESTFILES=$(circleci tests glob "./spec/**/*_spec.rb" | circleci tests split --split-by=timings)
             bundle exec rspec --profile 10 \
                               --color \
                               --order random \
