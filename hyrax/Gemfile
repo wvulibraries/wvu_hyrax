@@ -14,6 +14,7 @@ gem 'coffee-rails', '~> 4.2'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 2.5'
 gem 'turbolinks', '~> 5'
+gem 'rubyzip'
 
 # Hydra Dependencies
 # =====================================================
@@ -67,19 +68,16 @@ group :development do
 end
 
 group :test do
-  # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '>= 2.15'
-  gem 'selenium-webdriver'
-  # Easy installation and use of chromedriver to run system tests with Chrome
-  gem 'chromedriver-helper'
   gem 'simplecov', group: :test
   gem "simplecov-json" # For CodeClimate
-  gem 'simplecov-console'    
+  gem 'simplecov-console'  
+  gem 'webdrivers', '~> 3.0'  
 end
 
 # Development / Test Items (Primarily debugging)
 # =====================================================================================
 group :development, :test do
+  gem 'capybara'
   gem 'solr_wrapper', '>= 0.3'  
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]  
   gem 'factory_bot_rails'
