@@ -19,10 +19,6 @@ jobs:
           POSTGRES_DB: circle_test
           POSTGRES_PASSWORD: circleci        
       - image: ghcr.io/samvera/fcrepo4:4.7.5
-        command:
-          - sh
-          - "-c"
-          - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf;"
       - image: solr:8.11.1
         environment:
           SOLR_HEAP: "512m"
@@ -30,6 +26,10 @@ jobs:
           SOLR_LOGS: /opt/solr/logs
           SOLR_PID: /opt/solr/solr.pid
           SOLR_PORT: 8983
+        command:
+          - sh
+          - "-c"
+          - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf"          
       - image: redis # redis image  
       - image: bitnami/memcached
         environment:
@@ -113,7 +113,7 @@ jobs:
           command: |
             mkdir -p test-results/rspec test-artifacts
             ./cc-test-reporter before-build
-            TESTFILES=$(circleci tests glob "./spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+            TESTFILES=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
             bundle exec rspec --profile 10 \
                               --color \
                               --order random \
