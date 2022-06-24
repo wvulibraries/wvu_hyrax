@@ -18,6 +18,9 @@ if ENV["COVERAGE"]
   end
 end
 
+require 'active_fedora'
+require 'active_fedora/cleaner'
+
 RSpec.configure do |config|
   # expectations
   config.expect_with :rspec do |expectations|
