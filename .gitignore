@@ -20,3 +20,5 @@ dassie/*
 hyrax/import/mfcs_data/folklife_*
 hyrax/import/mfcs_data/forms
 hyrax/import/mfcs_data/objects
+hyrax-exports
+hyrax-exports/*

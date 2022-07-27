@@ -14,7 +14,7 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = 'c103450df18a0c7a1c5ede6cc505df28dbb327e4be3cefe286ead632c24dc9666f5ee69ef6c6c591d49bdd6f94ee64eba8ae9f08796f31cfe7580b1c22c0629a'
+  # config.secret_key = '27ff7b65ddd6aed375da681ff82ef88fe8e7a11f1400a16374dd9f714a10de0749fadf7187d25f85e137274af4300a04b217045cc23086ea8b10a628da2441f9'
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -126,7 +126,7 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 12
 
   # Set up a pepper to generate the hashed password.
-  # config.pepper = 'c8a71e17102a914ffc9c46d770ab43226ee08af8a5480d02785315c9c35ec8a566f2e43645798570e4ba71eb5e72002ea721d7a0e07dd44bd046a9dc1bd01629'
+  # config.pepper = '6eca0d35b7b9b03e4c077b677c537827ca8433b80337ca7702db249d08c8fae37985b2ed2c782072447c0e8cbd6db0483d0fa9b24a96f894f193193c9bc84d4b'
 
   # Send a notification to the original email when the user's email is changed.
   # config.send_email_changed_notification = false
@@ -273,8 +273,6 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
 
-  config.omniauth(:cas, url: 'https://ssodev.wvu.edu/cas')
-
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.
@@ -301,9 +299,9 @@ Devise.setup do |config|
   # ==> Turbolinks configuration
   # If your app is using Turbolinks, Turbolinks::Controller needs to be included to make redirection work correctly:
   #
-  ActiveSupport.on_load(:devise_failure_app) do
-    include Turbolinks::Controller
-  end
+  # ActiveSupport.on_load(:devise_failure_app) do
+  #   include Turbolinks::Controller
+  # end
 
   # ==> Configuration for :registerable
 

@@ -6,28 +6,24 @@ ruby '2.7.6'
 # Rails Dependencies
 # =====================================================
 gem 'rails', '~> 5.2.6'
-gem 'puma', '~> 4.3'
 gem 'pg', '>= 0.18', '< 2.0'
+gem 'puma', '~> 3.11'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.2'
-gem 'jquery-rails'
-gem 'jbuilder', '~> 2.5'
 gem 'turbolinks', '~> 5'
-gem 'rubyzip'
+gem 'jbuilder', '~> 2.5'
 
-# Hydra Dependencies
-# =====================================================
-gem 'hydra-role-management'
-gem 'hydra-editor'
+# Use Redis adapter to run Action Cable in production
+gem 'redis', '~> 4.0'
+# Use ActiveModel has_secure_password
+# gem 'bcrypt', '~> 3.1.7'
 
-# Hyrax Dependencies
-# =====================================================
-gem 'hyrax', '3.4.1'
-gem 'riiif', '~> 2.1'
-gem 'rsolr', '>= 1.0', '< 3'
-gem 'bootstrap-sass', '~> 3.0'
-gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript'
+# Use ActiveStorage variant
+# gem 'mini_magick', '~> 4.8'
+
+# Use Capistrano for deployment
+# gem 'capistrano-rails', group: :development
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
@@ -41,23 +37,47 @@ gem 'sidekiq'
 gem "sidekiq-cron", "~> 1.1"
 gem 'sidekiq-failures'
 
-# authentication
+# Health Check
 # =====================================================
-gem 'devise', '~> 4.6', '>= 4.6.2'
-gem 'devise-guests', '~> 0.6'
-gem 'omniauth', '~> 1.9'
-gem 'omniauth-cas', '~> 1.1', '>= 1.1.1'
+gem 'okcomputer'
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+# Hydra Dependencies
+# =====================================================
+gem 'hydra-role-management'
+gem 'hydra-editor'
+
+# Hyrax Dependencies
+# =====================================================
+gem 'hyrax', '3.4.1'
+gem 'rsolr', '>= 1.0', '< 3'
+
+gem 'bootstrap-sass', '~> 3.0'
+gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript'
+gem 'jquery-rails'
+gem 'riiif', '~> 2.1'
 
 # Bulk Import
 # =====================================================
 gem 'bulkrax', git: 'https://github.com/samvera-labs/bulkrax.git', branch: 'main'
 
-# Health Check
+# authentication
 # =====================================================
-gem 'okcomputer'
+gem 'devise'
+gem 'devise-guests', '~> 0.6'
 
-# Development / Test Items (Primarily debugging)
-# =====================================================================================
+group :development, :test do
+  gem 'solr_wrapper', '>= 0.3'
+
+  gem 'fcrepo_wrapper'
+  gem 'rspec-rails'
+
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+end
+
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
@@ -68,20 +88,9 @@ group :development do
 end
 
 group :test do
-  gem 'simplecov', group: :test
-  gem "simplecov-json" # For CodeClimate
-  gem 'simplecov-console'  
-  gem 'webdrivers', '~> 3.0'  
-end
-
-# Development / Test Items (Primarily debugging)
-# =====================================================================================
-group :development, :test do
-  gem 'capybara'
-  gem 'solr_wrapper', '>= 0.3'  
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]  
-  gem 'factory_bot_rails'
-  gem 'faker'
-  gem 'fcrepo_wrapper'
-  gem 'rspec-rails'
+  # Adds support for Capybara system testing and selenium driver
+  gem 'capybara', '>= 2.15'
+  gem 'selenium-webdriver'
+  # Easy installation and use of chromedriver to run system tests with Chrome
+  gem 'chromedriver-helper'
 end

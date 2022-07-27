@@ -28,7 +28,3 @@ RUN apt-get install -y ffmpeg
 # Node.js
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y nodejs
-
-ADD ./startup.sh /usr/bin/
-RUN chmod -v +x /usr/bin/startup.sh
-ENTRYPOINT ["/usr/bin/startup.sh"]

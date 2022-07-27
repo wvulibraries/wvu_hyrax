@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount Bulkrax::Engine, at: '/'
   mount Riiif::Engine => 'images', as: :riiif if Hyrax.config.iiif_image_server?
         mount BrowseEverything::Engine => '/browse'
 
@@ -14,10 +15,16 @@ Rails.application.routes.draw do
 
   mount Qa::Engine => '/authorities'
   mount Hyrax::Engine, at: '/'
+  mount HydraEditor::Engine => '/'
   resources :welcome, only: 'index'
   root 'hyrax/homepage#index'
   curation_concerns_basic_routes
   concern :exportable, Blacklight::Routes::Exportable.new
+
+  require 'sidekiq/web'
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
   resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog' do
     concerns :exportable
@@ -30,33 +37,5 @@ Rails.application.routes.draw do
       delete 'clear'
     end
   end
-
-  # Import
-  # ========================================================
-  get '/import'              => 'import#index',             as: 'import_index'
-
-  # JSON Imports
-  # ========================================================
-  resources :json_imports, only: [:index, :show, :new, :create]
-  post 'json_imports/preview', as: 'preview_json_import'
-  get 'json_imports/preview', to: redirect('json_imports/new')
-  get 'json_imports/:id/log', to: 'json_imports#log'
-  get 'json_imports/:id/report', to: 'json_imports#report'
-
-  require 'sidekiq/web'
-  # require 'sidekiq/cron/web'
-  # mount Sidekiq::Web => '/sidekiq'
-  # config/routes.rb
-  authenticate :user, lambda { |u| u.admin? } do
-    mount Sidekiq::Web => '/sidekiq'
-  end  
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-
-  mount Bulkrax::Engine, at: '/'
-
-  # Catalog Controller Routes
-  # ========================================================  
-  resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog' do
-    concerns :exportable
-  end
 end
