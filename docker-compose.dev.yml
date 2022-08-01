@@ -22,6 +22,7 @@ services:
       - ./hyrax:/home/hyrax
       - ./scripts:/home/hyrax/scripts
       - ./hyrax-exports/:/home/hyrax/imports
+      - bundle_data:/usr/local/bundle     
       - hyrax_tmp:/home/hyrax/tmp
     networks:
       - hyrax   
@@ -38,6 +39,7 @@ services:
     volumes:
       - ./hyrax:/home/hyrax
       - ./hyrax-exports/:/home/hyrax/imports
+      - bundle_data:/usr/local/bundle
       - hyrax_tmp:/home/hyrax/tmp                
     depends_on:
       - fcrepo
@@ -120,6 +122,7 @@ services:
 
 volumes:
   hyrax_tmp:
+  bundle_data:
   postgres:
   fcrepo:
   redis:
