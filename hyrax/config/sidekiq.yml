@@ -1,13 +1,13 @@
----
-:verbose: true
-:concurrency: 10
-:timeout: 25
-
 :queues:
-  - critical
   - default
+  - ingest
   - import
   - export
+  - fixity
+  - mailers
+  - doi
 
-production:
-  :concurrency: 25
+:logfile: ./log/sidekiq.log
+
+:verbose: true
+:concurrency: 5

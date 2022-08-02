@@ -34,7 +34,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # background jobs
 # =====================================================
 gem 'sidekiq'
-gem "sidekiq-cron", "~> 1.1"
+gem "sidekiq-cron"
 gem 'sidekiq-failures'
 
 # Health Check
