@@ -1,4 +1,5 @@
-FROM ruby:2.7.6
+ARG RUBY_VERSION=2.7.6
+FROM ruby:$RUBY_VERSION
 
 RUN mkdir -p /home/hyrax
 WORKDIR /home/hyrax
