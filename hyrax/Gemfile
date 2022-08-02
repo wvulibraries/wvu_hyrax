@@ -27,6 +27,7 @@ gem 'redis', '~> 4.0'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
+gem 'rubyzip'
 
 # Application Specific
 # =================================================================
@@ -87,10 +88,17 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
+# group :test do
+#   # Adds support for Capybara system testing and selenium driver
+#   gem 'capybara', '>= 2.15'
+#   gem 'selenium-webdriver'
+#   # Easy installation and use of chromedriver to run system tests with Chrome
+#   gem 'chromedriver-helper'
+# end
+
 group :test do
-  # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '>= 2.15'
-  gem 'selenium-webdriver'
-  # Easy installation and use of chromedriver to run system tests with Chrome
-  gem 'chromedriver-helper'
+  gem 'simplecov', group: :test
+  gem "simplecov-json" # For CodeClimate
+  gem 'simplecov-console'  
+  gem 'webdrivers', '~> 3.0'  
 end
