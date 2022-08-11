@@ -1,3 +1,15 @@
+:verbose: true
+:pidfile: ./tmp/pids/sidekiq.pid
+:logfile: ./log/sidekiq.log
+
+development:
+  :concurrency: 5
+
+production:
+  :concurrency: 10
+
+:max_retries: 1
+
 :queues:
   - default
   - ingest
@@ -6,8 +18,3 @@
   - fixity
   - mailers
   - doi
-
-:logfile: ./log/sidekiq.log
-
-:verbose: true
-:concurrency: 5

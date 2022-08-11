@@ -2,3 +2,5 @@
 /scripts/docker_images/*.tar
 /hyrax/import/mfcs_data/*
 hyrax/log/*
+mnt
+mnt/*

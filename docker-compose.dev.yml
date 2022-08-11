@@ -11,6 +11,7 @@ services:
       - './env/.env.dev.hyrax'       
     restart: on-failure           
     depends_on:
+      - db
       - fcrepo
       - memcached
       - postgres
@@ -19,40 +20,40 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./hyrax:/home/hyrax
-      - ./scripts:/home/hyrax/scripts
-      - ./hyrax-exports/:/home/hyrax/imports
-      - bundle_data:/usr/local/bundle     
-      - hyrax_tmp:/home/hyrax/tmp
+      - ./hyrax:/app/hyrax
+      - ./scripts:/app/hyrax/scripts
+
+      # added because we were using exports with bulkrax for testing atm
+      - ./mnt/nfs-exports/hyrax-exports:/app/hyrax/imports
+      # - ./mnt/:/mnt
+
+      - '/app/hyrax/tmp' # don't mount tmp directory      
+      #- bundle_data:/usr/local/bundle     
+      #- hyrax_tmp:/home/hyrax/tmp
     networks:
       - hyrax   
 
   sidekiq:
-    container_name: hyrax_sidekiq
+    container_name: sidekiq
     build: 
       context: ./
       dockerfile: Dockerfile
-    command: bundle exec sidekiq -C config/sidekiq.yml
+    command: sh -l -c 'bundle && bundle exec sidekiq'
     env_file:
       - './env/.env.dev.hyrax'     
     restart: always      
-    volumes:
-      - ./hyrax:/home/hyrax
-      - ./hyrax-exports/:/home/hyrax/imports
-      - bundle_data:/usr/local/bundle
-      - hyrax_tmp:/home/hyrax/tmp                
+    volumes_from:
+      - hyrax              
     depends_on:
+      - db
       - fcrepo
-      - memcached
-      - postgres
       - redis
-      - solr
     networks:
       - hyrax     
 
   memcached:
     image: bitnami/memcached
-    container_name: hyrax_memcached
+    container_name: memcached
     ports:
       - "11211"
     networks:
@@ -60,7 +61,7 @@ services:
 
   redis:
     image: redis:alpine
-    container_name: hyrax_redis
+    container_name: redis
     command: redis-server
     ports:
       - "6379"
@@ -76,18 +77,17 @@ services:
       retries: 3                                
 
   fcrepo:
+    container_name: fcrepo
     image: ghcr.io/samvera/fcrepo4:4.7.5
-    container_name: hyrax_fcrepo
-    restart: on-failure    
     volumes:
       - fcrepo:/data:cached
     ports:
-      - "8080:8080"
+      - 8080:8080
     networks:
-      - hyrax 
+      - hyrax
       
   solr:
-    container_name: hyrax_solr  
+    container_name: solr  
     image: solr:8.11.1
     restart: on-failure
     ports:
@@ -102,8 +102,8 @@ services:
     networks:
       - hyrax 
 
-  postgres:
-    container_name: hyrax_db
+  db:
+    container_name: db
     image: postgres:14-alpine
     ports:
       - "5432"

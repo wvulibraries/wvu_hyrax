@@ -1,61 +1,30 @@
 ARG RUBY_VERSION=2.7.6
 FROM ruby:$RUBY_VERSION
 
-RUN mkdir -p /home/hyrax
-WORKDIR /home/hyrax
-ADD ./hyrax /home/hyrax
+ENV LANG C.UTF-8
+ENV NODE_VERSION 16
+ENV NODE_ENV development
+ENV INSTALL_PATH /app/hyrax
 
-# Update all the things
-RUN apt-get update
+RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash -
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-# Generate UTF-8 locale
-RUN apt-get install -y locales
-RUN dpkg-reconfigure locales && \
-  locale-gen C.UTF-8 && \
-  /usr/sbin/update-locale LANG=C.UTF-8
-RUN echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && locale-gen
+RUN apt-get update -qq
+RUN apt-get install -y --no-install-recommends nodejs postgresql-client yarn build-essential vim graphicsmagick ghostscript ffmpeg 
 
-# Set UTF-8
-ENV LC_ALL C.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
+RUN mkdir -p $INSTALL_PATH
+WORKDIR $INSTALL_PATH
+ADD ./hyrax $INSTALL_PATH
 
-# Install capybara-webkit deps
-# RUN apt update \
-#     && apt-get install -y xvfb git qt5-default libqt5webkit5-dev \
-#                           gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x                        
+RUN gem install bundler
+RUN bundle install
+RUN yarn install --check-files
+RUN yarn upgrade
+RUN rm -rf tmp
 
-# Use JEMALLOC instead
-# JEMalloc is a faster garbage collection for Ruby.
-# -------------------------------------------------------------------------------------------------
-RUN apt-get install -y libjemalloc2 libjemalloc-dev
-ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so
-# -------------------------------------------------------------------------------------------------
+# RUN useradd -Ms /bin/bash app -u 1001
 
-# FFMPEG CODECS Uncomment if you need to install them. 
-# ------------------------------------------------------------------------------------
-# RUN apt-get coreutils freetype-dev lame-dev libogg-dev libass libass-dev libvpx-dev libvorbis-dev libwebp-dev libtheora-dev 
-# -------------------------------------------------------------------------------------------------
-
-# ImageMagic Conversions and FFMPEG Conversions
-# -------------------------------------------------------------------------------------------------
-RUN apt-get install -y graphicsmagick ghostscript ffmpeg libgs-dev 
-# -------------------------------------------------------------------------------------------------
-
-# Node.js
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
-    && apt-get install -y nodejs
-
-# yarn
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -\
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-    && apt-get update \
-    && apt-get install -y yarn
-		
-RUN \
-  gem update --system --quiet && \
-  gem install bundler && \
-  gem install rails  && \
-  bundle install
-
-RUN yarn install && yarn upgrade
+# RUN addgroup -S --gid 101 app && \
+#   adduser -S -G app -u 1001 -s /bin/sh -h /app app
+# USER app

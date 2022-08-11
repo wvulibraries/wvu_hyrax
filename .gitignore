@@ -22,3 +22,5 @@ hyrax/import/mfcs_data/forms
 hyrax/import/mfcs_data/objects
 hyrax-exports
 hyrax-exports/*
+mnt
+mnt/*
