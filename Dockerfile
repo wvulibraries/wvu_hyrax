@@ -4,7 +4,7 @@ FROM ruby:$RUBY_VERSION
 ENV LANG C.UTF-8
 ENV NODE_VERSION 16
 ENV NODE_ENV development
-ENV INSTALL_PATH /app/hyrax
+ENV INSTALL_PATH /home/hyrax
 
 RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash -
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
