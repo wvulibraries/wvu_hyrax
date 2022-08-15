@@ -1,34 +1,24 @@
-FROM ruby:2.7
+ARG RUBY_VERSION=2.7.6
+FROM ruby:$RUBY_VERSION
 
-ENV BUNDLER_VERSION=2.2.27
-ENV RAILS_VERSION=5.2.6
+ENV LANG C.UTF-8
+ENV NODE_VERSION 16
+ENV NODE_ENV development
+ENV INSTALL_PATH /home/hyrax
 
-RUN mkdir -p /home/hyrax/
-WORKDIR /home/hyrax
-ADD ./hyrax /home/hyrax
+RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash -
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-RUN apt-get update && apt-get -y install cron
+RUN apt-get update -qq
+RUN apt-get install -y --no-install-recommends nodejs postgresql-client yarn build-essential vim graphicsmagick ghostscript ffmpeg 
 
-# Use JEMALLOC instead
-# JEMalloc is a faster garbage collection for Ruby.
-# -------------------------------------------------------------------------------------------------
-RUN apt-get install -y libjemalloc2 libjemalloc-dev
-ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so
+RUN mkdir -p $INSTALL_PATH
+WORKDIR $INSTALL_PATH
+ADD ./hyrax $INSTALL_PATH
 
-RUN \
-  gem update --system --quiet && \
-  gem install bundler -v ${BUNDLER_VERSION} && \
-  gem install rails -v ${RAILS_VERSION} && \
-  bundle install --jobs=4 --retry=3 
-
-# FFMPEG Used to transcode video
-# -------------------------------------------------------------------------------------------------
-RUN apt-get install -y ffmpeg 
-
-# Node.js
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
-    && apt-get install -y nodejs
-
-ADD ./startup.sh /usr/bin/
-RUN chmod -v +x /usr/bin/startup.sh
-ENTRYPOINT ["/usr/bin/startup.sh"]
+RUN gem install bundler
+RUN bundle install
+RUN yarn install --check-files
+RUN yarn upgrade
+RUN rm -rf tmp
