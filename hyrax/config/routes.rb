@@ -30,33 +30,5 @@ Rails.application.routes.draw do
       delete 'clear'
     end
   end
-
-  # Import
-  # ========================================================
-  get '/import'              => 'import#index',             as: 'import_index'
-
-  # JSON Imports
-  # ========================================================
-  resources :json_imports, only: [:index, :show, :new, :create]
-  post 'json_imports/preview', as: 'preview_json_import'
-  get 'json_imports/preview', to: redirect('json_imports/new')
-  get 'json_imports/:id/log', to: 'json_imports#log'
-  get 'json_imports/:id/report', to: 'json_imports#report'
-
-  require 'sidekiq/web'
-  # require 'sidekiq/cron/web'
-  # mount Sidekiq::Web => '/sidekiq'
-  # config/routes.rb
-  authenticate :user, lambda { |u| u.admin? } do
-    mount Sidekiq::Web => '/sidekiq'
-  end  
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-
-  mount Bulkrax::Engine, at: '/'
-
-  # Catalog Controller Routes
-  # ========================================================  
-  resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog' do
-    concerns :exportable
-  end
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

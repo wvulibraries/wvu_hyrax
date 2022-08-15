@@ -1,4 +1,4 @@
 echo "Preparing Database"
 bin/rails db:create
-bin/rails db:schema:load
+bin/rails db:migrate
 bin/rails db:seed

@@ -2,11 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe Collection do
-  # factory
-  let(:collection) { FactoryBot.create :collection }
-
-  # shared examples 
-  context 'shared examples' do
-    it_behaves_like 'a valid factory' # factorybot
+  it "has tests" do
+    skip "Add your tests here"
   end
 end

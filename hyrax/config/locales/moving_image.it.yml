@@ -1,8 +1,0 @@
-it:
-  hyrax:
-    icons:
-      moving_image:     'fa fa-file-text-o'
-    select_type:
-      moving_image:
-        description:        "Moving image opere"
-        name:               "Moving Image"

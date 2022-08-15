@@ -1,83 +1,26 @@
-version: '3.4'
-# used for local testing
+version: "3.9"
 services:
-  hyrax:
-    build: 
-      context: ./
-      dockerfile: Dockerfile
-    container_name: hyrax
-    env_file:
-      - './env/.env.dev.hyrax'       
-    restart: on-failure           
-    depends_on:
-      - fcrepo
-      - postgres
-      - solr
-      - memcached      
+  db:
+    image: postgres
+    container_name: db
+    volumes:
+      - 'postgres:/var/lib/postgresql/data'
     ports:
-      - 3000:3000
-    volumes:
-      - ./hyrax:/home/hyrax
-      - ./scripts:/home/hyrax/scripts
-      - hyrax_tmp:/home/hyrax/tmp
-    networks:
-      - hyrax   
-
-  sidekiq:
-    container_name: hyrax_sidekiq
-    build: 
-      context: ./
-      dockerfile: Dockerfile
-    command: sh -l -c 'bundle && bundle exec sidekiq'
-    env_file:
-      - './env/.env.dev.hyrax'     
-    restart: always      
-    volumes:
-      - ./hyrax:/home/hyrax          
-    depends_on:
-      - fcrepo
-      - postgres
-      - solr
-      - memcached
-    networks:
-      - hyrax     
-
-  memcached:
-    image: bitnami/memcached
-    container_name: hyrax_memcached
-    ports:
-      - "11211"
-    networks:
-      - hyrax
-
-  redis:
-    image: redis:alpine
-    container_name: hyrax_redis
-    command: redis-server
-    volumes:
-      - redis:/var/lib/redis/data
-    restart: unless-stopped  
-    healthcheck:
-      test: redis-cli -h redis ping
-      interval: 30s
-      timeout: 3s
-      retries: 3
-    networks:
-      - hyrax                              
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: password   
 
   fcrepo:
     image: ghcr.io/samvera/fcrepo4:4.7.5
-    container_name: hyrax_fcrepo
+    container_name: fcrepo
     restart: on-failure    
     volumes:
       - fcrepo:/data:cached
     ports:
-      - "8080:8080"
-    networks:
-      - hyrax 
+      - "8080:8080"  
       
   solr:
-    container_name: hyrax_solr  
+    container_name: solr  
     image: solr:8.11.1
     restart: on-failure
     ports:
@@ -89,37 +32,72 @@ services:
     volumes:
       - solr:/var/solr/data:cached
       - ./hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf
-    networks:
-      - hyrax 
 
-  postgres:
-    container_name: hyrax_db
-    image: postgres:14-alpine
+  redis:
+    image: 'redis:5-alpine'
+    container_name: redis
+    command: redis-server
     ports:
-      - "5432"
-    env_file:
-      - './env/.env.dev.db'       
+      - '6379:6379'
     volumes:
-      - postgres:/var/lib/postgresql/data
-    restart: unless-stopped
-    healthcheck:
-        test: pg_isready -U postgres -h postgres
-        interval: 30s
-        timeout: 3s
-        retries: 3
-    networks:
-      - hyrax 
+      - 'redis:/data'   
+
+  sidekiq:
+    container_name: sidekiq
+    depends_on:
+      - 'db'
+      - 'fcrepo'
+      - 'solr'
+      - 'redis' 
+    build: .
+    command: bundle exec sidekiq
+    volumes:
+      - ./hyrax:/home/hyrax
+      - '/home/hyrax/tmp' # don't mount tmp directory
+      - ./hyrax-exports/:/home/hyrax/imports      
+    environment:
+      RAILS_ENV: development
+      REDIS_URL_SIDEKIQ: redis://redis:6379/12
+      DATABASE_PASSWORD: password
+      DATABASE_HOST: db    
+      #FEDORA_DEV_URL: http://fcrepo:8080/rest/
+      FCREPO_HOST: fcrepo
+      FCREPO_PORT: 8080
+      FEDORA_PASSWORD: fedoraAdmin
+      SOLR_DEV_URL: http://solr:8983/solr/hyrax_dev/
+      SOLR_TEST_URL: http://solr:8983/solr/hyrax_test/     
+
+  hyrax:
+    container_name: hyrax
+    depends_on:
+      - 'db'
+      - 'fcrepo'
+      - 'solr'
+      - 'redis' 
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0' -e development"
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./hyrax:/home/hyrax
+      - ./scripts:/home/hyrax/scripts      
+      - ./hyrax-exports/:/home/hyrax/imports      
+    environment:
+      RAILS_ENV: development
+      REDIS_URL_SIDEKIQ: redis://redis:6379/12
+      DATABASE_PASSWORD: password
+      DATABASE_HOST: db    
+      #FEDORA_DEV_URL: http://fcrepo:8080/rest/
+      FCREPO_HOST: fcrepo
+      FCREPO_PORT: 8080
+      FEDORA_PASSWORD: fedoraAdmin
+      SOLR_DEV_URL: http://solr:8983/solr/hyrax_dev/
+      SOLR_TEST_URL: http://solr:8983/solr/hyrax_test/  
 
 volumes:
-  hyrax_tmp:
   postgres:
   fcrepo:
-  redis:
   solr:
-
-networks:
-  hyrax:
-    driver: bridge
-    driver_opts:
-      com.docker.network.bridge.name: br-hyrax 
-
+  redis:
