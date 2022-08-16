@@ -51,13 +51,13 @@ services:
       - 'redis' 
     build: .
     command: bundle exec sidekiq
-    volumes:
-      - ./hyrax:/home/hyrax
-      - '/home/hyrax/tmp' # don't mount tmp directory
-      - ./hyrax-exports/:/home/hyrax/imports      
+    volumes_from:
+      - hyrax                              
     environment:
       RAILS_ENV: development
       REDIS_URL_SIDEKIQ: redis://redis:6379/12
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       DATABASE_PASSWORD: password
       DATABASE_HOST: db    
       #FEDORA_DEV_URL: http://fcrepo:8080/rest/
@@ -65,7 +65,7 @@ services:
       FCREPO_PORT: 8080
       FEDORA_PASSWORD: fedoraAdmin
       SOLR_DEV_URL: http://solr:8983/solr/hyrax_dev/
-      SOLR_TEST_URL: http://solr:8983/solr/hyrax_test/     
+      SOLR_TEST_URL: http://solr:8983/solr/hyrax_test/    
 
   hyrax:
     container_name: hyrax
@@ -82,11 +82,14 @@ services:
       - '3000:3000'
     volumes:
       - ./hyrax:/home/hyrax
+      - /home/hyrax/tmp # don't mount tmp directory
       - ./scripts:/home/hyrax/scripts      
-      - ./hyrax-exports/:/home/hyrax/imports      
+      - ./mnt/nfs-exports/hyrax-exports:/home/hyrax/imports                        
     environment:
       RAILS_ENV: development
       REDIS_URL_SIDEKIQ: redis://redis:6379/12
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       DATABASE_PASSWORD: password
       DATABASE_HOST: db    
       #FEDORA_DEV_URL: http://fcrepo:8080/rest/

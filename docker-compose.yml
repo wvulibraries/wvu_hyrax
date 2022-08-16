@@ -18,8 +18,7 @@ services:
       - 3000:3000
     volumes:
       - ./hyrax:/home/hyrax 
-      - ./mfcs_export:/mfcs_export  
-      #- ./mnt:/mnt                     
+      - ./mnt/nfs-exports/hyrax-exports:/home/hyrax/imports                    
 
   fcrepo:
     image: ghcr.io/samvera/fcrepo4:4.7.5
