@@ -1,4 +1,4 @@
-module WvuExtendedMetadata
+module ExtendedMetadata
   extend ActiveSupport::Concern
 
   included do
