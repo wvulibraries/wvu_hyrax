@@ -1,5 +1,4 @@
-# set environmentals
-ENV.each { |k, v| env(k, v) }
+env :PATH, ENV['PATH']
 
 # set logs and environment
 set :output, {:standard => "#{path}/log/cron.log", :error => "#{path}/log/cron_error.log"}

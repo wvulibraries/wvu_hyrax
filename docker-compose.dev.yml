@@ -1,55 +1,47 @@
 version: '3.4'
 # used for local testing
 services:
-  hyrax:
+  app:
     build: 
       context: ./
       dockerfile: Dockerfile
-    container_name: hyrax
-    command: bash -c "rm -f tmp/pids/server.pid ; rm -rf tmp/cache ; bundle exec rails s -p 3000 -b 0.0.0.0"
     env_file:
-      - './env/.env.dev.hyrax'       
-    restart: on-failure           
-    depends_on:
-      - db
-      - fcrepo
-      - memcached
-      - postgres
-      - redis
-      - solr       
-    ports:
-      - 3000:3000
+      - './env/.env.dev.hyrax' 
     volumes:
       - ./hyrax:/home/hyrax
       - ./scripts:/home/hyrax/scripts
 
       # added because we were using exports with bulkrax for testing atm
       - ./mnt/nfs-exports/hyrax-exports:/home/hyrax/imports
-      # - ./mnt/:/mnt
-
-      - '/home/hyrax/tmp' # don't mount tmp directory      
-      #- bundle_data:/usr/local/bundle     
-      #- hyrax_tmp:/home/hyrax/tmp
+      - '/home/hyrax/tmp' # don't mount tmp directory     
     networks:
-      - hyrax   
+      - hyrax         
 
-  sidekiq:
-    container_name: sidekiq
-    build: 
-      context: ./
-      dockerfile: Dockerfile
-    command: sh -l -c 'bundle && bundle exec sidekiq'
-    env_file:
-      - './env/.env.dev.hyrax'     
-    restart: always      
-    volumes_from:
-      - hyrax              
+  hyrax:
+    extends: app
+    container_name: hyrax
+    command: bundle exec rails s -p 3000 -b 0.0.0.0
+    ports:
+      - "3000:3000"
     depends_on:
-      - db
-      - fcrepo
       - redis
-    networks:
-      - hyrax     
+      - solr
+      - fcrepo
+      - postgres
+      - workers
+  
+  workers:
+    extends: app
+    container_name: sidekiq
+    command: bundle exec sidekiq
+    depends_on:
+      - redis
+      - solr
+      - fcrepo
+      - memcached 
+      - postgres
+    stdin_open: true
+    tty: true
 
   memcached:
     image: bitnami/memcached
@@ -82,7 +74,7 @@ services:
     volumes:
       - fcrepo:/data:cached
     ports:
-      - 8080:8080
+      - "8080:8080"
     networks:
       - hyrax
       
@@ -121,8 +113,6 @@ services:
       - hyrax 
 
 volumes:
-  hyrax_tmp:
-  bundle_data:
   postgres:
   fcrepo:
   redis:
