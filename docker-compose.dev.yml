@@ -4,7 +4,7 @@ services:
   app:
     build: 
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file:
       - './env/.env.dev.hyrax' 
     volumes:
@@ -27,7 +27,7 @@ services:
       - redis
       - solr
       - fcrepo
-      - postgres
+      - db
       - workers
   
   workers:
@@ -39,7 +39,7 @@ services:
       - solr
       - fcrepo
       - memcached 
-      - postgres
+      - db
     stdin_open: true
     tty: true
 
