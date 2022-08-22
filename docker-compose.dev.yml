@@ -10,6 +10,7 @@ services:
     volumes:
       - ./hyrax:/home/hyrax
       - ./scripts:/home/hyrax/scripts
+      - bundle:/usr/local/bundle
 
       # added because we were using exports with bulkrax for testing atm
       - ./mnt/nfs-exports/hyrax-exports:/home/hyrax/imports
@@ -17,7 +18,7 @@ services:
     networks:
       - hyrax         
 
-  hyrax:
+  web:
     extends: app
     container_name: hyrax
     command: bundle exec rails s -p 3000 -b 0.0.0.0
@@ -27,19 +28,19 @@ services:
       - redis
       - solr
       - fcrepo
-      - postgres
+      - db
       - workers
   
   workers:
     extends: app
     container_name: sidekiq
-    command: bundle exec sidekiq
+    command: bundle exec sidekiq --logfile log/sidekiq.log
     depends_on:
       - redis
       - solr
       - fcrepo
       - memcached 
-      - postgres
+      - db
     stdin_open: true
     tty: true
 
@@ -113,6 +114,7 @@ services:
       - hyrax 
 
 volumes:
+  bundle:
   postgres:
   fcrepo:
   redis:

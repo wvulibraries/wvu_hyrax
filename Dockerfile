@@ -2,7 +2,7 @@ ARG RUBY_VERSION=2.7.6
 FROM ruby:$RUBY_VERSION
 
 ENV LANG C.UTF-8
-ENV NODE_VERSION 16
+ENV NODE_VERSION 17
 ENV NODE_ENV development
 ENV INSTALL_PATH /home/hyrax
 
@@ -22,9 +22,3 @@ RUN bundle install
 RUN yarn install --check-files
 RUN yarn upgrade
 RUN rm -rf tmp
-
-# RUN useradd -Ms /bin/bash app -u 1001
-
-# RUN addgroup -S --gid 101 app && \
-#   adduser -S -G app -u 1001 -s /bin/sh -h /app app
-# USER app
