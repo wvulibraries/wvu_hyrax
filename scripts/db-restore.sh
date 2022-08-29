@@ -6,6 +6,6 @@
 # Updated : 05/16/2022
 # Purpose : This script is used to import hyrax development database 
 # Run script from the scripts folder on host machine
-echo "Restoring MFCS Dev Database"
+echo "Restoring Hyrax Dev Database"
 file=$(ls -t ./scripts/postgres-db-dump/*.sql | head -1)
 cat $file | docker exec -i hyrax_db psql -U postgres
