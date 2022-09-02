@@ -7,7 +7,7 @@ RUN mkdir -p /home/hyrax/
 WORKDIR /home/hyrax
 ADD ./hyrax /home/hyrax
 
-RUN apt-get update && apt-get -y install cron postgresql-client yarn build-essential vim graphicsmagick ghostscript
+RUN apt-get update && apt-get -y install cron postgresql-client yarn build-essential vim graphicsmagick ghostscript ffmpeg openjdk--jdk
 
 # Use JEMALLOC instead
 # JEMalloc is a faster garbage collection for Ruby.
@@ -21,9 +21,13 @@ RUN \
   gem install rails -v ${RAILS_VERSION} && \
   bundle install --jobs=4 --retry=3 
 
-# FFMPEG Used to transcode video
-# -------------------------------------------------------------------------------------------------
-RUN apt-get install -y ffmpeg 
+RUN mkdir -p /home/fits && \
+    cd /home/fits && \
+    wget https://github.com/harvard-lts/fits/releases/download/1.5.1/fits-1.5.1.zip -O fits.zip && \
+    unzip fits.zip && \
+    rm fits.zip && \
+    chmod a+x /home/fits/fits.sh
+ENV PATH="${PATH}:/home/fits"
 
 # Node.js
 RUN curl -sL https://deb.nodesource.com/setup_17.x | bash - \

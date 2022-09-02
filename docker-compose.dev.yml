@@ -5,13 +5,14 @@ services:
     build: 
       context: ./
       dockerfile: Dockerfile.dev
+    # image: wvu_hyrax_app
     env_file:
       - './env/.env.dev.hyrax' 
     volumes:
       - ./hyrax:/home/hyrax
       - ./scripts:/home/hyrax/scripts
       - bundle:/usr/local/bundle
-
+      - uploads:/home/hyrax/tmp/uploads
       # added because we were using exports with bulkrax for testing atm
       - ./mnt/nfs-exports/hyrax-exports:/home/hyrax/imports
       - '/home/hyrax/tmp' # don't mount tmp directory     
@@ -21,7 +22,7 @@ services:
   web:
     extends: app
     container_name: hyrax
-    command: bundle exec rails s -p 3000 -b 0.0.0.0
+    command: bash -c "bundle install; bundle exec rails s -p 3000 -b 0.0.0.0"
     ports:
       - "3000:3000"
     depends_on:
@@ -115,6 +116,7 @@ services:
 
 volumes:
   bundle:
+  uploads:
   postgres:
   fcrepo:
   redis:
