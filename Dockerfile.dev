@@ -7,7 +7,7 @@ RUN mkdir -p /home/hyrax/
 WORKDIR /home/hyrax
 ADD ./hyrax /home/hyrax
 
-RUN apt-get update && apt-get -y install cron postgresql-client yarn build-essential vim graphicsmagick ghostscript ffmpeg openjdk--jdk
+RUN apt-get update && apt-get -y install cron postgresql-client yarn build-essential vim graphicsmagick ghostscript ffmpeg openjdk-11-jdk
 
 # Use JEMALLOC instead
 # JEMalloc is a faster garbage collection for Ruby.
