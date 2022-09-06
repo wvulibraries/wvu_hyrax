@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   devise_for :users
   mount Hydra::RoleManagement::Engine => '/'
 
-  mount Qa::Engine => '/authorities'
+  mount Qa::Engine => '/qa'
   mount Hyrax::Engine, at: '/'
   mount HydraEditor::Engine => '/'
   resources :welcome, only: 'index'
