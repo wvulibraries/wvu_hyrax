@@ -4,7 +4,7 @@ FROM ruby:$RUBY_VERSION
 ENV LANG C.UTF-8
 ENV NODE_VERSION 17
 ENV NODE_ENV development
-ENV INSTALL_PATH /home/hyrax
+ENV INSTALL_PATH /home/wvu_hyrax
 
 RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash -
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
@@ -15,7 +15,7 @@ RUN apt-get install -y --no-install-recommends nodejs postgresql-client yarn bui
 
 RUN mkdir -p $INSTALL_PATH
 WORKDIR $INSTALL_PATH
-ADD ./hyrax $INSTALL_PATH
+ADD ./wvu_hyrax $INSTALL_PATH
 
 RUN gem install bundler
 RUN bundle install
