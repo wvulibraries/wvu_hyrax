@@ -1,2 +1,4 @@
-.DS_Store
+# exclude data folders
 /mnt
+/wvu_hyrax/tmp
+.DS_Store
