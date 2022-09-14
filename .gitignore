@@ -3,10 +3,10 @@ scripts/docker_images/.DS_Store
 solr/.DS_Store
 scripts/postgres-db-dump/.DS_Store
 .DS_Store
-hyrax/tmp
-hyrax/tmp/*
-hyrax/log
-hyrax/log/*.log
+wvu_hyrax/tmp
+wvu_hyrax/tmp/*
+wvu_hyrax/log
+wvu_hyrax/log/*.log
 postgres
 postgres/*
 redis
