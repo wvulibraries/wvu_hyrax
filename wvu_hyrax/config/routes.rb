@@ -12,9 +12,6 @@ Rails.application.routes.draw do
   end
 
   devise_for :users
-  devise_scope :user do
-    delete 'sign_out', :to => 'devise/sessions#destroy'
-  end
 
   mount Hydra::RoleManagement::Engine => '/'
 
