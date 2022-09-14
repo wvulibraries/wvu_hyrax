@@ -1,4 +1,5 @@
 # exclude data folders
 /mnt
+/data
 /wvu_hyrax/tmp
 .DS_Store

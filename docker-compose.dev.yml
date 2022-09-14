@@ -11,6 +11,8 @@ services:
     volumes:
       - ./wvu_hyrax:/home/wvu_hyrax
       - ./scripts:/home/wvu_hyrax/scripts
+      # add seed csv files to db folder in a subfolder called data
+      - ./data:/home/wvu_hyrax/db/data
       - bundle:/usr/local/bundle
       - uploads:/home/wvu_hyrax/tmp/uploads
       # added because we were using exports with bulkrax for testing atm

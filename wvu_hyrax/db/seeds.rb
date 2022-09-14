@@ -6,71 +6,36 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-if Rails.env.development? || Rails.env.test? 
-  Rake::Task['hyrax:default_admin_set:create'].invoke
-  Rake::Task['hyrax:default_collection_types:create'].invoke
-  Rake::Task['hyrax:workflow:load'].invoke
-
-  user = User.new(
-    :username => 'admin',
-    :email => ENV['ADMIN_EMAIL'] || 'changeme@mail.wvu.edu',
-    # :password => ENV['ADMIN_PASSWORD'] || 'password',
-    # :password_confirmation => ENV['ADMIN_PASSWORD'] || 'password',
-    :first_name => 'Admin',
-    :last_name => 'Account',
-    :created_at => Time.now,
-    :updated_at => Time.now
-  )
-
-  user.save!
-  # add hydra role
-  admin_role = Role.find_or_create_by(name: 'admin')
-  admin_role.users << user
-  admin_role.save 
-end
-
-# pass = Devise.friendly_token[0,20]
-
-user = User.new(
-  :username => 'tam0013',
-  :email => 'tam0013@mail.wvu.edu',
-  # :password => pass,
-  # :password_confirmation => pass,
-  :first_name => 'Tracy',
-  :last_name => 'McCormick',
-  :created_at => Time.now,
-  :updated_at => Time.now
-)
-
-user.save!
-
-# add hydra role
-admin_role = Role.find_or_create_by(name: 'admin')
-admin_role.users << user
-admin_role.save 
-
-# Set up a default admin user, if we are in a Development environment, otherwise, skip
-# if Rails.env.development? || Rails.env.test? 
-#   u = User.find_or_create_by(email: ENV['ADMIN_EMAIL'] || 'changeme@mail.wvu.edu')
-#   u.display_name = "Default Admin"
-#   # u.password = ENV['ADMIN_PASSWORD'] || 'password'
-#   u.save
-#   admin_role = Role.find_or_create_by(name: 'admin')
-#   admin_role.users << u
-#   admin_role.save
+# if Rails.env == 'development' || Rails.env == 'test'
+#   Rake::Task['hyrax:default_admin_set:create'].invoke
+#   Rake::Task['hyrax:default_collection_types:create'].invoke
+#   Rake::Task['hyrax:workflow:load'].invoke
 # end
 
-# u = User.find_or_create_by(email: 'tam0013@mail.wvu.edu')
-# u.display_name = "Tracy A McCormick"
-# # u.password = 'password'
-# u.save
-# admin_role = Role.find_or_create_by(name: 'admin')
-# admin_role.users << u
-# admin_role.save
+require_relative './user_seeding'
 
-# u = User.find_or_create_by(email: 'tam0013@mail.wvu.edu')
-# u.save
-# admin_role = Role.find_or_create_by(name: 'admin')
-# admin_role.users << u
-# admin_role.save
+ActiveFedora.fedora.connection.send(:init_base_path)
+
+puts "\n== Creating default collection types"
+Hyrax::CollectionType.find_or_create_default_collection_type
+Hyrax::CollectionType.find_or_create_admin_set_type
+
+puts "\n== Loading workflows"
+Hyrax::Workflow::WorkflowImporter.load_workflows
+errors = Hyrax::Workflow::WorkflowImporter.load_errors
+abort("Failed to process all workflows:\n  #{errors.join('\n  ')}") unless errors.empty?
+
+puts "\n== Creating default admin set"
+admin_set_id = Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s
+
+# I have found that when I come back to a development
+# environment, that I may have an AdminSet in Fedora, but it is
+# not indexed in Solr.  This remediates that situation by
+# ensuring we have an indexed AdminSet
+puts "\n== Ensuring the found or created admin set is indexed"
+AdminSet.find(admin_set_id).update_index
+role = Role.first_or_create!(name: 'admin')
+
+puts "\n== Creating admin users"
+seed_users
 
