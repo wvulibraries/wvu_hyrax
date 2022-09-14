@@ -3,9 +3,9 @@ FROM ruby:2.7
 ENV BUNDLER_VERSION=2.3.19
 ENV RAILS_VERSION=5.2.6
 
-RUN mkdir -p /home/hyrax/
-WORKDIR /home/hyrax
-ADD ./hyrax /home/hyrax
+RUN mkdir -p /home/wvu_hyrax/
+WORKDIR /home/wvu_hyrax
+ADD ./wvu_hyrax /home/wvu_hyrax
 
 RUN apt-get update && apt-get -y install cron postgresql-client yarn build-essential vim graphicsmagick ghostscript ffmpeg openjdk-11-jdk
 

@@ -1,6 +1,10 @@
 /scripts/postgres-db-dump/*.sql
 /scripts/docker_images/*.tar
-/hyrax/import/mfcs_data/*
-hyrax/log/*
+/wvu_hyrax/importing/folklife_1605711112/*
+/wvu_hyrax/importing/forms/*
+/wvu_hyrax/importing/objects/*
+/wvu_hyrax/log/*
 mnt
 mnt/*
+bundler
+bundler/*

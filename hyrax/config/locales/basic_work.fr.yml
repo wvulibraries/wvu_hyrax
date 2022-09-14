@@ -1,8 +1,0 @@
-fr:
-  hyrax:
-    icons:
-      basic_work:     'fa fa-file-text-o'
-    select_type:
-      basic_work:
-        description:        "Basic work œuvres"
-        name:               "Basic Work"

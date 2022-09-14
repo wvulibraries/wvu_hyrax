@@ -4,7 +4,7 @@
 # rm -r ./hyrax/tmp
 
 # remove docker volumes
-docker volume prune
+docker system prune --volumes
 
 # remove docker images
 docker image prune

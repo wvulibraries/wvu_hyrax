@@ -17,10 +17,8 @@ fedora
 fedora/*
 dassie
 dassie/*
-hyrax/import/mfcs_data/folklife_*
-hyrax/import/mfcs_data/forms
-hyrax/import/mfcs_data/objects
-hyrax-exports
-hyrax-exports/*
+wvu_hyrax/import/mfcs_data/folklife_*
+wvu_hyrax/import/mfcs_data/forms
+wvu_hyrax/import/mfcs_data/objects
 mnt
 mnt/*

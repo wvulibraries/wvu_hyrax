@@ -5,17 +5,17 @@ services:
     build: 
       context: ./
       dockerfile: Dockerfile.dev
-    # image: wvu_hyrax_app
+    # image: wvu_hyrax-app
     env_file:
       - './env/.env.dev.hyrax' 
     volumes:
-      - ./hyrax:/home/hyrax
-      - ./scripts:/home/hyrax/scripts
+      - ./wvu_hyrax:/home/wvu_hyrax
+      - ./scripts:/home/wvu_hyrax/scripts
       - bundle:/usr/local/bundle
-      - uploads:/home/hyrax/tmp/uploads
+      - uploads:/home/wvu_hyrax/tmp/uploads
       # added because we were using exports with bulkrax for testing atm
-      - ./mnt/nfs-exports/hyrax-exports:/home/hyrax/imports
-      - '/home/hyrax/tmp' # don't mount tmp directory     
+      - ./mnt/nfs-exports/hyrax-exports:/home/wvu_hyrax/imports
+      - '/home/wvu_hyrax/tmp' # don't mount tmp directory     
     networks:
       - hyrax         
 
@@ -35,7 +35,7 @@ services:
   workers:
     extends: app
     container_name: sidekiq
-    command: bundle exec sidekiq --logfile log/sidekiq.log
+    command: bundle exec sidekiq -C config/sidekiq.yml
     depends_on:
       - redis
       - solr
@@ -61,14 +61,14 @@ services:
       - "6379"
     volumes:
       - redis:/var/lib/redis/data
-    networks:
-      - hyrax
     restart: unless-stopped  
     healthcheck:
       test: redis-cli -h redis ping
       interval: 30s
       timeout: 3s
-      retries: 3                                
+      retries: 3                 
+    networks:
+      - hyrax               
 
   fcrepo:
     container_name: fcrepo
@@ -92,7 +92,7 @@ services:
       - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax_dev /opt/solr/server/configsets/hyraxconf"
     volumes:
       - solr:/var/solr/data:cached
-      - ./hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf
+      - ./wvu_hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf
     networks:
       - hyrax 
 
