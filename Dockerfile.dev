@@ -7,7 +7,13 @@ RUN mkdir -p /home/wvu_hyrax/
 WORKDIR /home/wvu_hyrax
 ADD ./wvu_hyrax /home/wvu_hyrax
 
-RUN apt-get update && apt-get -y install cron postgresql-client yarn build-essential vim graphicsmagick ghostscript ffmpeg openjdk-11-jdk
+RUN apt-get update && apt-get -y install \
+    cron \
+    postgresql-client \
+    build-essential \
+    vim \
+    libreoffice \
+    openjdk-11-jdk
 
 # Use JEMALLOC instead
 # JEMalloc is a faster garbage collection for Ruby.
@@ -15,12 +21,18 @@ RUN apt-get update && apt-get -y install cron postgresql-client yarn build-essen
 RUN apt-get install -y libjemalloc2 libjemalloc-dev
 ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so
 
+# ImageMagic Conversions and FFMPEG Conversions
+# -------------------------------------------------------------------------------------------------
+RUN apt-get install -y imagemagick ghostscript ffmpeg libgs-dev 
+# -------------------------------------------------------------------------------------------------
+
 RUN \
   gem update --system --quiet && \
   gem install bundler -v ${BUNDLER_VERSION} && \
   gem install rails -v ${RAILS_VERSION} && \
   bundle install --jobs=4 --retry=3 
 
+# FITS
 RUN mkdir -p /home/fits && \
     cd /home/fits && \
     wget https://github.com/harvard-lts/fits/releases/download/1.5.1/fits-1.5.1.zip -O fits.zip && \
@@ -32,3 +44,11 @@ ENV PATH="${PATH}:/home/fits"
 # Node.js
 RUN curl -sL https://deb.nodesource.com/setup_17.x | bash - \
     && apt-get install -y nodejs
+
+# yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -\
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && apt-get update \
+    && apt-get install -y yarn
+
+RUN yarn install && yarn upgrade
