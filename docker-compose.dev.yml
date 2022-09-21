@@ -11,13 +11,19 @@ services:
     volumes:
       - ./wvu_hyrax:/home/wvu_hyrax
       - ./scripts:/home/wvu_hyrax/scripts
-      # add seed csv files to db folder in a subfolder called data
-      - ./data:/home/wvu_hyrax/db/data
       - bundle:/usr/local/bundle
       - uploads:/home/wvu_hyrax/tmp/uploads
+      - derivatives:/home/wvu_hyrax/tmp/derivatives
       # added because we were using exports with bulkrax for testing atm
       - ./mnt/nfs-exports/hyrax-exports:/home/wvu_hyrax/imports
-      - '/home/wvu_hyrax/tmp' # don't mount tmp directory     
+      - '/home/wvu_hyrax/tmp' # don't mount tmp directory 
+      # folders that contain data not included in the git repo
+      # add seed csv files to db folder in a subfolder called data
+      - ./data/seed_files:/home/wvu_hyrax/db/data
+      # json folklife data for testing imports
+      - ./data/objects:/home/wvu_hyrax/importing/objects
+      - ./data/forms:/home/wvu_hyrax/importing/forms
+      - ./data/folklife_1605711112:/home/wvu_hyrax/importing/folklife_1605711112
     networks:
       - hyrax         
 
@@ -123,6 +129,7 @@ volumes:
   fcrepo:
   redis:
   solr:
+  derivatives:
 
 networks:
   hyrax:
