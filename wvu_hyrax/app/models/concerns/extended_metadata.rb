@@ -6,7 +6,7 @@ module ExtendedMetadata
     # ==============================================================================================================
     # identifier
     property :source_identifier, predicate: ::RDF::Vocab::DC.identifier, multiple: false do |index|
-      index.as :stored_searchable, :stored_sortable, :facetable
+      index.as :stored_searchable
     end
 
     # Institution
