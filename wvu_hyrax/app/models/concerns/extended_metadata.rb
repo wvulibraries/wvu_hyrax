@@ -2,6 +2,13 @@ module ExtendedMetadata
   extend ActiveSupport::Concern
 
   included do
+    # DC Identifiers
+    # ==============================================================================================================
+    # identifier
+    property :source_identifier, predicate: ::RDF::Vocab::DC.identifier, multiple: false do |index|
+      index.as :stored_searchable, :stored_sortable, :facetable
+    end
+
     # Institution
     # ==============================================================================================================
     # institution property
