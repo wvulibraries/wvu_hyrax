@@ -2,4 +2,5 @@
 /mnt
 /data
 /wvu_hyrax/tmp
+/wvu_hyrax/fits.log
 .DS_Store
