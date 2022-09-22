@@ -1,11 +1,13 @@
 FROM ruby:2.7
 
 ENV BUNDLER_VERSION=2.3.19
-ENV RAILS_VERSION=5.2.6
-
-RUN mkdir -p /home/wvu_hyrax/
-WORKDIR /home/wvu_hyrax
-ADD ./wvu_hyrax /home/wvu_hyrax
+ENV RAILS_VERSION=5.2.6  
+ENV FITS_VERSION=1.5.1
+ENV NODE_VERSION=17
+ENV BUNDLE_PATH="/usr/local/bundle"
+# should match local folder of our application
+ENV PROJECT_PATH wvu_hyrax
+ENV TZ="America/New_York"
 
 RUN apt-get update && apt-get -y install \
     cron \
@@ -26,23 +28,17 @@ ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so
 RUN apt-get install -y imagemagick ghostscript ffmpeg libgs-dev 
 # -------------------------------------------------------------------------------------------------
 
-RUN \
-  gem update --system --quiet && \
-  gem install bundler -v ${BUNDLER_VERSION} && \
-  gem install rails -v ${RAILS_VERSION} && \
-  bundle install --jobs=4 --retry=3 
-
 # FITS
 RUN mkdir -p /home/fits && \
     cd /home/fits && \
-    wget https://github.com/harvard-lts/fits/releases/download/1.5.1/fits-1.5.1.zip -O fits.zip && \
+    wget https://github.com/harvard-lts/fits/releases/download/${FITS_VERSION}/fits-${FITS_VERSION}.zip -O fits.zip && \
     unzip fits.zip && \
     rm fits.zip && \
     chmod a+x /home/fits/fits.sh
 ENV PATH="${PATH}:/home/fits"
 
 # Node.js
-RUN curl -sL https://deb.nodesource.com/setup_17.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
     && apt-get install -y nodejs
 
 # yarn
@@ -52,3 +48,16 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -\
     && apt-get install -y yarn
 
 RUN yarn install && yarn upgrade
+
+RUN mkdir -p /home/${PROJECT_PATH}/
+WORKDIR /home/${PROJECT_PATH}
+COPY ./${PROJECT_PATH}/Gemfile /home/${PROJECT_PATH}/Gemfile
+COPY ./${PROJECT_PATH}/Gemfile.lock /home/${PROJECT_PATH}/Gemfile.lock
+
+RUN \
+  gem update --system --quiet && \
+  gem install bundler -v ${BUNDLER_VERSION} && \
+#   gem install rails -v ${RAILS_VERSION} && \
+  bundle install --jobs=4 --retry=3 
+
+ADD ./${PROJECT_PATH} /home/${PROJECT_PATH}
