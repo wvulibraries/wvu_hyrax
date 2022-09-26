@@ -26,6 +26,9 @@ ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so
 # ImageMagic Conversions and FFMPEG Conversions
 # -------------------------------------------------------------------------------------------------
 RUN apt-get install -y imagemagick ghostscript ffmpeg libgs-dev 
+
+# Modifiy ImageMagick's security policy to allow reading and writing PDFs
+RUN sed -i 's/policy domain="coder" rights="none" pattern="PDF"/policy domain="coder" rights="read|write" pattern="PDF"/' /etc/ImageMagick-6/policy.xml
 # -------------------------------------------------------------------------------------------------
 
 # FITS
