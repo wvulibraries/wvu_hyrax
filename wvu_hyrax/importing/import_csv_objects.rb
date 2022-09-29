@@ -36,11 +36,12 @@ class Import
   #   ]
   # end
 
-  # split a subject string to array
-  def split_subjects(str)
+  # split string using ||| as the delimiter then sort the array
+  def split_string(str)
     # return nil if string length is 0
     return nil if str.to_s.mb_chars.length == 0
-    str.split('|||')
+    arr = str.split('|||')
+    arr.sort
   end
 
   # remove ascii character references for the actual character
@@ -65,9 +66,9 @@ class Import
   end 
 
   def create_item(row)
-    # create the item
-    # item = BasicWork.new(
+    # create hash for the item
     hash = {
+      # source_identifier: row['source_identifier'],      
       identifier: [] << row['source_identifier'],
       depositor: "tam0013@mail.wvu.edu",
       # id: row['id'],
@@ -78,15 +79,15 @@ class Import
       subtype: [] << row['subtype'],
       extent: (row['extent'] || ""),
       resource_type: [] << row['resource_type'],
-      creator: [] << row['creator'],
-      contributor: [] << (row['contributor'] || "Unknown"),
-      description: [] << remove_special_chars(row['description']),
+      creator: self.split_string(row['creator']),
+      contributor: self.split_string(row['contributor']),
+      description: [] << self.remove_special_chars(row['description']),
       # needs to be updated to read what is in the csv and convert it to the format below
       # should be a yml somewhere that has the actual values to compare to
       rights_statement: [] << "http://rightsstatements.org/vocab/InC-EDU/1.0/", 
       date_created: [] << row['date_created'],
-      subject: split_subjects(row['subject']),
-      language: [] << (row['language'] || "Unknown"),
+      subject: self.split_string(row['subject']),
+      language: self.split_string(row['language']),
       source: [] << row['source'],
       visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
       admin_set_id: "admin_set/default"
@@ -125,7 +126,7 @@ class Import
     # set collection identifier
     source = 'folklife'
     # set data directory
-    csv_text = File.read("/home/wvu_hyrax/imports/#{source}/export/bulkrax/#{source}-data-20.csv")
+    csv_text = File.read("/home/wvu_hyrax/imports/#{source}/export/bulkrax/#{source}-data.csv")
 
     csv = CSV.parse(csv_text, :headers => true)
     csv.each do |row|
@@ -147,7 +148,6 @@ class Import
         set_item_collection(item_id, source)
         # add files to item
         add_file_to_item(item_id, source, row['file'])
-        # exit
       end
     end
   end

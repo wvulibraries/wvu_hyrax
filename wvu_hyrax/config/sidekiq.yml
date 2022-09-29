@@ -1,19 +1,18 @@
-:verbose: true
-:pidfile: ./tmp/pids/sidekiq.pid
+  :queues:
+    - [default, 1]
+    - [import, 1] # This is for bulkrax
+    - [export, 1] # This is for bulkrax
+    - [fixity, 1]
+    - [mailers, 1]
+    - [doi, 1]
+    - [batch, 1]
+    - [ingest, 1]
+   
+  test: # n/a
+    :concurrency: 1
 
-development:
-  :concurrency: 5
+  development:
+    :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 1 %>
 
-production:
-  :concurrency: 10
-
-:max_retries: 1
-
-:queues:
-  - default
-  - ingest
-  - import
-  - export
-  - fixity
-  - mailers
-  - doi
+  production:
+    :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 5 %>
