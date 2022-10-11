@@ -32,6 +32,7 @@ RUN sed -i 's/policy domain="coder" rights="none" pattern="PDF"/policy domain="c
 # -------------------------------------------------------------------------------------------------
 
 # FITS
+# -------------------------------------------------------------------------------------------------
 RUN mkdir -p /home/fits && \
     cd /home/fits && \
     wget https://github.com/harvard-lts/fits/releases/download/${FITS_VERSION}/fits-${FITS_VERSION}.zip -O fits.zip && \
@@ -41,10 +42,12 @@ RUN mkdir -p /home/fits && \
 ENV PATH="${PATH}:/home/fits"
 
 # Node.js
+# -------------------------------------------------------------------------------------------------
 RUN curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
     && apt-get install -y nodejs
 
 # yarn
+# -------------------------------------------------------------------------------------------------
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -\
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update \
@@ -54,13 +57,10 @@ RUN yarn install && yarn upgrade
 
 RUN mkdir -p /home/${PROJECT_PATH}/
 WORKDIR /home/${PROJECT_PATH}
-COPY ./${PROJECT_PATH}/Gemfile /home/${PROJECT_PATH}/Gemfile
-COPY ./${PROJECT_PATH}/Gemfile.lock /home/${PROJECT_PATH}/Gemfile.lock
+ADD ./${PROJECT_PATH} /home/${PROJECT_PATH}
 
 RUN \
   gem update --system --quiet && \
   gem install bundler -v ${BUNDLER_VERSION} && \
-#   gem install rails -v ${RAILS_VERSION} && \
   bundle install --jobs=4 --retry=3 
 
-ADD ./${PROJECT_PATH} /home/${PROJECT_PATH}
