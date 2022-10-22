@@ -48,8 +48,8 @@ Bulkrax.setup do |config|
   # If you want Bulkrax to fill in source_identifiers for you, see below
 
   # To duplicate a set of mappings from one parser to another
-  #   config.field_mappings["Bulkrax::OaiOmekaParser"] = {}
-  #   config.field_mappings["Bulkrax::OaiDcParser"].each {|key,value| config.field_mappings["Bulkrax::OaiOmekaParser"][key] = value }
+    config.field_mappings["Bulkrax::OaiOmekaParser"] = {}
+    config.field_mappings["Bulkrax::OaiDcParser"].each {|key,value| config.field_mappings["Bulkrax::OaiOmekaParser"][key] = value }
 
   # Should Bulkrax make up source identifiers for you? This allow round tripping
   # and download errored entries to still work, but does mean if you upload the
@@ -69,7 +69,7 @@ Bulkrax.setup do |config|
   # config.qa_controlled_properties += ['my_field']
 
   # If the work type isn't provided during import, use Image
-  config.default_work_type = 'BasicWork'  
+  config.default_work_type = 'BasicWork'
 
   config.field_mappings['Bulkrax::CsvParser'] = {
     'subject' => { from: ['subject'], split: '\|\|\|'},
