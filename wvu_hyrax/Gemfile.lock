@@ -982,7 +982,7 @@ DEPENDENCIES
   rspec-rails
   rubyzip
   sass-rails (~> 5.0)
-  sidekiq
+  sidekiq (< 7)
   sidekiq-cron
   sidekiq-failures
   simplecov

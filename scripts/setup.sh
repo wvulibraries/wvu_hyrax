@@ -1,5 +1,5 @@
 echo "Preparing Database"
-bin/rails db:create
+bin/rails db:drop db:create
 
 # if schema.rb exists load schema else run the migrations
 FILE=/home/wvu_hyrax/db/schema.rb

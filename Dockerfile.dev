@@ -9,6 +9,8 @@ ENV BUNDLE_PATH="/usr/local/bundle"
 ENV PROJECT_PATH wvu_hyrax
 ENV TZ="America/New_York"
 
+USER root
+
 RUN apt-get update && apt-get -y install \
     cron \
     postgresql-client \

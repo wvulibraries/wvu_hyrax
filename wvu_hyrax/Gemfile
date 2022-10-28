@@ -34,7 +34,8 @@ gem 'rubyzip'
 
 # background jobs
 # =====================================================
-gem 'sidekiq'
+# sidekiq 7 is not compatible with rails 5.2
+gem 'sidekiq', '< 7'
 gem "sidekiq-cron"
 gem 'sidekiq-failures'
 
