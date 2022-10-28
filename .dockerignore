@@ -1,4 +1,8 @@
-/scripts/postgres-db-dump/*.sql
-/scripts/docker_images/*.tar
-/hyrax/import/mfcs_data/*
-hyrax/log/*
+repo_old
+repo_old/*
+mnt
+mnt/*
+data
+data/*
+env
+env/*

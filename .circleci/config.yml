@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/circleci-wvu-hyrax/hyrax
+    working_directory: ~/circleci-wvu-hyrax/wvu_hyrax
     shell: /bin/bash --login
     environment:
       RAILS_ENV: test

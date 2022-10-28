@@ -1,6 +1,0 @@
-test:
-  adapter: postgresql
-  database: circle_test
-  username: root
-  password: circleci
-  host: 127.0.0.1

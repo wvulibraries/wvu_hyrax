@@ -4,6 +4,13 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/489d6dd7c8e887743a1e/maintainability)](https://api.codeclimate.com/v1/badges/489d6dd7c8e887743a1e/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/489d6dd7c8e887743a1e/test_coverage)](https://api.codeclimate.com/v1/badges/489d6dd7c8e887743a1e/test_coverage)
 
+## STARTING PROJECT
+To bring up the project run
+`sh ./up.sh` 
+
+To bring down the project run
+`sh ./down.sh`
+
 ## RSPEC
 We are using Rspec to handle the backend testing.
 

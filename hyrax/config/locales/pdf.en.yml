@@ -1,8 +1,0 @@
-en:
-  hyrax:
-    icons:
-      pdf:     'fa fa-file-text-o'
-    select_type:
-      pdf:
-        description:        "Pdf works"
-        name:               "Pdf"
