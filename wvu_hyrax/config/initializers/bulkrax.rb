@@ -8,10 +8,10 @@ Bulkrax.setup do |config|
 
   # WorkType to use as the default if none is specified in the import
   # Default is the first returned by Hyrax.config.curation_concerns
-  config.default_work_type = BasicWork
+  config.default_work_type = 'BasicWork'
 
   # Path to store pending imports
-  # config.import_path = 'tmp/imports'
+  config.import_path = 'imports'
 
   # Path to store exports before download
   # config.export_path = 'tmp/exports'
@@ -37,6 +37,9 @@ Bulkrax.setup do |config|
   # Add to, or change existing mappings as follows
   #   e.g. to exclude date
   #   config.field_mappings["Bulkrax::OaiDcParser"]["date"] = { from: ["date"], excluded: true  }
+    config.field_mappings["Bulkrax::CsvParser"]["subject"] = { from: ['subject'], split: '\|\|\|'  }
+    config.field_mappings["Bulkrax::CsvParser"]["creator"] = { from: ['creator'], split: '\|\|\|'  }
+    config.field_mappings["Bulkrax::CsvParser"]["contributor"] = { from: ['contributor'], split: '\|\|\|' }
   #
   #   e.g. to import parent-child relationships
     config.field_mappings['Bulkrax::CsvParser']['parents'] = { from: ['parents'], related_parents_field_mapping: true }
@@ -68,15 +71,27 @@ Bulkrax.setup do |config|
   # Defaults: 'rights_statement' and 'license'
   # config.qa_controlled_properties += ['my_field']
 
-  # If the work type isn't provided during import, use Image
-  config.default_work_type = 'BasicWork'  
+  # Specify the delimiter regular expression for splitting an attribute's values into a multi-value array.
+  # config.multi_value_element_split_on = //\s*[:;|]\s*/.freeze
 
-  config.field_mappings['Bulkrax::CsvParser'] = {
-    'subject' => { from: ['subject'], split: '\|\|\|'},
-    'creator' => { from: ['creator'], split: '\|\|\|'},
-    'contributor' => { from: ['contributor'], split: '\|\|\|'}
-  }
+  # Specify the delimiter for joining an attribute's multi-value array into a string.  Note: the
+  # specific delimeter should likely be present in the multi_value_element_split_on expression.
+  # config.multi_value_element_join_on = ' | '
 end
 
 # Sidebar for hyrax 3+ support
 Hyrax::DashboardController.sidebar_partials[:repository_content] << "hyrax/dashboard/sidebar/bulkrax_sidebar_additions" if Object.const_defined?(:Hyrax) && ::Hyrax::DashboardController&.respond_to?(:sidebar_partials)
+
+# Bulkrax::ScheduleRelationshipsJob.class_eval do
+#   def perform(importer_id:)
+#     importer = ::Bulkrax::Importer.find(importer_id)
+#     pending_num = importer.entries.left_outer_joins(:latest_status)
+#                           .where('bulkrax_statuses.status_message IS NULL ').count
+#     return reschedule(importer_id) unless pending_num.zero?
+
+#     ::AssociateFilesetsWithWorkJob.perform_later(importer)
+#     importer.last_run.parents.each do |parent_id|
+#       ::Bulkrax::CreateRelationshipsJob.perform_later(parent_identifier: parent_id, importer_run_id: importer.last_run.id)
+#     end
+#   end
+# end

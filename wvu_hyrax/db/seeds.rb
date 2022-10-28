@@ -34,7 +34,7 @@ admin_set_id = Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.
 # ensuring we have an indexed AdminSet
 puts "\n== Ensuring the found or created admin set is indexed"
 AdminSet.find(admin_set_id).update_index
-role = Role.first_or_create!(name: 'admin')
+Role.first_or_create!(name: 'admin')
 
 puts "\n== Creating admin users"
 seed_users
