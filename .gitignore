@@ -6,4 +6,4 @@ data
 data/*
 env
 env/*
-.DS_Store
+/wvu_hyrax/fits.log
