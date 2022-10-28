@@ -1,0 +1,431 @@
+// @mixin vp($name, $argument) {
+//     -webkit-#{$name}: #{$argument};
+//     -ms-#{$name}: #{$argument};
+//     -moz-#{$name}: #{$argument};
+//     -o-#{$name}: #{$argument};
+//     -kthtml-#{$name}: #{$argument};
+//     #{$name}: #{$argument};
+//   }
+  
+//   #oral_histories {
+//        list-style-type: none;
+//        li {
+//            text-align: left;
+//            margin: 20px 0;
+//        }
+//    }
+//   .o {
+//       color: $primary-orange;
+//   }
+  
+//   body > div.collection-header > div > div > ul:nth-child(2) {
+//       display: none;
+//   }
+  
+//   #content {
+//       .imageWrapR {
+//           width: 100%;
+//           height: auto;
+//           text-align: center;
+//           float: right;
+//           padding: 10px 0 20PX 0;
+//           @include breakpoint(tablet) {
+//               width: 250px;
+//               padding: 10px 0 20PX 20PX;
+//           }
+//           img {
+//               width: 100%;
+//               max-width: 640px;
+//               height: auto;
+//               padding-bottom: 20px;
+//           }
+//           p {
+//               font-size: 0.8em !important;
+//               font-style: italic;
+//               margin-bottom: 0;
+//           }
+//       }
+//       .imageWrapL {
+//           width: 100%;
+//           height: auto;
+//           text-align: center;
+//           float: left;
+//           padding: 10px 0 20PX 0;
+//           @include breakpoint(tablet) {
+//               width: 250px;
+//               padding: 10px 20PX 20PX 0;
+//           }
+//           img {
+//               width: 100%;
+//               max-width: 640px;
+//               height: auto;
+//               padding-bottom: 20px;
+//           }
+//           p {
+//               font-size: 0.8em !important;
+//               font-style: italic;
+//               margin-bottom: 0;
+//           }
+//       }	
+//   }
+  
+//    .pagination {
+//        width: 100%;
+//    }
+//   #document {
+//        .dl-horizontal  {
+//            dt {
+//                font-weight: bold;
+//                color: #000;
+//            }
+//        }
+//    }
+   #documents {
+       .document {
+          //  width: 100%;
+           margin-right: 0;
+           border: none;
+          //  @include breakpoint(desktop) {
+          //     width: calc(50% - 4%);
+          //      margin-right: 4%;
+          // }
+          a {
+              display: block;
+              width: 100%;
+              img {
+                              width: 100%;
+                              margin:10px 0; 
+                  max-width: 200px;
+                  height: auto;
+              }
+          }
+        //   .documentHeader {
+        //       width: 100%;
+        //       h5 {
+        //           display: inline;
+        //           float: left;
+        //           text-align: left;
+        //           width: auto;
+        //           margin: 20px 0 0 0;
+        //           padding: 0;
+        //           font-size: 14px;
+        //           .document-counter {
+        //               color: #000;
+        //           }
+        //           a {
+        //               display: inline;
+        //               text-align: left;
+        //               width: auto;
+        //           }
+        //       }
+        //       .index-document-functions {
+        //           padding: 0;
+        //           margin: 20px 0 15px 0;
+        //       }
+        //   }
+        //   .document-metadata {
+        //       width: 100%;
+        //       dt {
+        //           width: 100%;
+        //           padding: 0 !important;
+        //           margin: 0 0 0 0;
+        //           float: left;
+        //           font-weight: bold;
+        //           color: #000;
+        //           @include breakpoint(tablet) {
+        //               width: 33%;
+        //               margin: 0;
+        //           }
+  
+        //        }
+        //       dd {
+        //           width: 100%;
+        //           padding: 0 !important;
+        //           margin: 0;
+        //           float: left;
+        //           @include breakpoint(tablet) {
+        //               width: 67%;
+        //           }
+        //       }
+        //   }
+      }
+      .document:nth-child(even) {
+           margin-right: 0;
+      }
+  }
+  
+//   /*********************************************************************
+//       480px or less
+//   **********************************************************************/
+//   html, body, form, nav, ul, div {
+//       display: block;
+//       margin: 0;
+//       padding: 0;
+//       text-align: center;
+//       font-family: "Helvetica Neue", "Helvetica","Roboto", Arial, sans-serif;
+//   }
+//   .collection-header {
+//       background: url("collectionbg.jpg") top center no-repeat;
+//       background-size: cover;
+//       margin-bottom: 40px;
+//       line-height: 0px;
+//       .collection-header-title {
+//           text-align: center;
+//           display: block;
+//           float: left;
+//           width: 100%;
+//           font-size: 24px;
+//           a {
+//               color: #fff;
+//               text-shadow: 1px 4px 10px rgba(0,0,0,1);
+//               font-weight: 600;
+//           }
+//       }
+//       .navbar-right {
+//           margin-right: 0;
+//           float: left;
+//           width: 100%;
+//           .navbar-nav {
+//               &:nth-child(1) {
+//                   width: auto;
+//                   margin: 0;
+//                   float: initial;
+//                   display: inline-block;
+//                   li {
+//                       padding: 0;
+//                       margin: 0;
+//                       float: left;
+//                       &:nth-child(1) {
+//                           width: auto;
+//                       }
+//                       &:nth-child(2) {
+//                           width: auto;	
+//                       }
+//                   }
+//               }	
+//               &:nth-child(2) {
+//                   width: 25%;
+//                   margin: 0;
+//                   float: left;
+//               }	
+//           }
+//           a {
+//               color: #fff;
+//               &:hover {
+//                   color: $primary-blue;
+//               }
+//           }
+//       }
+//   }
+//   #content, #documents {
+//       text-align: left;
+//       .document-image {
+//           img {
+//               width: 100%;
+//               height: auto;
+//               max-width: 200px;
+//           }
+//       }
+//   }
+//   .wrap {
+//       width: 95%;
+//       margin: 0 auto; 
+//   }
+  
+//   /* Toggles */
+  
+//   .tabbarToggle {
+//       position: absolute;
+//       bottom: 55px;
+//       background: #337AB7;
+//       width: 100%;
+//       margin: 0;
+//       left: 0;
+//       padding: 5%;
+//       margin-left: 0;
+//       border-top: 2px solid lighten( #337AB7, 15% );
+//       height: auto;
+//       overflow: hidden;
+//       display: inline-block;
+//   }
+//   .tabbarToggle2 {
+//       bottom: 55px;
+//       position: fixed;
+//       background: #337AB7;
+//       width: 100%;
+//       margin: 0;
+//       left: 0;
+//       padding: 5%;
+//       margin-left: 0;
+//       overflow-y: scroll;
+//       display: inline-block;
+//       border-top: 2px solid lighten( #337AB7, 15% );
+//   }
+//   .tabbarToggleSearch {
+//       height: auto;
+//       padding: 5%;
+//   }
+//   .tbwrap {
+//       width: 100%;
+//       margin: 0px auto;
+//       display: block;
+//       height: auto;
+//   }
+//   .tabbarBlue {
+//       background: #337AB7;
+//   }
+//   #menu-toggle2, #search-toggle2 {
+//   }
+//   .hiding {
+//       position:absolute;
+//       left:-10000px;
+//       top:auto;
+//       width:1px;
+//       height:1px;
+//       overflow: hidden;
+//   }
+//   .destroy {
+//       display: none; /* Only used for mobile/n on-accessibility issues */
+//   }
+//   #main-container {
+//       .row {
+//           #sidebar {
+//               display: none;
+//           }
+//           #content {
+//               .wrap {
+//                   text-align: left;
+//                   p {
+//                       line-height: 150%;
+//                       font-size: 1em;
+//                       a {
+//                           text-decoration: none;
+//                           border-bottom: 1px solid #337AB7;
+//                           &:hover {
+//                               border-bottom: 1px solid #23527C;
+//                           }
+//                       }
+//                   }
+//               }
+//               .shareThis {
+//                   display: block;
+//                   float: left;
+//                   width: 100%;
+//               }
+//               div[id*='doc_wvulibraries'] {
+//                   padding-bottom: 40px;
+//                   .document-image {
+//                       width: 100%;
+//                       margin-right: 0;
+//                       margin-bottom: 40px;
+//                       float: left;
+//                       img {
+//                           width: 100%;
+//                           height: auto;
+//                       }
+//                   }
+//                   .document-image:nth-child(2) {
+//                       margin-right: 0;
+//                   }
+//                   h1 {
+//                       text-align: left;
+//                   }
+//                   .dl-horizontal {
+//                       dt, dd {
+//                           text-align: left;
+//                       }
+//                   }
+//               }
+//           }
+//       }
+//   }
+  
+//   #content #documents .document .document-wrap dl {
+//       width: calc(100% - 10%);
+//       margin: 0 5% 5%;
+//   }
+  
+//   #content #documents .document .document-wrap .documentHeader { 
+//       width: calc(100% - 10%);
+//       margin: 0 5% 5%;
+//   }
+  
+//   .photo img { 
+//       width:100%; 
+//   }
+  
+  
+//   /*********************************************************************
+//       768px to 1024px
+//   **********************************************************************/
+//   @media screen and (min-width: 768px) {
+//       #main-container {
+//           .row {
+//               #sidebar {
+//                   display: block;
+//               }
+//               #content {
+//                   .wrap {
+//                   }
+//                   .shareThis {
+//                       display: inline-block;
+//                       float: left;
+//                       width: auto;
+//                   }
+//                   div[id*='doc_wvulibraries'] {
+//                       .document-image {
+//                           width: 49%;
+//                           margin-right: 2%;
+//                       }
+//                       .document-image:nth-child(2) {
+//                           margin-right: 0;
+//                       }
+//                   }
+//               }
+//           }
+//       }
+//       .tabbarBlue {
+//           background: none;
+//       }
+//       .tbwrap {
+//           width: 90%;
+//       }
+//       .collection-header {
+//           margin-bottom: 0;
+//           .collection-header-title {
+//               display: inline-block;
+//               float: left;
+//               margin-left: 60px;
+//               width: auto;
+//               padding: 40px 0;
+//               font-size: 36px;
+//           }
+//           .navbar-right {
+//               float: right;
+//               width: auto;
+//               padding-top: 60px;
+//               .navbar-nav {
+//                   &:nth-child(1) {
+//                       width: auto;
+//                       float: inherit;
+//                       li {
+//                           padding: 0;
+//                           margin: 0;
+//                           float: inherit;
+//                           &:nth-child(1) {
+//                               width: auto;
+//                           }
+//                           &:nth-child(2) {
+//                               width: auto;	
+//                           }
+//                       }
+//                   }	
+//                   &:nth-child(2) {
+//                       width: 25%;
+//                       margin: 0;
+//                       float: left;
+//                   }	
+//               }
+//           }
+//       }
+//   }
