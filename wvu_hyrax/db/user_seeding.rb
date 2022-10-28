@@ -8,9 +8,9 @@ def seed_users
   admin_role = Role.find_or_create_by(name: 'admin')
 
   csv_file_path = '/home/wvu_hyrax/db/data/users.csv'
-  puts 'Seeding users from #{csv_file_path}...'
-  f = File.new(csv_file_path, 'r')
-  csv = CSV.new(f)
+  puts "Seeding users from #{csv_file_path}..."
+  file = File.new(csv_file_path, 'r')
+  csv = CSV.new(file)
   headers = csv.shift
   
   csv.each do |row|
@@ -20,12 +20,12 @@ def seed_users
       first_name: row[2],
       last_name: row[3]
     }
-    inv = User.create(user_information)
-    admin_role.users << inv
+    new_user = User.create(user_information)
+    admin_role.users << new_user
   end
 
   # save the role
   admin_role.save 
 
-  puts 'Seeding users from #{csv_file_path} done.'
+  puts "Seeding users complete"
 end
