@@ -40,7 +40,7 @@ Hyrax.config do |config|
   config.uploader = {
      limitConcurrentUploads: 6,
      maxNumberOfFiles: 100,
-     maxFileSize: 850.megabytes
+     maxFileSize: 5.gigabytes
   }
 
   # Enables a link to the citations page for a work
