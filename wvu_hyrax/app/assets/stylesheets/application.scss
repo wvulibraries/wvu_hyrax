@@ -13,32 +13,15 @@
  *= require_self
  */
  
- @import "bootstrap-sprockets";
- @import "bootstrap-default-overrides";
- @import 'bootstrap';
- @import 'blacklight/blacklight';
- @import "font-awesome";
- @import "blacklight_gallery/gallery";
- @import "blacklight_gallery/masonry";
- @import "blacklight_gallery/slideshow";
- @import "blacklight_gallery/osd_viewer";
- @import 'hyrax/hyrax';
- @import 'hyrax/login_signup';
+ @import "hyrax";
  
-// import custom scss 
-// it is important that the order gets imported in a certain way so that variables are able to be used in other scss files
-@import "partials/variables";
-@import "partials/wvu";
-@import "partials/wvrhc";
-// @import "partials/helpmodal";
-@import "partials/custom";
-// @import "partials/image_wrappers";
-// @import "partials/email";
-// @import "partials/alerts"; 
-
-// @import "partials/audio";
-// @import "partials/video";
-
-// @import "partials/jwest_1";
-
-// @import "partials/bios";
+//  // import custom scss 
+//  // it is important that the order gets imported in a certain way so that variables are able to be used in other scss files
+//  @import "partials/variables";
+//  @import "partials/wvu";
+//  @import "partials/wvrhc";
+//  // @import "partials/helpmodal";
+//  @import "partials/custom";
+//  // @import "partials/image_wrappers";
+//  // @import "partials/email";
+//  // @import "partials/alerts";
