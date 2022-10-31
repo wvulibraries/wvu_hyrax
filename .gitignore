@@ -7,3 +7,5 @@ data/*
 env
 env/*
 /wvu_hyrax/fits.log
+wvu_hyrax/public/
+wvu_hyrax/public/*
