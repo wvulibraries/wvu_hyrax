@@ -11,10 +11,10 @@ Bulkrax.setup do |config|
   config.default_work_type = 'BasicWork'
 
   # Path to store pending imports
-  #config.import_path = 'tmp/imports'
+  config.import_path = 'tmp/imports'
 
   # Path to store exports before download
-  # config.export_path = 'tmp/exports'
+  config.export_path = 'tmp/exports'
 
   # Server name for oai request header
   # config.server_name = 'my_server@name.com'

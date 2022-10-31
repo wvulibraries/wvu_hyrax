@@ -12,6 +12,8 @@ services:
       - ./wvu_hyrax:/home/wvu_hyrax
       - ./scripts:/home/wvu_hyrax/scripts
       # - bundle:/usr/local/bundle
+      - imports:/home/wvu_hyrax/tmp/imports
+      - exports:/home/wvu_hyrax/tmp/exports
       - uploads:/home/wvu_hyrax/tmp/uploads
       - derivatives:/home/wvu_hyrax/tmp/derivatives
       # added because we were using exports with bulkrax for testing atm
@@ -121,6 +123,8 @@ services:
 volumes:
   # bundle:
   uploads:
+  imports:
+  exports: 
   postgres:
   fcrepo:
   redis:
