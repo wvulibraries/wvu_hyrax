@@ -15,13 +15,13 @@
  
  @import "hyrax";
  
-//  // import custom scss 
-//  // it is important that the order gets imported in a certain way so that variables are able to be used in other scss files
-//  @import "partials/variables";
-//  @import "partials/wvu";
-//  @import "partials/wvrhc";
-//  // @import "partials/helpmodal";
-//  @import "partials/custom";
-//  // @import "partials/image_wrappers";
-//  // @import "partials/email";
-//  // @import "partials/alerts";
+ // import custom scss 
+ // it is important that the order gets imported in a certain way so that variables are able to be used in other scss files
+ @import "partials/variables";
+ @import "partials/wvu";
+ @import "partials/wvrhc";
+ @import "partials/helpmodal";
+ @import "partials/custom";
+ @import "partials/image_wrappers";
+ @import "partials/email";
+ @import "partials/alerts";
