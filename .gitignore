@@ -8,3 +8,5 @@ env
 env/*
 /wvu_hyrax/fits.log
 .DS_Store
+wvu_hyrax/public/
+wvu_hyrax/public/*
