@@ -31,7 +31,7 @@ Rails.application.configure do
 
   config.web_console.whitelisted_ips = ['172.18.0.0/16', '172.27.0.0/16', '0.0.0.0/0']
 
-  # Store uploaded files on the local file system (see config/storage.yml for options)
+   # Store uploaded files on the local file system (see config/storage.yml for options)
   config.active_storage.service = :local
 
   # Don't care if the mailer can't send.
@@ -39,18 +39,12 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  # Logging
-  #
-  config.log_level = :debug
-  config.log_formatter = ::Logger::Formatter.new
-  # log to stdout
-  logger               = ActiveSupport::Logger.new(STDOUT)
-  logger.formatter     = config.log_formatter
-  config.logger        = ActiveSupport::TaggedLogging.new(logger)
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
+
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
+
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
@@ -62,15 +56,6 @@ Rails.application.configure do
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
-  config.assets.prefix = '/dev-assets'
-
-  # Raises error for missing translations
-  config.action_view.raise_on_missing_translations = false
-
-  # Use an evented file watcher to asynchronously detect changes in source code,
-  # routes, locales, etc. This feature depends on the listen gem.
-  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
-
   # Email Tests 
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries    = true
@@ -81,7 +66,14 @@ Rails.application.configure do
     address: "smtp.wvu.edu",
     port: 25,
     enable_starttls_auto: true
-  }  
+  }
+  
+  # Raises error for missing translations
+  # config.action_view.raise_on_missing_translations = true
+
+  # Use an evented file watcher to asynchronously detect changes in source code,
+  # routes, locales, etc. This feature depends on the listen gem.
+  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.active_job.queue_adapter = :sidekiq
 end

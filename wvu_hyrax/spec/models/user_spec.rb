@@ -1,12 +1,13 @@
-# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe Collection do
+RSpec.describe User, type: :model do
   # factory
-  let(:collection) { FactoryBot.create :collection }
+  let(:user) { FactoryBot.create :user }
 
   # shared examples 
   context 'shared examples' do
     it_behaves_like 'a valid factory' # factorybot
   end
+
 end

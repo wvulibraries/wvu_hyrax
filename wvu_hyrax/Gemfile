@@ -71,16 +71,6 @@ gem 'devise'
 gem 'devise-guests', '~> 0.6'
 gem 'devise_cas_authenticatable'
 
-group :development, :test do
-  gem 'solr_wrapper', '>= 0.3'
-
-  gem 'fcrepo_wrapper'
-  gem 'rspec-rails'
-
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-end
-
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
@@ -103,4 +93,19 @@ group :test do
   gem "simplecov-json" # For CodeClimate
   gem 'simplecov-console'  
   gem 'webdrivers', '~> 3.0'  
+end
+
+# Development / Test Items (Primarily debugging)
+# =====================================================================================
+group :development, :test do
+  gem 'capybara'
+  gem 'solr_wrapper', '>= 0.3'  
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]  
+  gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'fcrepo_wrapper'
+  gem 'rspec-rails'
+
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]  
 end

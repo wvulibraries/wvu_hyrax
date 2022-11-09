@@ -3,11 +3,13 @@
 class Import
   require 'csv'
 
-  def initialize
+  def initialize()
     puts 'This will import exported objects from mfcs into the current hyrax setup ... are you sure you want to do this? (Yes, No)'
-    if gets.chomp == 'Yes'
+    if gets.chomp.downcase == 'yes'
       puts 'Importing ...'
-      import_objects
+
+      @folder = '/home/wvu_hyrax/imports'
+      perform
     else
       puts 'Aborting ...'
     end
@@ -47,7 +49,7 @@ class Import
     return []
   end
 
-  # split string using the delimiter and return an arraybin
+  # split string using the delimiter and return an array
   def string_to_array(str, delimiter = '|||')
     # return empty array if string length is 0
     return [] if str.to_s.mb_chars.length == 0
@@ -79,7 +81,7 @@ class Import
     # create hash for the item
     hash = {
       # source_identifier: row['source_identifier'],      
-      identifier: [] << row['identifier'],
+      # identifier: [] << row['identifier'],
       depositor: "tam0013@mail.wvu.edu",
       title: [] << row['title'],
       date_uploaded: row['date_created'],
@@ -101,6 +103,8 @@ class Import
 
     # create the item
     item = BasicWork.new(hash)
+    # set depositor user
+    item.depositor = User.where(email: hash[:depositor]).first.user_key
     item.save
 
     # return the id of the new item
@@ -119,7 +123,7 @@ class Import
   def add_file_to_item(item_id, source, filename)
     item = BasicWork.find(item_id)
     user = User.where(email: item.depositor).first
-    file = File.open("/home/wvu_hyrax/imports/#{source}/export/bulkrax/files/#{filename}")
+    file = File.open("#{@folder}/#{source}/export/bulkrax/files/#{filename}")
     file_set = FileSet.new
     file_set.title = [filename]
     file_set.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
@@ -131,32 +135,48 @@ class Import
     actor.attach_to_work(item) 
   end
 
-  def import_objects
-    # set collection identifier
-    source = '4224'
-    # set data directory
-    csv_text = File.read("/home/wvu_hyrax/imports/folklife/export/bulkrax/folklife-data-test.csv")
+  def perform
+    # loop over each import directory
+    Dir.glob("#{@folder}/*") do |source|
+      # get collection identifer from the directory name
+      collection_source = source.split('/').last
+      csv_file = "#{source}/export/bulkrax/#{collection_source}-data.csv"
 
-    csv = CSV.parse(csv_text, :headers => true)
-    csv.each do |row|
-      # first row should be collection data
-      if row['model'].eql?("Collection")
-        # create the collection if it doesn't exist
-        collection = Collection.new
-        collection.title = [] << row['title']
-        collection.source = [] << source
-        collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-        collection.collection_type = Hyrax::CollectionType.find_or_create_default_collection_type
-        collection.save
-      end
+      # verify the csv file exists if not skip to next directory
+      next unless File.exist?(csv_file)
 
-      # all other rows should be item data
-      if row['model'].eql?("BasicWork")
-        # create the item
-        item_id = create_item(row)
-        set_item_collection(item_id, source)
-        # add files to item
-        add_file_to_item(item_id, 'folklife', row['file'])
+      # set data directory
+      csv_text = File.read(csv_file)
+
+      csv = CSV.parse(csv_text, :headers => true)
+      csv.each do |row|
+        # first row should be collection data
+        if row['model'].eql?("Collection")
+          # find or create collection
+          collection = Collection.where(source: collection_source).first
+          if collection.nil?
+            # create the collection if it doesn't exist
+            collection = Collection.new
+            collection.title = [] << row['title']
+            collection.source = [] << row['source_identifier']
+            collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+            collection.collection_type = Hyrax::CollectionType.find_or_create_default_collection_type
+            collection.save
+          end
+        end
+
+        # all other rows should be item data
+        if row['model'].eql?("BasicWork")
+          # create the item if it doesn't exist
+          item = BasicWork.where(title: row['title']).first
+
+          if item.nil?
+            item_id = create_item(row)
+            set_item_collection(item_id, collection_source)
+            # add files to item
+            add_file_to_item(item_id, collection_source, row['file'])
+          end
+        end
       end
     end
   end
