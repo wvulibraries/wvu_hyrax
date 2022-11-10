@@ -14,3 +14,29 @@
 @import "blacklight_gallery/slideshow";
 @import "blacklight_gallery/osd_viewer";
 @import 'hyrax/hyrax';
+@import 'partials/variables';
+
+.brand-logo img {
+  height: 28px;
+  margin-top: -4px;
+  margin-right: 0.225em;
+}
+
+.navbar-collapse, .navbar-brand, .navbar-header, .site-footer {
+  background: $primary-blue;
+}
+
+#user_utility_links {
+  background: $primary-blue;
+}
+
+.navbar-nav, .nav-item, .nav-link, .searchbar-right label {
+  color: $primary-orange;
+}
+
+#institution_name {
+  font-family: TimesNewRoman,"Times New Roman",Times,Baskerville,Georgia,serif;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: $primary-orange;
+}
