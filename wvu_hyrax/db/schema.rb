@@ -233,6 +233,20 @@ ActiveRecord::Schema.define(version: 2022_06_28_193554) do
     t.index ["user_id"], name: "index_file_view_stats_on_user_id"
   end
 
+  create_table "hyrax_checksums", id: false, force: :cascade do |t|
+    t.string "fileset_id", null: false
+    t.date "ingest_date"
+    t.integer "ingest_week_no"
+    t.date "last_fixity_check"
+    t.string "last_fixity_result"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "deleted_by"
+    t.string "image_file_name"
+    t.index ["fileset_id"], name: "index_hyrax_checksums_on_fileset_id", unique: true
+    t.index ["ingest_week_no"], name: "index_hyrax_checksums_on_ingest_week_no"
+  end
+
   create_table "hyrax_collection_types", force: :cascade do |t|
     t.string "title"
     t.text "description"
