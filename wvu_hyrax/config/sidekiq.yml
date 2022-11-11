@@ -1,19 +1,25 @@
-  :queues:
-    - [default, 1]
-    - [import, 1] # This is for bulkrax
-    - [export, 1] # This is for bulkrax
-    - [fixity, 1]
-    - [mailers, 1]
-    - [doi, 1]
-    - [batch, 1]
-    - [ingest, 1]
-    - [derivatives, 1]
-   
-  test: # n/a
-    :concurrency: 1
+:verbose: true
 
-  development:
-    :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 2 %>
+:timeout: 30
 
-  production:
-    :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 5 %>
+:queues:
+  - [ingest, 4]
+  - [import, 3] # This is for bulkrax
+  - [export, 3] # This is for bulkrax
+  - [batch, 2]
+  - [attach, 2] # custom queue for attaching files
+  - [derivatives, 1] # custom queue for creating derivatives
+  - [default, 1]
+  - [fixity, 1]
+  - [mailers, 1]
+  - [doi, 1]  
+
+test: # n/a
+  :concurrency: 1
+
+development:
+  :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 1 %>
+  :logfile: ./log/sidekiq_development.log
+
+production:
+  :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 2 %>
