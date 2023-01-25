@@ -55,7 +55,7 @@ services:
   memcached:
     image: bitnami/memcached
     container_name: memcached
-    ports:
+    expose:
       - "11211"
     networks:
       - hyrax
@@ -108,7 +108,7 @@ services:
   db:
     container_name: db
     image: postgres:14-alpine
-    ports:
+    expose:
       - "5432"
     env_file:
       - './env/.env.dev.db'       
