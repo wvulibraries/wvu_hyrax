@@ -16,13 +16,13 @@ services:
       - uploads:/home/wvu_hyrax/tmp/uploads
       - derivatives:/home/wvu_hyrax/tmp/derivatives
       # added because we were using exports with bulkrax for testing atm
-      - /mnt/nfs-exports/hyrax-exports:/home/wvu_hyrax/imports
+      - ./mnt/nfs-exports/hyrax-exports:/home/wvu_hyrax/imports
       - '/home/wvu_hyrax/tmp' # don't mount tmp directory 
       # folders that contain data not included in the git repo
       # add seed csv files to db folder in a subfolder called data
       - ./data/seed_files:/home/wvu_hyrax/db/data
       # add sftp upload directory
-      - /mnt/nfs-exports/hyrax-uploads/sftp_uploads:/home/wvu_hyrax/sftp_uploads
+      - ./mnt/nfs-exports/hyrax-uploads/sftp_uploads:/home/wvu_hyrax/sftp_uploads
     networks:
       - hyrax         
 
