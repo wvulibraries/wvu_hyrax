@@ -25,10 +25,10 @@ Hyrax.config do |config|
   # config.rendering_predicate = ::RDF::DC.hasFormat
 
   # Email recipient of messages sent via the contact form
-  # config.contact_email = "repo-admin@example.org"
+  config.contact_email = "libdev@wvu.edu"
 
   # Text prefacing the subject entered in the contact form
-  # config.subject_prefix = "Contact form:"
+  config.subject_prefix = "Contact form:"
 
   # How many notifications should be displayed on the dashboard
   # config.max_notifications_for_dashboard = 5
@@ -42,6 +42,19 @@ Hyrax.config do |config|
      maxNumberOfFiles: 100,
      maxFileSize: 5.gigabytes
   }
+
+  # Enable displaying usage statistics in the UI
+  # Defaults to false
+  # Requires a Google Analytics id and OAuth2 keyfile.  See README for more info
+  # config.analytics = false
+
+  # Google Analytics tracking ID to gather usage statistics
+  # config.google_analytics_id = 'UA-99999999-1'
+
+  # Date you wish to start collecting Google Analytic statistics for
+  # Leaving it blank will set the start date to when ever the file was uploaded by
+  # NOTE: if you have always sent analytics to GA for downloads and page views leave this commented out
+  # config.analytic_start_date = DateTime.new(2014, 9, 10)
 
   # Enables a link to the citations page for a work
   # Default is false
@@ -76,11 +89,11 @@ Hyrax.config do |config|
   config.fits_path = "/home/fits/fits.sh"
 
   # Path to the file derivatives creation tool
-  config.libreoffice_path = "soffice"
+  config.libreoffice_path = "/usr/bin/soffice"
 
   # Option to enable/disable full text extraction from PDFs
   # Default is true, set to false to disable full text extraction
-  config.extract_full_text = true
+  # config.extract_full_text = true
 
   # How many seconds back from the current time that we should show by default of the user's activity on the user's dashboard
   # config.activity_to_show_default_seconds_since_now = 24*60*60
@@ -104,7 +117,7 @@ Hyrax.config do |config|
   # Should work creation require file upload, or can a work be created first
   # and a file added at a later time?
   # The default is true.
-  # config.work_requires_files = true
+   config.work_requires_files = false
 
   # How many rows of items should appear on the work show view?
   # The default is 10
@@ -124,23 +137,24 @@ Hyrax.config do |config|
   #   * iiif_image_size_default
   #
   # Default is false
-  config.iiif_image_server = false
+  config.iiif_image_server = true
 
   # Returns a URL that resolves to an image provided by a IIIF image server
   # JL : config.iiif_image_url_builder = lambda do |file_id, base_url, size|
   # JL :   Riiif::Engine.routes.url_helpers.image_url(file_id, host: base_url, size: size)
   # JL : end
   # JL : cloned from https://github.com/UCLALibrary/californica/pull/312/commits/7cdb819a8e08d69f5250aa4a1cd19d65d18f89ed
-  config.iiif_image_url_builder = lambda do |file_id, base_url, size|
-    #Riiif::Engine.routes.url_helpers.image_url(file_id, host: base_url, size: size)
-    #byebug
-    if ENV['IIIF_SERVER_URL'].present?
-#      ENV['IIIF_SERVER_URL'] + file_id.gsub('/', '%2F') + "/" + size + "/full/0/default.jpg"
-       IIIF_SERVER_URL + file_id.gsub('/', '%2F') + "/full/" + size + "/0/default.jpg"
-    else
-      Riiif::Engine.routes.url_helpers.image_url(file_id, host: base_url, size: size)
-    end
+  config.iiif_info_url_builder = lambda do |file_id, base_url|
+    uri = Riiif::Engine.routes.url_helpers.info_url(file_id, host: base_url)
+    uri.sub(%r{/info\.json\Z}, '')
   end
+
+  config.iiif_image_url_builder = lambda do |file_id, base_url, size, format|
+    Riiif::Engine.routes.url_helpers.image_url(file_id, host: base_url, size: size)
+  end
+  # config.iiif_image_url_builder = lambda do |file_id, base_url, size|
+  #   "#{base_url}/downloads/#{file_id.split('/').first}"
+  # end
 
   # Returns a URL that resolves to an info.json file provided by a IIIF image server
   # JL : config.iiif_info_url_builder = lambda do |file_id, base_url|
@@ -163,23 +177,19 @@ Hyrax.config do |config|
   # config.iiif_info_url_builder = lambda do |_, _|
   #   ""
   # end
-
+  #byebug
   # Returns a URL that indicates your IIIF image server compliance level
   config.iiif_image_compliance_level_uri = 'http://iiif.io/api/image/2/level2.json'
 
   # Returns a IIIF image size default
   config.iiif_image_size_default = '600,'
+  #config.iiif_image_size_default = 'full'
 
   # Fields to display in the IIIF metadata section; default is the required fields
   config.iiif_metadata_fields = Hyrax::Forms::WorkForm.required_fields
 
   # Should a button with "Share my work" show on the front page to all users (even those not logged in)?
-  config.display_share_button_when_not_logged_in = false
-
-  # This user is logged as the acting user for jobs and other processes that
-  # run without being attributed to a specific user (e.g. creation of the
-  # default admin set).
-  # config.system_user_key = 'systemuser@example.com'
+   config.display_share_button_when_not_logged_in = false
 
   # The user who runs batch jobs. Update this if you aren't using emails
   # config.batch_user_key = 'batchuser@example.com'
@@ -188,12 +198,12 @@ Hyrax.config do |config|
   # config.audit_user_key = 'audituser@example.com'
   #
   # The banner image. Should be 5000px wide by 1000px tall
-  # config.banner_image = 'https://cloud.githubusercontent.com/assets/92044/18370978/88ecac20-75f6-11e6-8399-6536640ef695.jpg'
+  #config.banner_image = 'https://cloud.githubusercontent.com/assets/92044/18370978/88ecac20-75f6-11e6-8399-6536640ef695.jpg'
 
   # Temporary paths to hold uploads before they are ingested into FCrepo
   # These must be lambdas that return a Pathname. Can be configured separately
-  #  config.upload_path = ->() { Rails.root + 'tmp' + 'uploads' }
-  #  config.cache_path = ->() { Rails.root + 'tmp' + 'uploads' + 'cache' }
+   config.upload_path = ->() { Rails.root + 'tmp' + 'uploads' }
+   config.cache_path = ->() { Rails.root + 'tmp' + 'uploads' + 'cache' }
 
   # Location on local file system where derivatives will be stored
   # If you use a multi-server architecture, this MUST be a shared volume
@@ -236,8 +246,26 @@ Hyrax.config do |config|
   # ActiveJob queue to handle ingest-like jobs
   config.ingest_queue_name = :ingest
 
-  # ActiveJob queue to handle derivative-like jobs
-  # config.derivatives_queue_name = :derivatives
+  # Some Devise config changes
+
+  Devise.lock_strategy = :failed_attempts
+
+  # Defines which key will be used when locking and unlocking an account
+  Devise.unlock_keys = [:time]
+
+  # Defines which strategy will be used to unlock an account.
+  # :email = Sends an unlock link to the user email
+  # :time  = Re-enables login after a certain amount of time (see :unlock_in below)
+  # :both  = Enables both strategies
+  # :none  = No unlock strategy. You should handle unlocking by yourself.
+  # config.unlock_strategy = :both
+
+  # Number of authentication tries before locking an account if lock_strategy
+  # is failed attempts.
+  Devise.maximum_attempts = 5
+
+  # Time interval to unlock the account if :time is enabled as unlock_strategy.
+  Devise.unlock_in = 1.hour
 
   ## Attributes for the lock manager which ensures a single process/thread is mutating a ore:Aggregation at once.
   # How many times to retry to acquire the lock before raising UnableToAcquireLockError
@@ -258,24 +286,6 @@ Hyrax.config do |config|
   #                                "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{Noid::Rails.treeify(id)}"
   #                              end
 
-  # Identify the model class name that will be used for Collections in your app
-  # (i.e. ::Collection for ActiveFedora, Hyrax::PcdmCollection for Valkyrie)
-  # config.collection_model = '::Collection'
-  # config.collection_model = 'Hyrax::PcdmCollection'
-
-  # Identify the model class name that will be used for Admin Sets in your app
-  # (i.e. AdminSet for ActiveFedora, Hyrax::AdministrativeSet for Valkyrie)
-  # config.admin_set_model = 'AdminSet'
-  # config.admin_set_model = 'Hyrax::AdministrativeSet'
-
-  # When your application is ready to use the valkyrie index instead of the one
-  # maintained by active fedora, you will need to set this to true. You will
-  # also need to update your Blacklight configuration.
-  # config.query_index_from_valkyrie = false
-
-  ## Configure index adapter for Valkyrie::Resources to use solr readonly indexer
-  # config.index_adapter = :solr_index
-
   ## Fedora import/export tool
   #
   # Path to the Fedora import export tool jar file
@@ -295,7 +305,7 @@ Hyrax.config do |config|
     config.browse_everything = nil
   end
 
-  ## Register all directories which can be used to ingest from the local file
+  ## Whitelist all directories which can be used to ingest from the local file
   # system.
   #
   # Any file, and only those, that is anywhere under one of the specified
@@ -309,16 +319,8 @@ Hyrax.config do |config|
   # ingest files from the file system that are not part of the BrowseEverything
   # mount point.
   #
-  # config.registered_ingest_dirs = []
+  # config.whitelisted_ingest_dirs = []
 
-  ##
-  # Set the system-wide virus scanner
-  config.virus_scanner = Hyrax::VirusScanner
-
-  ## Remote identifiers configuration
-  # Add registrar implementations by uncommenting and adding to the hash below.
-  # See app/services/hyrax/identifier/registrar.rb for the registrar interface
-  # config.identifier_registrars = {}
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"

@@ -4,10 +4,10 @@
 
 :queues:
   - [ingest, 4]
-  - [import, 3] # This is for bulkrax
-  - [export, 3] # This is for bulkrax
   - [batch, 2]
   - [attach, 2] # custom queue for attaching files
+  - [import, 1] # This is for bulkrax
+  - [export, 1] # This is for bulkrax  
   - [derivatives, 1] # custom queue for creating derivatives
   - [default, 1]
   - [fixity, 1]
