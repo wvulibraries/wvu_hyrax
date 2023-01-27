@@ -62,7 +62,4 @@ ADD ./${PROJECT_PATH} /home/${PROJECT_PATH}
 RUN \
   gem update --system --quiet && \
   gem install bundler -v ${BUNDLER_VERSION} && \
-  bundle install --jobs=4 --retry=3 
-
-RUN yarn install && yarn upgrade
-
+  bundle install --jobs=4 --retry=3

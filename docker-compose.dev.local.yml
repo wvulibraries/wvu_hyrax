@@ -21,6 +21,7 @@ services:
       # folders that contain data not included in the git repo
       # add seed csv files to db folder in a subfolder called data
       - ./data/seed_files:/home/wvu_hyrax/db/data
+      - ./data/node_modules:/home/wvu_hyrax/node_modules
       # add sftp upload directory
       - ./mnt/nfs-exports/hyrax-uploads/sftp_uploads:/home/wvu_hyrax/sftp_uploads
     networks:
