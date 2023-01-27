@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   mount Bulkrax::Engine, at: '/'
   mount Riiif::Engine => 'images', as: :riiif if Hyrax.config.iiif_image_server?
-        mount BrowseEverything::Engine => '/browse'
+  mount BrowseEverything::Engine => '/browse'
 
   mount Blacklight::Engine => '/'
   
@@ -43,6 +43,7 @@ Rails.application.routes.draw do
     end
   end
 
+  mount PdfjsViewer::Rails::Engine => "/pdfjs", as: 'pdfjs'
   resources :hyrax_checksums, :only => [ :index, :create, :update ]
   
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

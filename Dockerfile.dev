@@ -46,8 +46,7 @@ ENV PATH="${PATH}:/home/fits"
 # Node.js
 # -------------------------------------------------------------------------------------------------
 RUN curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
-	&& apt-get -y install nodejs \
-	&& npm i -g npm
+	&& apt-get -y install nodejs
 
 # yarn
 # -------------------------------------------------------------------------------------------------
@@ -55,8 +54,6 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -\
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update \
     && apt-get install -y yarn
-
-RUN yarn install && yarn upgrade
 
 RUN mkdir -p /home/${PROJECT_PATH}/
 WORKDIR /home/${PROJECT_PATH}
@@ -66,4 +63,6 @@ RUN \
   gem update --system --quiet && \
   gem install bundler -v ${BUNDLER_VERSION} && \
   bundle install --jobs=4 --retry=3 
+
+RUN yarn install && yarn upgrade
 
