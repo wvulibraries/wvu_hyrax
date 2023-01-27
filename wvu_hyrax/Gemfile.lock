@@ -663,7 +663,8 @@ GEM
     power_converter (0.1.2)
     psych (3.3.4)
     public_suffix (5.0.1)
-    puma (3.12.6)
+    puma (4.3.12)
+      nio4r (~> 2.0)
     qa (5.10.0)
       activerecord-import
       deprecation
@@ -1030,7 +1031,7 @@ DEPENDENCIES
   okcomputer
   pdfjs_viewer-rails
   pg (>= 0.18, < 2.0)
-  puma (~> 3.11)
+  puma (~> 4.3)
   rails (~> 5.2.6)
   redis (~> 4.0)
   riiif (~> 2.1)
