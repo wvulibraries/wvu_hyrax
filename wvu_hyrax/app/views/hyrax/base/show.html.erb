@@ -20,7 +20,7 @@
               <%= render 'representative_media', presenter: @presenter, viewer: true if @presenter.iiif_viewer? %>
             </div>
           <% end %>
-          <% if @presenter.representative_presenter.pdf? %>
+          <% if @presenter.representative_presenter.present? && @presenter.representative_presenter.pdf? %>
             <div class="col-sm-12">
               <%= render 'pdf_viewer', file_set: @presenter.representative_presenter, viewer: false %>
             </div>
