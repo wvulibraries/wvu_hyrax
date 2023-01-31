@@ -1,57 +1,120 @@
-version: '3.7'
+version: '3.4'
 # used for local testing
-# note only have either mfcs_export or mnt not both for conversions or hyrax.
 services:
-  hyrax:
+  app:
     build: 
       context: ./
       dockerfile: Dockerfile
-    container_name: wvu_hyrax
+    # image: wvu_hyrax-app
     env_file:
-      - './env/.env.hyrax'       
-    restart: on-failure           
+      - './env/.env.hyrax' 
+    volumes:
+      - ./wvu_hyrax:/home/wvu_hyrax
+      - ./scripts:/home/wvu_hyrax/scripts
+      - imports:/home/wvu_hyrax/tmp/imports
+      - exports:/home/wvu_hyrax/tmp/exports
+      - uploads:/home/wvu_hyrax/tmp/uploads
+      - derivatives:/home/wvu_hyrax/tmp/derivatives
+      # added because we were using exports with bulkrax for testing atm
+      - /mnt/nfs-exports/hyrax-exports:/home/wvu_hyrax/imports
+      - '/home/wvu_hyrax/tmp' # don't mount tmp directory 
+      # folders that contain data not included in the git repo
+      # add seed csv files to db folder in a subfolder called data
+      - ./data/seed_files:/home/wvu_hyrax/db/data
+      - ./data/node_modules:/home/wvu_hyrax/node_modules
+      # add sftp upload directory
+      - /mnt/nfs-exports/hyrax-uploads/sftp_uploads:/home/wvu_hyrax/sftp_uploads
+    networks:
+      - hyrax         
+
+  web:
+    extends: app
+    container_name: hyrax
+    command: bash -c "bundle install; bundle exec rails s -p 3000 -b 0.0.0.0"
+    ports:
+      - "3000:3000"
     depends_on:
+      - redis
+      - solr
       - fcrepo
       - db
+      - workers
+  
+  workers:
+    extends: app
+    container_name: sidekiq
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    depends_on:
+      - redis
       - solr
-    ports:
-      - 3000:3000
+      - fcrepo
+      - memcached 
+      - db
+    stdin_open: true
+    tty: true
+
+  memcached:
+    image: bitnami/memcached
+    container_name: memcached
+    expose:
+      - "11211"
+    networks:
+      - hyrax
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    command: redis-server
+    expose:
+      - "6379"
     volumes:
-      - ./hyrax:/home/hyrax  
-      - /mnt:/mnt                     
+      - redis:/var/lib/redis/data
+    restart: unless-stopped  
+    healthcheck:
+      test: redis-cli -h redis ping
+      interval: 30s
+      timeout: 3s
+      retries: 3                 
+    networks:
+      - hyrax               
 
   fcrepo:
+    container_name: fcrepo
     image: ghcr.io/samvera/fcrepo4:4.7.5
-    container_name: wvu_fcrepo
-    restart: on-failure    
     volumes:
-      - ./fedora/data:/data:cached
+      - fcrepo:/data:cached
     ports:
-      - "8080:8080"  
+      - "8080:8080"
+    networks:
+      - hyrax
       
   solr:
+    container_name: solr  
     image: solr:8.11.1
-    container_name: wvu_solr
     restart: on-failure
     ports:
-      - 8983:8983
+      - "8983:8983"
     command:
       - sh
       - "-c"
-      - "solr-precreate hyrax_prod /opt/solr/server/configsets/hyraxconf"
+      - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax_dev /opt/solr/server/configsets/hyraxconf"
+      - "&&"
+      - "chown -R 8983:8983 /var/solr"      
     volumes:
-      - ./solr/data:/var/solr/data:cached
-      - ./hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf    
+      - ./wvu_hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf/conf      	
+      - solr:/var/solr     
+    networks:
+      - hyrax 
 
   db:
-    container_name: hyrax_db
+    container_name: db
     image: postgres:14-alpine
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     env_file:
       - './env/.env.db'       
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready", "-d", "hyrax"]
@@ -59,3 +122,21 @@ services:
       timeout: 60s
       retries: 5
       start_period: 80s  
+    networks:
+      - hyrax 
+
+volumes:
+  uploads:
+  imports:
+  exports: 
+  postgres:
+  fcrepo:
+  redis:
+  solr:
+  derivatives:
+
+networks:
+  hyrax:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-hyrax-wvudr
