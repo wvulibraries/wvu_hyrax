@@ -82,7 +82,7 @@ services:
     container_name: fcrepo
     image: ghcr.io/samvera/fcrepo4:4.7.5
     volumes:
-      - fcrepo:/data
+      - fcrepo:/data:cached
     ports:
       - "8080:8080"
     networks:
