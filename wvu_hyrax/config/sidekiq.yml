@@ -1,7 +1,3 @@
-:verbose: true
-
-:timeout: 30
-
 :queues:
   - [ingest, 4]
   - [batch, 2]
@@ -18,8 +14,8 @@ test: # n/a
   :concurrency: 1
 
 development:
-  :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 1 %>
+  :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 2 %>
   :logfile: ./log/sidekiq_development.log
 
 production:
-  :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 2 %>
+  :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 5 %>
