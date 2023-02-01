@@ -11,13 +11,13 @@ services:
     volumes:
       - ./wvu_hyrax:/home/wvu_hyrax
       - ./scripts:/home/wvu_hyrax/scripts
+      - /home/wvu_hyrax/tmp # don't mount tmp directory  	      
       - imports:/home/wvu_hyrax/tmp/imports
       - exports:/home/wvu_hyrax/tmp/exports
       - uploads:/home/wvu_hyrax/tmp/uploads
       - derivatives:/home/wvu_hyrax/tmp/derivatives
       # added because we were using exports with bulkrax for testing atm
       - ./mnt/nfs-exports/hyrax-exports:/home/wvu_hyrax/imports
-      - '/home/wvu_hyrax/tmp' # don't mount tmp directory 
       # folders that contain data not included in the git repo
       # add seed csv files to db folder in a subfolder called data
       - ./data/seed_files:/home/wvu_hyrax/db/data
@@ -43,7 +43,7 @@ services:
   workers:
     extends: app
     container_name: sidekiq
-    command: bundle exec sidekiq -C config/sidekiq.yml
+    command: bash -c "bundle install; bundle exec sidekiq -C config/sidekiq.yml"
     depends_on:
       - redis
       - solr
