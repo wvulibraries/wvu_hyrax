@@ -24,7 +24,7 @@
             <div class="col-sm-12">
               <%= render 'pdf_viewer', file_set: @presenter.representative_presenter, viewer: false %>
             </div>
-          <% end %>
+          <% end %>    
           <div class="col-sm-3 text-center">
             <%= render 'representative_media', presenter: @presenter, viewer: false unless @presenter.iiif_viewer? %>
             <%= render 'citations', presenter: @presenter %>
