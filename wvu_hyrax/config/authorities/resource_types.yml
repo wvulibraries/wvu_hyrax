@@ -1,23 +1,25 @@
 terms:
-  - id: http://id.loc.gov/vocabulary/resourceTypes/car
-    term: cartographic
-  - id: http://id.loc.gov/vocabulary/resourceTypes/col
-    term: collection
-  - id: http://id.loc.gov/vocabulary/resourceTypes/mix
-    term: mixed material
-  - id: http://id.loc.gov/vocabulary/resourceTypes/mov
-    term: moving image
-  - id: http://id.loc.gov/vocabulary/resourceTypes/not
-    term: notated music
-  - id: http://id.loc.gov/vocabulary/resourceTypes/aud
-    term: sound recording
-  - id: http://id.loc.gov/vocabulary/resourceTypes/aum
-    term: sound recording-musical
-  - id: http://id.loc.gov/vocabulary/resourceTypes/aun
-    term: sound recording-nonmusical
-  - id: http://id.loc.gov/vocabulary/resourceTypes/img
-    term: still image
-  - id: http://id.loc.gov/vocabulary/resourceTypes/txt
-    term: text
-  - id: http://id.loc.gov/vocabulary/resourceTypes/art
-    term: three dimensional object
+  - id: http://purl.org/dc/dcmitype/Collection
+    term: Collection
+  - id: http://purl.org/dc/dcmitype/Dataset
+    term: Dataset
+  - id: http://purl.org/dc/dcmitype/Event
+    term: Event
+  - id: http://purl.org/dc/dcmitype/Image
+    term: Image
+  - id: http://purl.org/dc/dcmitype/InteractiveResource
+    term: InteractiveResource
+  - id: http://purl.org/dc/dcmitype/MovingImage
+    term: MovingImage
+  - id: http://purl.org/dc/dcmitype/PhysicalObject
+    term: Physical Object
+  - id: http://purl.org/dc/dcmitype/Service
+    term: Service
+  - id: http://purl.org/dc/dcmitype/Software
+    term: Software
+  - id: http://purl.org/dc/dcmitype/Sound
+    term: Sound
+  - id: http://purl.org/dc/dcmitype/StillImage
+    term: StillImage
+  - id: http://purl.org/dc/dcmitype/Text
+    term: Text
