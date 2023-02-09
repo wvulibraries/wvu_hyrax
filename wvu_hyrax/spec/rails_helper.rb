@@ -28,4 +28,6 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
 
   config.include ActiveJob::TestHelper
+
+  config.use_transactional_fixtures = true
 end
