@@ -28,6 +28,10 @@
             <div class="col-sm-12">
               <%= render 'video_viewer', file_set: @presenter.representative_presenter, viewer: false %>
             </div>
+            <% elsif @presenter.representative_presenter.present? && @presenter.representative_presenter.audio? %>
+            <div class="col-sm-12">
+              <%= render 'audio_viewer', file_set: @presenter.representative_presenter, viewer: false %>
+            </div>
           <% else %>            
             <div class="col-sm-3 text-center">
               <%= render 'representative_media', presenter: @presenter, viewer: false unless @presenter.iiif_viewer? %>
