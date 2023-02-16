@@ -86,7 +86,7 @@ class Import
       title: [] << row['title'],
       date_uploaded: row['date_created'],
       institution: row['institution'],
-      subtype: [] << row['subtype'],
+      # subtype: [] << row['subtype'],
       extent: (row['extent'] || ""),
       resource_type: [] << row['resource_type'],
       creator: self.string_to_array(row['creator']),
