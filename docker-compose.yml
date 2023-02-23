@@ -68,7 +68,7 @@ services:
     expose:
       - "6379"
     env_file:
-      - './env/.env.dev.redis'
+      - './env/.env.prod.redis'
     volumes:
       - redis:/var/lib/redis/data
     restart: unless-stopped  
