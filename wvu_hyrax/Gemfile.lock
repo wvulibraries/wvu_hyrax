@@ -1026,7 +1026,7 @@ DEPENDENCIES
   pdfjs_viewer-rails
   pg (>= 0.18, < 2.0)
   puma (~> 4.3)
-  rails (~> 5.2.6)
+  rails (~> 5.2.8.1)
   redis (~> 4.0)
   riiif (~> 2.1)
   rsolr (>= 1.0, < 3)
@@ -1053,4 +1053,4 @@ RUBY VERSION
    ruby 2.7.7p221
 
 BUNDLED WITH
-   2.3.19
+   2.4.7
