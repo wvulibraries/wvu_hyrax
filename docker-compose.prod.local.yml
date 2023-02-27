@@ -11,7 +11,7 @@ services:
     volumes:
       - ./wvu_hyrax:/home/wvu_hyrax
       - ./scripts:/home/wvu_hyrax/scripts
-      - ./data/logs:/home/hydra/log         
+      - ./data/logs:/home/wvu_hyrax/log         
       - /home/wvu_hyrax/tmp # don't mount tmp directory  	      
       - imports:/home/wvu_hyrax/tmp/imports
       - exports:/home/wvu_hyrax/tmp/exports
