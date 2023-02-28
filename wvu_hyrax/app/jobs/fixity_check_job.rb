@@ -38,7 +38,7 @@ class FixityCheckJob < Hyrax::ApplicationJob
 
     # update the hyrax checksum table
 
-    hc = HyraxChecksum.find_by(:fileset_id => file_set_id)
+    hc = Checksum.find_by(:fileset_id => file_set_id)
       #  byebug
     fixity = Hyrax::FixityStatusPresenter.new(file_set_id)
     #hc.update({:fileset_id => file_set_id,
@@ -50,11 +50,11 @@ class FixityCheckJob < Hyrax::ApplicationJob
     hc.update(last_fixity_result: fixity.check_file_set_status,
               last_fixity_check: Date.today)
     begin
-      if hc.image_file_name.nil?
+      if hc.file_name.nil?
         file_set = FileSet.find(file_set_id)
         hc.update(last_fixity_result: fixity.check_file_set_status,
                   last_fixity_check: Date.today,
-                  image_file_name: file_set.label)
+                  file_name: file_set.label)
       end
     rescue
     end

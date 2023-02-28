@@ -1,0 +1,77 @@
+terms:
+- id: advertisements
+  term: advertisements
+- id: architecturalDocuments
+  term: architectural documents
+- id: books
+  term: books
+- id: broadsides
+  term: broadsides (notices)
+- id: businessRecords
+  term: business records
+- id: cartographicMaterials
+  term: cartographic materials
+- id: censusRecords
+  term: census records
+- id: comics
+  term: comics (documents)
+- id: correspondence
+  term: correspondence
+- id: costume
+  term: costume (mode of fashion)
+- id: culturalArtifacts
+  term: cultural artifacts
+- id: decorativeArts
+  term: decorative arts
+- id: digitalDocuments
+  term: digital documents
+- id: digitalImages
+  term: digital images
+- id: digitalMovingImageFormats
+  term: digital moving image formats
+- id: digitalPhotographs
+  term: digital photographs
+- id: drawings
+  term: drawings (visual works)
+- id: furniture
+  term: furniture
+- id: genealogies
+  term: genealogies (histories)
+- id: governmentRecords
+  term: government records
+- id: graphicArts
+  term: graphic arts
+- id: interviews
+  term: interviews
+- id: motionPictures
+  term: motion pictures (visual works)
+- id: newspapers
+  term: newspapers
+- id: oralHistories
+  term: oral histories (document genre)
+- id: painting 
+  term: painting (visual works)
+- id: pamphlets
+  term: pamphlets
+- id: performances
+  term: performances (creative events)
+- id: periodicals
+  term: periodicals
+- id: photographs
+  term: photographs
+- id: postcards
+  term: postcards
+- id: posters
+  term: posters
+- id: prints
+  term: prints (visual works)
+- id: sermons
+  term: sermons
+- id: sheetMusic
+  term: sheet music
+- id: soundRecordings
+  term: sound recordings
+- id: textiles
+  term: textiles (visual works)
+- id: workflowDocuments
+  term: work-flow documents 
