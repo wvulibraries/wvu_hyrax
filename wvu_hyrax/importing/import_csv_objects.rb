@@ -125,6 +125,24 @@ class Import
     end
   end  
 
+  # def add_file_to_item(item_id, source, filename)
+  #   item = BasicWork.find(item_id)
+  #   user = User.where(email: item.depositor).first
+  #   file = File.open("/home/wvu_hyrax/imports/#{source}/export/bulkrax/files/#{filename}")
+  #   file_set = FileSet.new
+  #   file_set.title = [filename]
+  #   file_set.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+  #   file_set.apply_depositor_metadata(item.depositor)
+  #   file_set.save
+  #   actor = Hyrax::Actors::FileSetActor.new(file_set, user)
+  #   #actor.create_metadata(item)
+  #   actor.create_content(file)
+  #   actor.attach_to_work(item) 
+
+  #   # create the checksum record
+  #   Checksum.where(:fileset_id => actor.file_set.id).first_or_create(:ingest_date => Date.today, :ingest_week_no => Date.today.strftime("%U").to_i, :file_name => actor.file_set.label )
+  # end
+
   def perform
     # loop over each import directory
     Dir.glob("#{@folder}/*") do |source|
@@ -192,7 +210,6 @@ class Import
           puts "Creating item #{row['title']}"
           item_id = create_item(row)
           set_item_collection(item_id, collection_source)
-
 
           # add file to item job queue
           AddFileToItemJob.perform_later(item_id, collection_source, row['file'])

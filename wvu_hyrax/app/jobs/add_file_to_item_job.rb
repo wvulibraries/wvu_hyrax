@@ -1,7 +1,7 @@
 # app/jobs/add_file_to_item_job.rb
 
 # Import Job
-class AddFileToItemJob < ApplicationJob
+class AddFileToItemJob < Hyrax::ApplicationJob
     queue_as :ingest
 
     def perform(item_id, source, filename)

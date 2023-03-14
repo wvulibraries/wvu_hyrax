@@ -82,10 +82,12 @@ services:
       - hyrax               
 
   fcrepo:
-    container_name: fcrepo
     image: ghcr.io/samvera/fcrepo4:4.7.5
-    volumes:
-      - fcrepo:/data:cached
+    container_name: fcrepo
+    depends_on:
+      - db        
+    env_file:
+      - './env/.env.fedora' 
     ports:
       - "8080:8080"
     networks:
