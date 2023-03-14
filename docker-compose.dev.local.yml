@@ -68,7 +68,6 @@ services:
     env_file:
       - './env/.env.dev.redis' 
     command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"
-    # command: redis-server
     expose:
       - "6379"
     volumes:
