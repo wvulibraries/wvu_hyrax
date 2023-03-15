@@ -1,95 +1,163 @@
-version: 2.1
-orbs:
-    samvera: samvera/circleci-orb@1.0.0
+version: 2
 jobs:
-    build:
-        parameters:
-            ruby_version:
-                type: string
-                default: 2.7.4
-            bundler_version:
-                type: string
-                default: 2.1.4
-        executor:
-            name: samvera/ruby_fcrepo_solr_redis
-            ruby_version: << parameters.ruby_version >>
-            solr_version: 7-alpine
-        working_directory: ~/project
-        parallelism: 4
-        steps:
-            - checkout
+  build:
+    working_directory: ~/circleci-wvu-hyrax/wvu_hyrax
+    shell: /bin/bash --login
+    environment:
+      RAILS_ENV: test
+      RACK_ENV: test
+      COVERAGE: true
+      TZ: /usr/share/zoneinfo/America/NewYork
+    docker:
+      - image: cimg/ruby:2.7-browsers
+        environment:
+          PGHOST: 127.0.0.1
+          PGUSER: root
+      - image: circleci/postgres:14 # database image
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: circle_test
+          POSTGRES_PASSWORD: circleci        
+      - image: ghcr.io/samvera/fcrepo4:4.7.5
+        command:
+          - sh
+          - "-c"
+          - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf;"
+      - image: solr:8.11.1
+        environment:
+          SOLR_HEAP: "512m"
+          SOLR_HOME: ./solr
+          SOLR_LOGS: /opt/solr/logs
+          SOLR_PID: /opt/solr/solr.pid
+          SOLR_PORT: 8983
+      - image: circleci/redis # redis image  
+      - image: bitnami/memcached
+        environment:
+          MEMCACHED_PORT: 11211
+          MEMCACHED_MAX_CONNS: 1024
+          MEMCACHED_MAX_CONNS_PER_IP: 1024
+    steps:
+      - checkout:
+          path: ~/circleci-wvu-hyrax
+      - run:
+          name: Configure secrets.yml
+          command: mv config/secrets.ci.yml config/secrets.yml
+      - run:
+          name: Configure database.yml
+          command: mv config/database.ci.yml config/database.yml
+      - run:
+          name: Configure application.yml
+          command: mv config/application.ci.yml config/application.yml              
+      - run:
+          name: apt update
+          command: sudo apt update
 
-            - samvera/bundle:
-                ruby_version: << parameters.ruby_version >>
-                bundler_version: << parameters.bundler_version >>
+      # Restore bundle cache
+      - type: cache-restore
+        key: hyrax-bundle-{{ checksum "Gemfile.lock" }}
 
-            - samvera/rubocop
+      # - type: cache-restore
+      #   key: hyrax-yarn-{{ checksum "yarn.lock" }}       
 
-            - run:
-                name: Get yarn version
-                command: echo $(yarn --version) >> "YARN_VERSION"
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.6.1
+      # - run:
+      #     name: install system libraries
+      #     command: sudo apt-get update && sudo apt-get -y install postgresql-client
+      - run:
+          name: Force Bundler Version
+          command: |
+            sudo gem update --system
+            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+            source $BASH_ENV
+            gem install bundler
+      - run:
+          name: bundle gems
+          command: bundle install --jobs=4 --retry=3
+      # - run:
+      #     name: Yarn Install
+      #     command: yarn install --cache-folder ~/.cache/yarn
+      # - run:
+      #     name: Precompile assets
+      #     command: RAILS_ENV=test bundle exec rails webpacker:compile
+      - run:
+          name: Install Code Climate Test Reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          name: Wait for PostgreSQL to start
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
 
-            - restore_cache:
-                keys:
-                    - v1-yarn-{{ checksum "yarn.lock" }}-{{ checksum "YARN_VERSION" }}
+      # Store bundle cache
+      - type: cache-save
+        key: hyrax-bundle-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
 
-            - run: yarn
+      # Store yarn cache
+      # - type: cache-save
+      #   key: hyrax-yarn-{{ checksum "yarn.lock" }}
+      #   paths:
+      #     - ~/.yarn-cache
 
-            - save_cache:
-                key: v1-yarn-{{ checksum "yarn.lock" }}-{{ checksum "YARN_VERSION" }}
-                paths:
-                    - ~/project/node_modules
+      - run:
+          name: Setup Database
+          command: |
+            bundle exec rake db:create db:schema:load
+      - run:
+          name: Run tests
+          command: |
+            mkdir -p test-results/rspec test-artifacts
+            ./cc-test-reporter before-build
+            TESTFILES=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+            bundle exec rspec --profile 10 \
+                              --color \
+                              --order random \
+                              --out test-results/rspec/rspec.xml \
+                              --format progress \
+                              -- ${TESTFILES}
+      - run:
+          name: Code Climate Test Coverage
+          command: |
+            ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+      - persist_to_workspace:
+          root: coverage
+          paths:
+            - codeclimate.*.json
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-artifacts
 
-            - samvera/install_solr_core
+  upload-coverage:
+    docker:
+      - image: cimg/ruby:2.7.2-node
+    environment:
+       CC_TEST_REPORTER_ID:  7f1c1c181beba7c0991b78ba797b48670c2a5c34260701c0feb01b40656219a6
+    working_directory: ~/circleci-wvu-hyrax
 
-            - run:
-                name: Install Code Climate test reporter
-                command: |
-                    curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-                    chmod +x ./cc-test-reporter
-                    ./cc-test-reporter before-build
-            - samvera/parallel_rspec
+    steps:
+      - attach_workspace:
+          at: ~/circleci-wvu-hyrax
+      - run:
+          name: Install Code Climate Test Reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          command: |
+            ./cc-test-reporter sum-coverage --output - codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input -
 
-            - run:
-                name: Generate CC coverage
-                command:  ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
-
-            - persist_to_workspace:
-                root: coverage
-                paths: codeclimate.*.json
-
-            - store_artifacts:
-                path: tmp/screenshots
-
-            - deploy:
-                command: curl -k https://coveralls.io/webhook?repo_token=${COVERALLS_REPO_TOKEN} -d "payload[build_num]=${CIRCLE_BUILD_NUM}&payload[status]=done"
-
-    coverage:
-        docker:
-            - image: circleci/ruby:2.7.4
-        working_directory: ~/project
-        parallelism: 1
-        steps:
-            - attach_workspace:
-                at: /tmp/codeclimate
-
-            - run:
-                name: Install Code Climate test reporter
-                command: |
-                    curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-                    chmod +x ./cc-test-reporter
-            - run:
-                name: Upload Coverage
-                command: |
-                    ./cc-test-reporter sum-coverage --output='/tmp/codeclimate/summed_coverage.json' /tmp/codeclimate/codeclimate.*.json
-                    ./cc-test-reporter upload-coverage --input='/tmp/codeclimate/summed_coverage.json'
 workflows:
-    version: 2
-    ci:
-        jobs:
-            - build:
-                name: ruby2.7.4
-            - coverage:
-                name: codeclimate
-                requires:
-                    - ruby2.7.4
+  version: 2
+
+  commit:
+    jobs:
+      - build
+      - upload-coverage:
+          requires:
+             - build
