@@ -1,4 +1,4 @@
-module ExtendedMetadata
+module ExtendedCollectionMetadata
   extend ActiveSupport::Concern
 
   included do

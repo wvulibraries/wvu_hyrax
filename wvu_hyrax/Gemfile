@@ -28,6 +28,7 @@ gem 'redis', '~> 4.0'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'rubyzip'
+gem 'qa'
 
 # Application Specific
 # =================================================================
@@ -66,7 +67,7 @@ gem 'pdfjs_viewer-rails'
 
 # Bulk Import
 # =====================================================
-gem 'bulkrax', git: 'https://github.com/samvera-labs/bulkrax.git', branch: 'main'
+gem 'bulkrax'
 
 # authentication
 # =====================================================

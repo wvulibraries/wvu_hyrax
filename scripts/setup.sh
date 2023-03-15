@@ -1,6 +1,3 @@
-echo "Install Yarn Packages"
-yarn install
-
 echo "Preparing Database"
 bin/rails db:drop db:create
 
