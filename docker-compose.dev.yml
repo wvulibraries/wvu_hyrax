@@ -80,7 +80,7 @@ services:
       retries: 3                 
     networks:
       - hyrax   
-      
+
   fcrepo:
     image: ghcr.io/samvera/fcrepo4:4.7.5
     container_name: fcrepo
@@ -135,7 +135,6 @@ volumes:
   imports:
   exports: 
   postgres:
-  fcrepo:
   redis:
   solr:
   derivatives:

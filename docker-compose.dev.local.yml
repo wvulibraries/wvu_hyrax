@@ -135,7 +135,6 @@ volumes:
   imports:
   exports: 
   postgres:
-  fcrepo:
   redis:
   solr:
   derivatives:
