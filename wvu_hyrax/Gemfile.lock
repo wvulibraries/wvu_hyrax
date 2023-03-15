@@ -673,7 +673,7 @@ GEM
       rdf
     raabro (1.4.0)
     racc (1.6.2)
-    rack (2.2.6.2)
+    rack (2.2.6.4)
     rack-cas (0.16.1)
       addressable (~> 2.3)
       nokogiri (~> 1.5)
