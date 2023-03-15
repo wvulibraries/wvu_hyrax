@@ -5,6 +5,7 @@ mnt/*
 data
 data/*
 env
+env/.*
 env/*
 wvu_hyrax/fits.log
 .DS_Store
