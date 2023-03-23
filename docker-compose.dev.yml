@@ -90,6 +90,8 @@ services:
       - './env/.env.dev.fedora' 
     ports:
       - "8080:8080"
+    volumes:
+      - ./data/fcrepo_dev:/data:cached           
     networks:
       - hyrax
       
