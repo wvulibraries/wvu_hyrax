@@ -17,7 +17,7 @@ Rails.application.routes.draw do
 
   mount Hydra::RoleManagement::Engine => '/'
 
-  mount Qa::Engine => '/qa'
+  mount Qa::Engine => '/authorities'
   mount Hyrax::Engine, at: '/'
   mount HydraEditor::Engine => '/'
   resources :welcome, only: 'index'
