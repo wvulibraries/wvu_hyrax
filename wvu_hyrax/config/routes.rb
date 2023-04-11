@@ -17,7 +17,7 @@ Rails.application.routes.draw do
 
   mount Hydra::RoleManagement::Engine => '/'
 
-  mount Qa::Engine => '/qa'
+  mount Qa::Engine => '/authorities'
   mount Hyrax::Engine, at: '/'
   mount HydraEditor::Engine => '/'
   resources :welcome, only: 'index'
@@ -44,7 +44,7 @@ Rails.application.routes.draw do
   end
 
   mount PdfjsViewer::Rails::Engine => "/pdfjs", as: 'pdfjs'
-  resources :hyrax_checksums, :only => [ :index, :create, :update ]
+  resources :checksums, :only => [ :index, :create, :update ]
   
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

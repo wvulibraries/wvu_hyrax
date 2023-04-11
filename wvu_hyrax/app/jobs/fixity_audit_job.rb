@@ -8,11 +8,11 @@ class FixityAuditJob < ApplicationJob
     week_no = Date.today.strftime("%U").to_s
 
     # Read fixity table for week Number
-    @hyrax_checksums = HyraxChecksum.weekly(week_no)
+    @checksums = Checksum.weekly(week_no)
 
-    @hyrax_checksums.each do | hyrax_checksum |
+    @checksums.each do | checksum |
         begin
-          fs = FileSet.find(hyrax_checksum.fileset_id)
+          fs = FileSet.find(checksum.fileset_id)
           fs.files.each do | a_file |
             # byebug
             FixityCheckJob.perform_now(a_file.uri, file_set_id:fs.id, file_id:a_file.id)

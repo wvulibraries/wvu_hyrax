@@ -25,7 +25,7 @@ module WvuHyrax
     config.rack_cas.service = "/users/service"
     
     # force ssl
-    config.force_ssl = true if Rails.env.production?
+    # config.force_ssl = true if Rails.env.production?
     
     # session store
     config.session_store :cookie_store, expire_after: nil, secure: true if Rails.env.production?

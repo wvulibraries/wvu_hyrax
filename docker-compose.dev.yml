@@ -65,29 +65,33 @@ services:
   redis:
     image: redis:alpine
     container_name: redis
-    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"
-    ports:
-      - "6379"
     env_file:
-      - './env/.env.dev.redis'
+      - './env/.env.dev.redis' 
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"
+    expose:
+      - "6379"
     volumes:
       - redis:/var/lib/redis/data
-    restart: unless-stopped  
+    restart: always  
     healthcheck:
       test: redis-cli -h redis ping
       interval: 30s
       timeout: 3s
       retries: 3                 
     networks:
-      - hyrax               
+      - hyrax   
 
   fcrepo:
-    container_name: fcrepo
     image: ghcr.io/samvera/fcrepo4:4.7.5
-    volumes:
-      - fcrepo:/data:cached
+    container_name: fcrepo
+    depends_on:
+      - db        
+    env_file:
+      - './env/.env.dev.fedora' 
     ports:
       - "8080:8080"
+    volumes:
+      - ./data/fcrepo_dev:/data:cached           
     networks:
       - hyrax
       
@@ -133,7 +137,6 @@ volumes:
   imports:
   exports: 
   postgres:
-  fcrepo:
   redis:
   solr:
   derivatives:

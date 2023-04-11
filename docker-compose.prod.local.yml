@@ -65,27 +65,33 @@ services:
   redis:
     image: redis:alpine
     container_name: redis
-    command: redis-server
+    env_file:
+      - './env/.env.redis' 
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"
     expose:
       - "6379"
     volumes:
       - redis:/var/lib/redis/data
-    restart: unless-stopped  
+    restart: always  
     healthcheck:
       test: redis-cli -h redis ping
       interval: 30s
       timeout: 3s
       retries: 3                 
     networks:
-      - hyrax               
+      - hyrax                
 
   fcrepo:
-    container_name: fcrepo
     image: ghcr.io/samvera/fcrepo4:4.7.5
-    volumes:
-      - fcrepo:/data:cached
+    container_name: fcrepo
+    depends_on:
+      - db        
+    env_file:
+      - './env/.env.fedora' 
     ports:
       - "8080:8080"
+    volumes:
+      - fcrepo:/data:cached           
     networks:
       - hyrax
       
@@ -98,7 +104,7 @@ services:
     command:
       - sh
       - "-c"
-      - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax_dev /opt/solr/server/configsets/hyraxconf"
+      - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax_prod /opt/solr/server/configsets/hyraxconf"
       - "&&"
       - "chown -R 8983:8983 /var/solr"      
     volumes:
@@ -131,10 +137,10 @@ volumes:
   imports:
   exports: 
   postgres:
-  fcrepo:
   redis:
   solr:
   derivatives:
+  fcrepo:
 
 networks:
   hyrax:

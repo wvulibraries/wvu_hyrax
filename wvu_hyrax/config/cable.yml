@@ -1,11 +1,14 @@
 development:
   adapter: redis
   url: <%= ENV.fetch("REDIS_URL_SIDEKIQ") { "redis://redis:6379/12" } %>
-
+  password: <%= ENV.fetch("REDIS_PASSWORD") { "docker" } %> 
+  channel_prefix: hyrax_development
+  
 test:
   adapter: test
 
 production:
   adapter: redis
   url: <%= ENV.fetch("REDIS_URL_SIDEKIQ") { "redis://redis:6379/12" } %>
+  password: <%= ENV.fetch("REDIS_PASSWORD") { "docker" } %> 
   channel_prefix: hyrax_production

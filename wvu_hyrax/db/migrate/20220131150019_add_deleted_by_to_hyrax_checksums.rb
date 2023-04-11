@@ -1,5 +1,5 @@
-class AddDeletedByToHyraxChecksums < ActiveRecord::Migration[5.1]
+class AddDeletedByToChecksums < ActiveRecord::Migration[5.1]
   def change
-    add_column :hyrax_checksums, :deleted_by, :string
+    add_column :checksums, :deleted_by, :string
   end
 end

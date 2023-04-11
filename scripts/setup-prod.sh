@@ -10,4 +10,5 @@ else
 fi
 
 bin/rails db:seed
+bin/rails assets:precompile
 

@@ -80,13 +80,12 @@ class Import
   def create_item(row)
     # create hash for the item
     hash = {
-      # source_identifier: row['source_identifier'],      
-      # identifier: [] << row['identifier'],
-      depositor: "tam0013@mail.wvu.edu",
+      identifier: [] << row['identifier'],     
+      depositor: row['depositor'],
       title: [] << row['title'],
       date_uploaded: row['date_created'],
+      date_modified: Date.today.to_s,
       institution: row['institution'],
-      # subtype: [] << row['subtype'],
       extent: (row['extent'] || ""),
       resource_type: [] << row['resource_type'],
       creator: self.string_to_array(row['creator']),
@@ -101,11 +100,17 @@ class Import
       admin_set_id: "admin_set/default"
     }
 
+    puts "Creating item #{hash[:identifier]}"
+    puts hash.inspect
+    
     # create the item
     item = BasicWork.new(hash)
+
     # set depositor user
-    item.depositor = User.where(email: hash[:depositor]).first.user_key
+    item.depositor = User.where(email: hash[:depositor].downcase).first.user_key
     item.save
+
+    puts "Created item #{item.id}"
 
     # return the id of the new item
     item.id
@@ -120,26 +125,31 @@ class Import
     end
   end  
 
-  def add_file_to_item(item_id, source, filename)
-    item = BasicWork.find(item_id)
-    user = User.where(email: item.depositor).first
-    file = File.open("#{@folder}/#{source}/export/bulkrax/files/#{filename}")
-    file_set = FileSet.new
-    file_set.title = [filename]
-    file_set.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-    file_set.apply_depositor_metadata(item.depositor)
-    file_set.save
-    actor = Hyrax::Actors::FileSetActor.new(file_set, user)
-    #actor.create_metadata(item)
-    actor.create_content(file)
-    actor.attach_to_work(item) 
-  end
+  # def add_file_to_item(item_id, source, filename)
+  #   item = BasicWork.find(item_id)
+  #   user = User.where(email: item.depositor).first
+  #   file = File.open("/home/wvu_hyrax/imports/#{source}/export/bulkrax/files/#{filename}")
+  #   file_set = FileSet.new
+  #   file_set.title = [filename]
+  #   file_set.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+  #   file_set.apply_depositor_metadata(item.depositor)
+  #   file_set.save
+  #   actor = Hyrax::Actors::FileSetActor.new(file_set, user)
+  #   #actor.create_metadata(item)
+  #   actor.create_content(file)
+  #   actor.attach_to_work(item) 
+
+  #   # create the checksum record
+  #   Checksum.where(:fileset_id => actor.file_set.id).first_or_create(:ingest_date => Date.today, :ingest_week_no => Date.today.strftime("%U").to_i, :file_name => actor.file_set.label )
+  # end
 
   def perform
     # loop over each import directory
     Dir.glob("#{@folder}/*") do |source|
+
       # get collection identifer from the directory name
       collection_source = source.split('/').last
+
       csv_file = "#{source}/export/bulkrax/#{collection_source}-data.csv"
 
       # verify the csv file exists if not skip to next directory
@@ -150,6 +160,8 @@ class Import
 
       csv = CSV.parse(csv_text, :headers => true)
       csv.each do |row|
+        puts "Find or Create Collection: #{collection_source}"
+
         # first row should be collection data
         if row['model'].eql?("Collection")
           # find or create collection
@@ -167,15 +179,40 @@ class Import
 
         # all other rows should be item data
         if row['model'].eql?("BasicWork")
-          # create the item if it doesn't exist
+          # ImportBasicWorkJob.perform_later(row)
+
+          # if no depositor is listed set it for the libdev account
+          row['depositor'] = "libdev@mail.wvu.edu" unless row['depositor'].present?          
+
+          # check if user exists
+          user = User.where(email: row['depositor'].downcase).first
+          if user.nil?
+            # create the user if it doesn't exist
+            user_information = {
+              username: row['depositor'].split("@").first,
+              email: row['depositor'],
+              first_name: row['first_name'],
+              last_name: row['last_name'],
+            }
+            new_user = User.create(user_information)
+            new_user.save
+          end
+
+          # destroy item if it already exists
           item = BasicWork.where(title: row['title']).first
 
-          if item.nil?
-            item_id = create_item(row)
-            set_item_collection(item_id, collection_source)
-            # add files to item
-            add_file_to_item(item_id, collection_source, row['file'])
+          if item.present?
+            puts "Record Already exists. Destroying current item #{item.id}"
+            item.destroy
           end
+
+          # create the item
+          puts "Creating item #{row['title']}"
+          item_id = create_item(row)
+          set_item_collection(item_id, collection_source)
+
+          # add file to item job queue
+          AddFileToItemJob.perform_later(item_id, collection_source, row['file'])
         end
       end
     end

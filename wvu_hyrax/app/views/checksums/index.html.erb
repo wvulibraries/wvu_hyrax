@@ -1,0 +1,42 @@
+<% provide :page_header do %>
+  <h1><span class="fa fa-shield" aria-hidden="true"></span> Checksums</h1>
+<% end %>
+<div>
+  Files Ingested: <%= ChecksumPresenter.new.all %>
+</div>
+<div>
+  Files Audited: <%= ChecksumPresenter.new.audited %>
+</div>
+<div>
+  Failures: <%= ChecksumPresenter.new.failed %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>fileset id</th>
+        <th>ingest date</th>
+        <th>ingest week no</th>
+        <th>last fixity check</th>
+        <th>last fixity result</th>
+      </tr>
+    </thead>
+    <% @checksums.each do | checksum | %>
+    <tr>
+      <td><%= link_to checksum.fileset_id, polymorphic_path([main_app, FileSet.find(checksum.fileset_id)]) %></td>
+      <td><%= checksum.ingest_date %></td>
+      <td><%= checksum.ingest_week_no %></td>
+      <td><%= checksum.last_fixity_check %></td>
+      <% case checksum.last_fixity_result %>
+        <% when 'pass' %>
+             <td><span class="label label-success"><%= checksum.last_fixity_result %></span></td>
+        <% when 'fail' %>
+             <td><span class="label label-danger"><%= checksum.last_fixity_result %></span></td>
+        <% else %>
+             <td><span class="label label-warning">o/s</span></td>
+      <% end %>
+    </tr>
+    <% end %>
+  </table>
+</div>

@@ -1,10 +1,9 @@
-repo_old
-repo_old/*
 mnt
 mnt/*
 data
 data/*
 env
+env/.*
 env/*
 wvu_hyrax/fits.log
 .DS_Store

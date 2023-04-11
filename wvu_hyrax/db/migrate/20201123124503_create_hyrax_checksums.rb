@@ -1,6 +1,6 @@
-class CreateHyraxChecksums < ActiveRecord::Migration[5.1]
+class CreateChecksums < ActiveRecord::Migration[5.1]
   def up
-    create_table :hyrax_checksums, :id => false do |t|
+    create_table :checksums, :id => false do |t|
       t.string  :fileset_id, :null => false
       t.date    :ingest_date
       t.integer :ingest_week_no
@@ -9,11 +9,11 @@ class CreateHyraxChecksums < ActiveRecord::Migration[5.1]
 
       t.timestamps
     end
-    add_index :hyrax_checksums, :fileset_id, unique: true
-    add_index :hyrax_checksums, :ingest_week_no
+    add_index :checksums, :fileset_id, unique: true
+    add_index :checksums, :ingest_week_no
   end
 
   def down
-    drop_table :hyrax_checksums
+    drop_table :checksums
   end
 end

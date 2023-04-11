@@ -22,9 +22,10 @@ services:
       # folders that contain data not included in the git repo
       # add seed csv files to db folder in a subfolder called data
       - ./data/seed_files:/home/wvu_hyrax/db/data
-      - ./data/node_modules:/home/wvu_hyrax/node_modules
+      - node:/home/wvu_hyrax/node_modules
       # add sftp upload directory
       - ./mnt/nfs-exports/hyrax-uploads/sftp_uploads:/home/wvu_hyrax/sftp_uploads
+      - ./data:/data
     networks:
       - hyrax         
 
@@ -65,27 +66,33 @@ services:
   redis:
     image: redis:alpine
     container_name: redis
-    command: redis-server
+    env_file:
+      - './env/.env.dev.redis' 
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"
     expose:
       - "6379"
     volumes:
       - redis:/var/lib/redis/data
-    restart: unless-stopped  
+    restart: always  
     healthcheck:
       test: redis-cli -h redis ping
       interval: 30s
       timeout: 3s
       retries: 3                 
     networks:
-      - hyrax               
+      - hyrax                  
 
   fcrepo:
-    container_name: fcrepo
     image: ghcr.io/samvera/fcrepo4:4.7.5
-    volumes:
-      - fcrepo:/data:cached
+    container_name: fcrepo
+    depends_on:
+      - db        
+    env_file:
+      - './env/.env.dev.fedora' 
     ports:
       - "8080:8080"
+    volumes:
+      - fcrepo:/data:cached           
     networks:
       - hyrax
       
@@ -131,10 +138,11 @@ volumes:
   imports:
   exports: 
   postgres:
-  fcrepo:
   redis:
   solr:
   derivatives:
+  fcrepo:
+  node:
 
 networks:
   hyrax:

@@ -1,0 +1,54 @@
+<%# Override Bulkrax to remove frequency and set admin_set_id %>
+
+<div class="panel-body">
+  <% if importer.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(importer.errors.count, "error") %> prohibited this importer from being saved:</h2>
+
+      <ul>
+        <% importer.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <% case ENV["RAILS_ENV"] %>
+            <% when 'development' %>
+                 <span class="label label-info">Environment : <%= ENV["RAILS_ENV"]%></span>
+            <% when 'dcdevhyrax' %>
+                 <span class="label label-warning">Environment : <%= ENV["RAILS_ENV"]%></span>
+            <% when 'digcollhyrax01' %>
+                 <span class="label label-success">Environment : <%= ENV["RAILS_ENV"]%></span>
+            <% when 'digcollhyrax02' %>
+                 <span class="label label-danger">Environment : <%= ENV["RAILS_ENV"]%></span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= form.input :name %>
+
+  <%= form.input :admin_set_id, collection: [[AdminSet::DEFAULT_TITLE.first, AdminSet::DEFAULT_ID]], selected: AdminSet::DEFAULT_ID %>
+
+  <%= form.hidden_field :user_id, value: current_user.id %>
+
+  <%= form.input :limit, as: :integer, hint: 'leave blank or 0 for all records' %>
+
+  <%= form.input :parser_klass, collection: Bulkrax.parsers.map {|p| [p[:name], p[:class_name], {'data-partial' => p[:partial]}]}, label: "Parser" %>
+
+  <%= form.fields_for :parser_fields do |fi| %>
+    <div class='parser_fields'>
+      <p>Specific fields for each parser are available only when a parser is selected</p>
+      <% Bulkrax.parsers.map {|p| p[:partial]}.uniq.each do |partial| %>
+        <%= render partial: partial, locals: {form: form, fi: fi, importer: importer} %>
+      <% end %>
+    </div>
+  <% end %>
+
+</div>

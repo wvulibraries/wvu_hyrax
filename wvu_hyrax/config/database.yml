@@ -3,7 +3,7 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   host: <%= ENV['DATABASE_HOST'] %>
-  username: postgres
+  username: <%= ENV['DATABASE_USER'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
 
 development:
@@ -17,5 +17,3 @@ test:
 production:
   <<: *default
   database: hyrax
-  username: hyrax_user
-  password: <%= ENV['DATABASE_PASSWORD'] %>

@@ -1,4 +1,4 @@
-class HyraxChecksumsController < ApplicationController
+class ChecksumsController < ApplicationController
 
   include Hyrax::ThemedLayoutController
 
@@ -15,8 +15,8 @@ class HyraxChecksumsController < ApplicationController
   def index
     add_breadcrumb t(:'hyrax.controls.home'), main_app.root_path
     add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-    add_breadcrumb 'Checksum Audits', hyrax_checksums_path
-    @hyrax_checksums = HyraxChecksum.sorted
+    add_breadcrumb 'Checksum Audits', checksums_path
+    @checksums = Checksum.sorted
   end
 
   def create
@@ -26,8 +26,8 @@ class HyraxChecksumsController < ApplicationController
   end
 
   private
-  def hyrax_checksum_params
-    params.require(:hyrax_checksum).permit(:last_fixity_result, :last_fixity_check)
+  def checksum_params
+    params.require(:checksum).permit(:last_fixity_result, :last_fixity_check)
   end
 
 end
