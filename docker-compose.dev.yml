@@ -5,26 +5,26 @@ services:
     build: 
       context: ./
       dockerfile: Dockerfile.dev
-    # image: wvu_hyrax-app
     env_file:
-      - './env/.env.dev.hyrax' 
+      - './env/env.dev.hyrax' 
     volumes:
       - ./wvu_hyrax:/home/wvu_hyrax
       - ./scripts:/home/wvu_hyrax/scripts
-      - ./data/logs:/home/wvu_hyrax/log         
-      - /home/wvu_hyrax/tmp # don't mount tmp directory  	  	      
+      - ./data/logs:/home/wvu_hyrax/log         	      
       - imports:/home/wvu_hyrax/tmp/imports
       - exports:/home/wvu_hyrax/tmp/exports
       - uploads:/home/wvu_hyrax/tmp/uploads
       - derivatives:/home/wvu_hyrax/tmp/derivatives
       # added because we were using exports with bulkrax for testing atm
-      - /mnt/nfs-exports/hyrax-exports:/home/wvu_hyrax/imports
+      - ./data/hyrax-exports:/home/wvu_hyrax/imports
       # folders that contain data not included in the git repo
       # add seed csv files to db folder in a subfolder called data
       - ./data/seed_files:/home/wvu_hyrax/db/data
       - ./data/node_modules:/home/wvu_hyrax/node_modules
       # add sftp upload directory
-      - /mnt/nfs-exports/hyrax-uploads/sftp_uploads:/home/wvu_hyrax/sftp_uploads
+      - ./data/sftp_uploads:/home/wvu_hyrax/sftp_uploads
+      # don't mount tmp directory  
+      - /home/wvu_hyrax/tmp 
     networks:
       - hyrax         
 
@@ -66,7 +66,7 @@ services:
     image: redis:alpine
     container_name: redis
     env_file:
-      - './env/.env.dev.redis' 
+      - './env/env.dev.redis' 
     command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"
     expose:
       - "6379"
@@ -87,11 +87,11 @@ services:
     depends_on:
       - db        
     env_file:
-      - './env/.env.dev.fedora' 
+      - './env/env.dev.fedora' 
     ports:
       - "8080:8080"
     volumes:
-      - ./data/fcrepo_dev:/data:cached           
+      - fcrepo:/data:cached           
     networks:
       - hyrax
       
@@ -119,7 +119,7 @@ services:
     expose:
       - "5432"
     env_file:
-      - './env/.env.dev.db'       
+      - './env/env.dev.db'       
     volumes:
       - postgres:/var/lib/postgresql/data
     restart: unless-stopped
@@ -140,6 +140,7 @@ volumes:
   redis:
   solr:
   derivatives:
+  fcrepo:
 
 networks:
   hyrax:
