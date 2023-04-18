@@ -121,7 +121,7 @@ services:
     env_file:
       - './env/env.db'       
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - ./data/postgres:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready", "-d", "hyrax"]
