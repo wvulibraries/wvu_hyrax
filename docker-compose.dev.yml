@@ -59,6 +59,12 @@ services:
       - fcrepo
       - memcached 
       - db
+    healthcheck:
+      test: ["CMD", "bash", "/scripts/sidekiqmon.sh"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s   
     stdin_open: true
     tty: true
 
