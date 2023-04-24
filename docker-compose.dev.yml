@@ -133,7 +133,6 @@ services:
     volumes:
       - ./wvu_hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf/conf      	
       - ./data/solr:/var/solr
-      - ./data/logs/solr_dev/:/var/solr/logs
     restart: unless-stopped
     healthcheck:
        test: curl --fail -s http://localhost:8893/ || exit 1
