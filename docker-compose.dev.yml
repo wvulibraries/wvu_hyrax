@@ -96,7 +96,7 @@ services:
       - hyrax   
 
   fcrepo:
-    image: ghcr.io/samvera/fcrepo4:4.7.5
+    image: ghcr.io/scientist-softserv/docker-fcrepo:4.7.6-SNAPSHOT2
     container_name: fcrepo
     depends_on:
       - db        
@@ -118,15 +118,18 @@ services:
       
   solr:
     container_name: solr  
-    image: solr:8.11.1
+    # image: solr:8.11.1
+    build: 
+      context: ./
+      dockerfile: Dockerfile.solr
     ports:
       - "8983:8983"
     command:
       - sh
       - "-c"
       - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax_dev /opt/solr/server/configsets/hyraxconf"
-      - "&&"
-      - "chown -R 8983:8983 /var/solr"      
+      # - "&&"
+      # - "chown -R 8983:8983 /var/solr"      
     volumes:
       - ./wvu_hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf/conf      	
       - solr:/var/solr
