@@ -124,7 +124,6 @@ services:
     volumes:
       - ./wvu_hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf/conf      	
       - ./data/solr:/var/solr
-      - ./data/logs/solr_prod/:/var/solr/logs  
     networks:
       - hyrax 
 
