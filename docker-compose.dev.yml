@@ -128,8 +128,8 @@ services:
       - sh
       - "-c"
       - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax_dev /opt/solr/server/configsets/hyraxconf"
-      # - "&&"
-      # - "chown -R 8983:8983 /var/solr"      
+      - "&&"
+      - "chown -R 8983:8983 /var/solr"      
     volumes:
       - ./wvu_hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf/conf      	
       - solr:/var/solr
