@@ -118,10 +118,10 @@ services:
       
   solr:
     container_name: solr  
-    # image: solr:8.11.1
-    build: 
-      context: ./
-      dockerfile: Dockerfile.solr
+    image: solr:8.11.1
+    # build: 
+    #   context: ./
+    #   dockerfile: Dockerfile.solr
     ports:
       - "8983:8983"
     command:
