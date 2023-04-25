@@ -89,7 +89,7 @@ services:
       - hyrax                
 
   fcrepo:
-    image: ghcr.io/samvera/fcrepo4:4.7.5
+    image: ghcr.io/scientist-softserv/docker-fcrepo:4.7.6-SNAPSHOT2
     container_name: fcrepo
     depends_on:
       - db        
