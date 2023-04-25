@@ -59,12 +59,12 @@ services:
       - fcrepo
       - memcached 
       - db
-    # healthcheck:
-    #   test: ["CMD", "bash", "/scripts/sidekiqmon.sh"]
-    #   interval: 30s
-    #   timeout: 60s
-    #   retries: 5
-    #   start_period: 80s   
+    healthcheck:
+      test: ["CMD", "bash", "/scripts/sidekiqmon.sh"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s   
     stdin_open: true
     tty: true
 
@@ -135,7 +135,7 @@ services:
       - solr:/var/solr
     restart: unless-stopped
     healthcheck:
-       test: curl --fail -s http://localhost:8893/ || exit 1
+       test: curl --fail -s http://localhost:8983/ || exit 1
        interval: 30s
        timeout: 60s
        retries: 5
