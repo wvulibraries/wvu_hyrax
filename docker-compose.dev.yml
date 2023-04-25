@@ -132,7 +132,7 @@ services:
       - "chown -R 8983:8983 /var/solr"      
     volumes:
       - ./wvu_hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf/conf      	
-      - ./data/solr:/var/solr
+      - :solr:/var/solr
     restart: unless-stopped
     healthcheck:
        test: curl --fail -s http://localhost:8893/ || exit 1
