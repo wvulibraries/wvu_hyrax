@@ -1,6 +1,6 @@
-FROM ruby:2.7
+FROM ruby:2.7.8
 
-ENV BUNDLER_VERSION=2.3.20
+ENV BUNDLER_VERSION=2.4.7
 ENV RAILS_VERSION=6.1.6.1
 
 RUN mkdir -p /home/hyrax
@@ -26,5 +26,5 @@ RUN \
 RUN apt-get install -y ffmpeg 
 
 # Node.js
-RUN curl -sL https://deb.nodesource.com/setup_17.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
