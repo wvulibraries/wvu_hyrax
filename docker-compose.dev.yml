@@ -10,17 +10,18 @@ services:
     volumes:
       - ./hyrax:/home/hyrax
       - ./scripts:/home/hyrax/scripts
+      - ./data/logs:/home/hyrax/log      
 
       # added because we were using exports with bulkrax for testing atm
-      - ./mnt/nfs-exports/hyrax-exports:/home/hyrax/imports
+      - ./data/hyrax-exports:/home/hyrax/imports
       - '/home/hyrax/tmp' # don't mount tmp directory     
     networks:
       - hyrax         
 
-  hyrax:
+  web:
     extends: app
     container_name: hyrax
-    command: bundle exec rails s -p 3000 -b 0.0.0.0
+    command: bash -c "bundle install; bundle exec rails s -p 3000 -b 0.0.0.0"
     ports:
       - "3000:3000"
     depends_on:
@@ -69,12 +70,23 @@ services:
       retries: 3                                
 
   fcrepo:
+    image: ghcr.io/scientist-softserv/docker-fcrepo:4.7.6-SNAPSHOT2
     container_name: fcrepo
-    image: ghcr.io/samvera/fcrepo4:4.7.5
-    volumes:
-      - fcrepo:/data:cached
+    depends_on:
+      - db        
+    env_file:
+      - './env/.env.dev.fedora' 
     ports:
       - "8080:8080"
+    volumes:
+      - fcrepo:/data:cached  
+    restart: unless-stopped
+    healthcheck:
+       test: curl --fail -s http://localhost:8080/ || exit 1
+       interval: 30s
+       timeout: 60s
+       retries: 5
+       start_period: 80s                 
     networks:
       - hyrax
       
