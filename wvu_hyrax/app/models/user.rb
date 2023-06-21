@@ -16,12 +16,14 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
   # current setup for database authentication
-  # devise :database_authenticatable, :registerable,
+  # devise :invitable, :database_authenticatable, :registerable,
   #        :recoverable, :rememberable, :trackable, :validatable
 
+  include Devise::Models::DatabaseAuthenticatable
+
   # uncomment for cas setup
-  devise :cas_authenticatable, 
-     :recoverable, :rememberable, :trackable
+  devise :invitable, :cas_authenticatable, 
+     :recoverable, :rememberable, :trackable, :validatable
 
   # Method added by Blacklight; Blacklight uses #to_s on your
   # user class to get a user-displayable login/identifier for
@@ -59,18 +61,18 @@ end
 #   # -----------------------------------------------------
 #   # Include default devise modules. Others available are:
 #   # :confirmable, :lockable, :timeoutable and :omniauthable
-#   # devise :cas_authenticatable, 
+#   # devise :invitable, :cas_authenticatable, 
 #   #    :recoverable, :rememberable, :trackable
          
-#   devise :database_authenticatable, :registerable,
+#   devise :invitable, :database_authenticatable, :registerable,
 #          :recoverable, :rememberable, :validatable
 
 #   # Include default devise modules. Others available are:
 #   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-#   # devise :database_authenticatable, :recoverable, :rememberable, :validatable, :trackable,
+#   # devise :invitable, :database_authenticatable, :recoverable, :rememberable, :validatable, :trackable,
 #   #        :omniauthable, omniauth_providers: [:cas]
 
-#   # devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable,
+#   # devise :invitable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable,
 # 	#        :omniauthable, omniauth_providers: [:cas]
 
 #   # Validations

@@ -151,6 +151,20 @@ ActiveRecord::Schema.define(version: 2022_06_28_193554) do
     t.index ["file_set_id", "file_id"], name: "by_file_set_id_and_file_id"
   end
 
+  create_table "checksums", id: false, force: :cascade do |t|
+    t.string "fileset_id", null: false
+    t.date "ingest_date"
+    t.integer "ingest_week_no"
+    t.date "last_fixity_check"
+    t.string "last_fixity_result"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "deleted_by"
+    t.string "file_name"
+    t.index ["fileset_id"], name: "index_checksums_on_fileset_id", unique: true
+    t.index ["ingest_week_no"], name: "index_checksums_on_ingest_week_no"
+  end
+
   create_table "collection_branding_infos", force: :cascade do |t|
     t.string "collection_id"
     t.string "role"
@@ -231,20 +245,6 @@ ActiveRecord::Schema.define(version: 2022_06_28_193554) do
     t.integer "user_id"
     t.index ["file_id"], name: "index_file_view_stats_on_file_id"
     t.index ["user_id"], name: "index_file_view_stats_on_user_id"
-  end
-
-  create_table "checksums", id: false, force: :cascade do |t|
-    t.string "fileset_id", null: false
-    t.date "ingest_date"
-    t.integer "ingest_week_no"
-    t.date "last_fixity_check"
-    t.string "last_fixity_result"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "deleted_by"
-    t.string "file_name"
-    t.index ["fileset_id"], name: "index_checksums_on_fileset_id", unique: true
-    t.index ["ingest_week_no"], name: "index_checksums_on_ingest_week_no"
   end
 
   create_table "hyrax_collection_types", force: :cascade do |t|
@@ -680,7 +680,21 @@ ActiveRecord::Schema.define(version: 2022_06_28_193554) do
     t.binary "zotero_token"
     t.string "zotero_userid"
     t.string "preferred_locale"
+    t.datetime "deleted_at"
+    t.string "invitation_token"
+    t.datetime "invitation_created_at"
+    t.datetime "invitation_sent_at"
+    t.datetime "invitation_accepted_at"
+    t.integer "invitation_limit"
+    t.string "invited_by_type"
+    t.integer "invited_by_id"
+    t.integer "invitations_count", default: 0
+    t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
+    t.index ["invitations_count"], name: "index_users_on_invitations_count"
+    t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

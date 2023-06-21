@@ -7,7 +7,7 @@
 
   <% if can? :manage, User %>
     <%= menu.nav_link(hyrax.admin_users_path) do %>
-      <span class="fa fa-user" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.users') %></span>
+      <span class="fa fa-user" aria-hidden="true"></span> <span class="sidebar-action-text">View User Profile</span>
     <% end %>
   <% end %>
 
@@ -21,10 +21,20 @@
     <% end %>
   <% end %>
 
-  <%= menu.nav_link('/admin/users',  data: { turbolinks: false }) do %>
+  <%# menu.nav_link('/admin/users',  data: { turbolinks: false }) do 
       <span class="fa fa-users"></span> <span class="sidebar-action-text">Manage Users</span>
+  <% end %> 
+
+  <%# if can? :manage, User 
+    <%= menu.nav_link('/users/new',  data: { turbolinks: false }) do 
+      <span class="fa fa-user"></span> <span class="sidebar-action-text">Create New User</span>
+    <% end 
   <% end %>
 
-  <%= menu.nav_link('/users/new',  data: { turbolinks: false }) do %>
-      <span class="fa fa-user"></span> <span class="sidebar-action-text">Create New User</span>
+<% if defined?(Samvera::Persona) %>
+  <% if can? :manage, User %>
+    <%= menu.nav_link('/persona/users',  data: { turbolinks: false }) do %>
+      <span class="fa fa-user" aria-hidden="true"></span><span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.users') %></span>
+      <% end %>
   <% end %>
+<% end %>

@@ -11,6 +11,8 @@ Rails.application.routes.draw do
     concerns :searchable
   end
 
+  mount Samvera::Persona::Engine => '/'
+
   devise_for :users, controllers: {
     sessions: 'users/sessions'
   }
@@ -45,6 +47,6 @@ Rails.application.routes.draw do
 
   mount PdfjsViewer::Rails::Engine => "/pdfjs", as: 'pdfjs'
   resources :checksums, :only => [ :index, :create, :update ]
-  
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
