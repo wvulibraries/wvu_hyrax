@@ -30,6 +30,16 @@ services:
       - fcrepo
       - db
       - workers
+
+  migrate:
+    extends: app
+    container_name: migrate
+    command: bash -c "bundle install; sh ./scripts/setup.sh"
+    depends_on:
+      - redis
+      - solr
+      - fcrepo
+      - db
   
   workers:
     extends: app
