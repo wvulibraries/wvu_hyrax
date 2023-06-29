@@ -23,7 +23,7 @@ class User < ApplicationRecord
 
   # uncomment for cas setup
   devise :invitable, :cas_authenticatable, 
-     :recoverable, :rememberable, :trackable, :validatable
+     :recoverable, :rememberable, :trackable
 
   # Method added by Blacklight; Blacklight uses #to_s on your
   # user class to get a user-displayable login/identifier for
