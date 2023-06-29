@@ -161,6 +161,7 @@ ActiveRecord::Schema.define(version: 2023_06_22_180209) do
     t.datetime "updated_at", null: false
     t.string "deleted_by"
     t.string "image_file_name"
+    t.string "file_name"
     t.index ["fileset_id"], name: "index_checksums_on_fileset_id", unique: true
     t.index ["ingest_week_no"], name: "index_checksums_on_ingest_week_no"
   end
