@@ -1,0 +1,8 @@
+<div>
+  <audio controls="controls" class="" style="width:100%" data-setup="{}" controlsList="nodownload" preload="auto">
+    <source src="<%= hyrax.download_path(file_set, file: 'ogg') %>" type="audio/ogg" />
+    <source src="<%= hyrax.download_path(file_set, file: 'mp3') %>" type="audio/mp3" />
+    <source src="<%= hyrax.download_path(file_set, file: 'wav') %>" type="audio/wav" />  
+    <%= t('hyrax.file_set.show.downloadable_content.audio_tag_not_supported') %>
+  </audio>
+</div>

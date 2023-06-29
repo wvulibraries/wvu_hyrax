@@ -1,24 +1,35 @@
-ARG RUBY_VERSION=2.7.6
-FROM ruby:$RUBY_VERSION
+FROM ruby:2.7.8
 
-ENV LANG C.UTF-8
-ENV NODE_VERSION 16
-ENV NODE_ENV development
-ENV INSTALL_PATH /home/hyrax
+# ENV BUNDLER_VERSION=2.4.7
+ENV RAILS_VERSION=6.1.6.1
 
-RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash -
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN mkdir -p /home/hydra
+WORKDIR /home/hydra
+ADD ./hydra /home/hydra
 
-RUN apt-get update -qq
-RUN apt-get install -y --no-install-recommends nodejs postgresql-client yarn build-essential vim graphicsmagick ghostscript ffmpeg 
+RUN apt-get update && apt-get -y install cron
 
-RUN mkdir -p $INSTALL_PATH
-WORKDIR $INSTALL_PATH
-ADD ./hyrax $INSTALL_PATH
+# Use JEMALLOC instead
+# JEMalloc is a faster garbage collection for Ruby.
+# -------------------------------------------------------------------------------------------------
+RUN apt-get install -y libjemalloc2 libjemalloc-dev
+ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so
 
-RUN gem install bundler
-RUN bundle install
-RUN yarn install --check-files
-RUN yarn upgrade
-RUN rm -rf tmp
+RUN \
+  gem update --system --quiet && \
+  # gem install bundler -v ${BUNDLER_VERSION} && \
+  gem install rails -v ${RAILS_VERSION} && \
+  bundle config set --local without 'development test' && \
+  bundle install --jobs=4 --retry=3
+
+# FFMPEG Used to transcode video
+# -------------------------------------------------------------------------------------------------
+RUN apt-get install -y ffmpeg 
+
+# Node.js
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
+
+ADD ./startup.sh /usr/bin/
+RUN chmod -v +x /usr/bin/startup.sh
+ENTRYPOINT ["/usr/bin/startup.sh"]

@@ -8,6 +8,8 @@ class User < ApplicationRecord
   include Hyrax::User
   include Hyrax::UserUsageStats
 
+  # attr_accessible :email, :password, :password_confirmation if Blacklight::Utils.needs_attr_accessible?
+
   # Connects this user object to Blacklights Bookmarks.
   include Blacklight::User
 
@@ -22,4 +24,11 @@ class User < ApplicationRecord
   def to_s
     email
   end
+
+  # Returns String containing First Name and Last Name
+  # @return String
+  # @author(s) David J. Davis, Tracy A. McCormick
+  def display_name
+    "#{first_name} #{last_name}"
+  end  
 end

@@ -25,10 +25,10 @@ Hyrax.config do |config|
   # config.rendering_predicate = ::RDF::DC.hasFormat
 
   # Email recipient of messages sent via the contact form
-  # config.contact_email = "repo-admin@example.org"
+  config.contact_email = "libdev@mail.wvu.edu"
 
   # Text prefacing the subject entered in the contact form
-  # config.subject_prefix = "Contact form:"
+  config.subject_prefix = "Contact form:"
 
   # How many notifications should be displayed on the dashboard
   # config.max_notifications_for_dashboard = 5
@@ -37,11 +37,11 @@ Hyrax.config do |config|
   # config.max_days_between_fixity_checks = 7
 
   # Options to control the file uploader
-  # config.uploader = {
-  #   limitConcurrentUploads: 6,
-  #   maxNumberOfFiles: 100,
-  #   maxFileSize: 500.megabytes
-  # }
+  config.uploader = {
+    limitConcurrentUploads: 6,
+    maxNumberOfFiles: 100,
+    maxFileSize: 500.megabytes
+  }
 
   # Enables a link to the citations page for a work
   # Default is false
@@ -54,7 +54,7 @@ Hyrax.config do |config|
   # config.persistent_hostpath = 'http://localhost/files/'
 
   # If you have ffmpeg installed and want to transcode audio and video set to true
-  # config.enable_ffmpeg = false
+  config.enable_ffmpeg = true
 
   # Hyrax uses NOIDs for files and collections instead of Fedora UUIDs
   # where NOID = 10-character string and UUID = 32-character string w/ hyphens
@@ -73,10 +73,10 @@ Hyrax.config do |config|
   # config.redis_namespace = "hyrax"
 
   # Path to the file characterization tool
-  # config.fits_path = "fits.sh"
+  config.fits_path = "/home/fits/fits.sh"
 
   # Path to the file derivatives creation tool
-  # config.libreoffice_path = "soffice"
+  config.libreoffice_path = "/usr/bin/soffice"
 
   # Option to enable/disable full text extraction from PDFs
   # Default is true, set to false to disable full text extraction
@@ -104,7 +104,7 @@ Hyrax.config do |config|
   # Should work creation require file upload, or can a work be created first
   # and a file added at a later time?
   # The default is true.
-  # config.work_requires_files = true
+  config.work_requires_files = false
 
   # How many rows of items should appear on the work show view?
   # The default is 10
@@ -124,7 +124,17 @@ Hyrax.config do |config|
   #   * iiif_image_size_default
   #
   # Default is false
-  # config.iiif_image_server = false
+  config.iiif_image_server = true
+
+  # Returns a URL that resolves to an image provided by a IIIF image server
+  # JL : config.iiif_image_url_builder = lambda do |file_id, base_url, size|
+  # JL :   Riiif::Engine.routes.url_helpers.image_url(file_id, host: base_url, size: size)
+  # JL : end
+  # JL : cloned from https://github.com/UCLALibrary/californica/pull/312/commits/7cdb819a8e08d69f5250aa4a1cd19d65d18f89ed
+  config.iiif_info_url_builder = lambda do |file_id, base_url|
+    uri = Riiif::Engine.routes.url_helpers.info_url(file_id, host: base_url)
+    uri.sub(%r{/info\.json\Z}, '')
+  end
 
   # Returns a URL that resolves to an image provided by a IIIF image server
   config.iiif_image_url_builder = lambda do |file_id, base_url, size, format|
@@ -135,25 +145,43 @@ Hyrax.config do |config|
   # end
 
   # Returns a URL that resolves to an info.json file provided by a IIIF image server
+  # JL : config.iiif_info_url_builder = lambda do |file_id, base_url|
+  # JL :     uri = Riiif::Engine.routes.url_helpers.info_url(file_id, host: base_url)
+  # JL :     uri.sub(%r{/info\.json\Z}, '')
+  # JL :   end
+  # JL : cloned from https://github.com/UCLALibrary/californica/pull/312/commits/7cdb819a8e08d69f5250aa4a1cd19d65d18f89ed
   config.iiif_info_url_builder = lambda do |file_id, base_url|
-    uri = Riiif::Engine.routes.url_helpers.info_url(file_id, host: base_url)
-    uri.sub(%r{/info\.json\Z}, '')
+    #byebug
+    #uri = Riiif::Engine.routes.url_helpers.info_url(file_id, host: base_url)
+    #uri.sub(%r{/info\.json\Z}, '')
+    if ENV['IIIF_SERVER_URL'].present?
+      IIIF_SERVER_URL + file_id.gsub('/', '%2F')
+    else
+      uri = Riiif::Engine.routes.url_helpers.info_url(file_id, host: base_url)
+      uri.sub(%r{/info\.json\Z}, '')
+    end
   end
+
+  # Returns a URL that resolves to an info.json file provided by a IIIF image server
+  # config.iiif_info_url_builder = lambda do |file_id, base_url|
+  #   uri = Riiif::Engine.routes.url_helpers.info_url(file_id, host: base_url)
+  #   uri.sub(%r{/info\.json\Z}, '')
+  # end
   # config.iiif_info_url_builder = lambda do |_, _|
   #   ""
   # end
 
   # Returns a URL that indicates your IIIF image server compliance level
-  # config.iiif_image_compliance_level_uri = 'http://iiif.io/api/image/2/level2.json'
+  config.iiif_image_compliance_level_uri = 'http://iiif.io/api/image/2/level2.json'
 
   # Returns a IIIF image size default
-  # config.iiif_image_size_default = '600,'
+  config.iiif_image_size_default = '600,'
 
   # Fields to display in the IIIF metadata section; default is the required fields
-  # config.iiif_metadata_fields = Hyrax::Forms::WorkForm.required_fields
+  config.iiif_metadata_fields = Hyrax::Forms::WorkForm.required_fields
 
   # Should a button with "Share my work" show on the front page to all users (even those not logged in)?
-  # config.display_share_button_when_not_logged_in = true
+  config.display_share_button_when_not_logged_in = false
 
   # This user is logged as the acting user for jobs and other processes that
   # run without being attributed to a specific user (e.g. creation of the
@@ -171,12 +199,12 @@ Hyrax.config do |config|
 
   # Temporary paths to hold uploads before they are ingested into FCrepo
   # These must be lambdas that return a Pathname. Can be configured separately
-  #  config.upload_path = ->() { Rails.root + 'tmp' + 'uploads' }
-  #  config.cache_path = ->() { Rails.root + 'tmp' + 'uploads' + 'cache' }
+  config.upload_path = ->() { Rails.root + 'tmp' + 'uploads' }
+  config.cache_path = ->() { Rails.root + 'tmp' + 'uploads' + 'cache' }
 
   # Location on local file system where derivatives will be stored
   # If you use a multi-server architecture, this MUST be a shared volume
-  # config.derivatives_path = Rails.root.join('tmp', 'derivatives')
+  config.derivatives_path = Rails.root.join('tmp', 'derivatives')
 
   # Should schema.org microdata be displayed?
   # config.display_microdata = true
@@ -188,7 +216,7 @@ Hyrax.config do |config|
   # Location on local file system where uploaded files will be staged
   # prior to being ingested into the repository or having derivatives generated.
   # If you use a multi-server architecture, this MUST be a shared volume.
-  # config.working_path = Rails.root.join('tmp', 'uploads')
+  config.working_path = Rails.root.join('tmp', 'uploads')
 
   # Should the media display partial render a download link?
   # config.display_media_download_link = true
@@ -207,13 +235,13 @@ Hyrax.config do |config|
   # config.owner_permission_levels = { "Edit Access" => "edit" }
 
   # Path to the ffmpeg tool
-  # config.ffmpeg_path = 'ffmpeg'
+  config.ffmpeg_path = 'ffmpeg'
 
   # Max length of FITS messages to display in UI
   # config.fits_message_length = 5
 
   # ActiveJob queue to handle ingest-like jobs
-  # config.ingest_queue_name = :default
+  config.ingest_queue_name = :ingest
 
   ## Attributes for the lock manager which ensures a single process/thread is mutating a ore:Aggregation at once.
   # How many times to retry to acquire the lock before raising UnableToAcquireLockError
@@ -298,6 +326,11 @@ Hyrax.config do |config|
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"
+
+# set bulkrax default work type to first curation_concern if it isn't already set
+if Bulkrax.default_work_type.blank?
+  Bulkrax.default_work_type = Hyrax.config.curation_concerns.first.to_s
+end
 
 Qa::Authorities::Local.register_subauthority('subjects', 'Qa::Authorities::Local::TableBasedAuthority')
 Qa::Authorities::Local.register_subauthority('languages', 'Qa::Authorities::Local::TableBasedAuthority')

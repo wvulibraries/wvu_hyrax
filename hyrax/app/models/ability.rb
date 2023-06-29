@@ -1,7 +1,8 @@
 class Ability
-  include Hydra::Ability
-  
+  # Both are needed for this to work.
+  include Hydra::Ability 
   include Hyrax::Ability
+
   self.ability_logic += [:everyone_can_create_curation_concerns]
 
   # Define any customized permissions here.
@@ -17,5 +18,14 @@ class Ability
     # if user_groups.include? 'special_group'
     #   can [:create], ActiveFedora::Base
     # end
+    
+    #default cancan abilities
+    if current_user.admin?
+      can [:create, :show, :add_user, :remove_user, :index, :edit, :update, :destroy], Role
+    end
+  end
+  
+  def can_import_works?
+    can_create_any_work?
   end
 end

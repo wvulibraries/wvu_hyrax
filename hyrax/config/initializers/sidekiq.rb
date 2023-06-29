@@ -1,5 +1,7 @@
+sidekiq_config = { url: "redis://#{ENV['REDIS_HOST']}:#{ENV['REDIS_PORT']}/12", password: ENV['REDIS_PASSWORD'] }
+
 Sidekiq.configure_server do |config|
-  config.redis = { url: ENV.fetch("REDIS_URL_SIDEKIQ") { "redis://redis:6379/12" } }
+  config.redis = sidekiq_config
   schedule_file = "config/schedule.yml"
   if File.exists?(schedule_file)
     Sidekiq::Cron::Job.load_from_hash YAML.load_file(schedule_file)
@@ -8,5 +10,5 @@ Sidekiq.configure_server do |config|
 end
 
 Sidekiq.configure_client do |config|
-  config.redis = { url: ENV.fetch("REDIS_URL_SIDEKIQ") { "redis://redis:6379/12" } }
+  config.redis = sidekiq_config
 end

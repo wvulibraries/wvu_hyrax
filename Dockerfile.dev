@@ -1,13 +1,22 @@
 FROM ruby:2.7.8
 
-ENV BUNDLER_VERSION=2.4.7
+# ENV BUNDLER_VERSION=2.4.7
 ENV RAILS_VERSION=6.1.6.1
+ENV FITS_VERSION=1.6.0
+ENV NODE_VERSION=18
+# should match local folder of our application
+ENV PROJECT_PATH hyrax
+ENV TZ="America/New_York"
 
-RUN mkdir -p /home/hyrax
-WORKDIR /home/hyrax
-ADD ./hyrax /home/hyrax
+USER root
 
-RUN apt-get update && apt-get -y install cron
+RUN apt-get update && apt-get -y install \
+    cron \
+    postgresql-client \
+    build-essential \
+    vim \
+    libreoffice \
+    openjdk-11-jdk
 
 # Use JEMALLOC instead
 # JEMalloc is a faster garbage collection for Ruby.
@@ -15,16 +24,41 @@ RUN apt-get update && apt-get -y install cron
 RUN apt-get install -y libjemalloc2 libjemalloc-dev
 ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so
 
-RUN \
-  gem update --system --quiet && \
-  gem install bundler -v ${BUNDLER_VERSION} && \
-  gem install rails -v ${RAILS_VERSION} && \
-  bundle install --jobs=4 --retry=3
-
-# FFMPEG Used to transcode video
+# ImageMagic Conversions and FFMPEG Conversions
 # -------------------------------------------------------------------------------------------------
-RUN apt-get install -y ffmpeg 
+RUN apt-get install -y imagemagick ghostscript ffmpeg libgs-dev 
+
+# Modifiy ImageMagick's security policy to allow reading and writing PDFs
+RUN sed -i 's/policy domain="coder" rights="none" pattern="PDF"/policy domain="coder" rights="read|write" pattern="PDF"/' /etc/ImageMagick-6/policy.xml
+# -------------------------------------------------------------------------------------------------
+
+# FITS
+# -------------------------------------------------------------------------------------------------
+RUN mkdir -p /home/fits && \
+    cd /home/fits \
+    && wget https://github.com/harvard-lts/fits/releases/download/${FITS_VERSION}/fits-${FITS_VERSION}.zip -O fits.zip \
+    && unzip fits.zip \
+    && rm fits.zip \
+    && chmod a+x /home/fits/fits.sh
+ENV PATH="${PATH}:/home/fits"
 
 # Node.js
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
+# -------------------------------------------------------------------------------------------------
+RUN curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
+	&& apt-get -y install nodejs
+
+# yarn
+# -------------------------------------------------------------------------------------------------
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -\
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && apt-get update \
+    && apt-get install -y yarn
+
+RUN mkdir -p /home/${PROJECT_PATH}/
+WORKDIR /home/${PROJECT_PATH}
+ADD ./${PROJECT_PATH} /home/${PROJECT_PATH}
+
+RUN \
+  gem update --system --quiet && \
+#   gem install bundler -v ${BUNDLER_VERSION} && \
+  bundle install --jobs=4 --retry=3

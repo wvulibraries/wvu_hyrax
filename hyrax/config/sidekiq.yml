@@ -1,20 +1,26 @@
 :verbose: true
-:pidfile: ./tmp/pids/sidekiq.pid
-:logfile: ./log/sidekiq.log
 
-development:
-  :concurrency: 5
-
-production:
-  :concurrency: 10
-
-:max_retries: 1
+:timeout: 30
 
 :queues:
-  - default
-  - ingest
-  - import
-  - export
-  - fixity
-  - mailers
-  - doi
+  - [ingest, 4]
+  - [batch, 2]
+  - [attach, 2] # custom queue for attaching files
+  - [import, 1] # This is for bulkrax
+  - [export, 1] # This is for bulkrax  
+  - [derivatives, 1] # custom queue for creating derivatives
+  - [default, 1]
+  - [fixity, 1]
+  - [mailers, 1]
+  - [doi, 1]  
+
+test: # n/a
+  :concurrency: 1
+
+development:
+  :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 1 %>
+  :logfile: ./log/sidekiq_development.log
+
+production:
+  :concurrency: <%= ENV['SIDEKIQ_WORKERS'] || 2 %>
+  :logfile: ./log/sidekiq_production.log

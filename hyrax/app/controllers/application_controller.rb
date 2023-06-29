@@ -8,6 +8,4 @@ class ApplicationController < ActionController::Base
   include Hyrax::Controller
   include Hyrax::ThemedLayoutController
   with_themed_layout '1_column'
-
-
 end

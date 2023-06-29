@@ -12,6 +12,5 @@
     "uv-config": "cp ./config/uv/uv.html ./public/uv/uv.html & cp ./config/uv/uv-config.json ./public/uv/",
     "build": "webpack --config webpack.config.js"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
