@@ -3,28 +3,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.7.8'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
-gem 'rails', '~> 6.1.6', '>= 6.1.6.1'
-# Use postgresql as the database for Active Record
+# Rails
+# ==============================================================================
 gem 'pg', '~> 1.1'
-# Use Puma as the app server
 gem 'puma'
-# Use SCSS for stylesheets
-gem 'sass-rails', '>= 6'
-
-gem 'jsbundling-rails'
-
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.7'
-# Use Redis adapter to run Action Cable in production
-gem 'redis', '~> 4.0'
-# Use Active Model has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-# Use Active Storage variant
-# gem 'image_processing', '~> 1.2'
+gem 'rails', '~> 6.1.6', '>= 6.1.6.1'
+gem 'webpacker', '~> 5.2', '>= 5.2.1'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
@@ -37,6 +21,26 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'sidekiq'
 gem "sidekiq-cron", "~> 1.1"
 gem 'sidekiq-failures'
+
+# authentication
+# =====================================================
+gem 'devise'
+gem 'devise-guests', '~> 0.8'
+
+
+gem 'sass-rails', '>= 6'
+gem 'jsbundling-rails'
+# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
+gem 'turbolinks', '~> 5'
+# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+gem 'jbuilder', '~> 2.7'
+# Use Redis adapter to run Action Cable in production
+gem 'redis', '~> 4.0'
+# Use Active Model has_secure_password
+# gem 'bcrypt', '~> 3.1.7'
+
+# Use Active Storage variant
+# gem 'image_processing', '~> 1.2'
 
 # Health Check
 # =====================================================
@@ -58,8 +62,6 @@ gem 'rsolr', '>= 1.0', '< 3'
 gem 'bootstrap', '~> 4.0'
 gem 'twitter-typeahead-rails', '0.11.1.pre.corejavascript'
 gem 'jquery-rails'
-gem 'devise'
-gem 'devise-guests', '~> 0.8'
 gem 'openseadragon', '>= 0.2.0'
 gem 'riiif', '~> 2.1'
 

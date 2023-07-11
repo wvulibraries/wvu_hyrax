@@ -2,13 +2,17 @@
 
 Bulkrax.setup do |config|
   # Add local parsers
-  # config.parsers += [
-  #   { name: 'MODS - My Local MODS parser', class_name: 'Bulkrax::ModsXmlParser', partial: 'mods_fields' },
-  # ]
+  config.parsers = [
+    { name: 'CSV - Comma Separated Values', class_name: 'Bulkrax::CsvParser', partial: 'csv_fields' }
+  ]
 
   # WorkType to use as the default if none is specified in the import
   # Default is the first returned by Hyrax.config.curation_concerns
   config.default_work_type = 'BasicWork'
+
+  curation_concerns, Default =  Hyrax.config.curation_concerns
+
+  config.qa_controlled_properties = []
 
   # Path to store pending imports
   config.import_path = 'tmp/imports'
@@ -30,24 +34,31 @@ Bulkrax.setup do |config|
 
   # Field mappings
   # Create a completely new set of mappings by replacing the whole set as follows
-  #   config.field_mappings = {
-  #     'Bulkrax::CsvParser' => {
-  #       'subject' => { from: ['subject'], split: '\|\|\|'},
-  #       'creator' => { from: ['creator'], split: '\|\|\|'},
-  #       'contributor' => { from: ['contributor'], split: '\|\|\|'}
-  #   }
-  # }
-
-  #   config.field_mappings = {
-  #     "Bulkrax::OaiDcParser" => { **individual field mappings go here*** }
-  #   }
+    config.field_mappings = {
+      'Bulkrax::CsvParser' => {
+        "identifier" => { from: ["identifier"], source_identifier: true },
+        "depositor" => { from: ["depositor"] }, 
+        "title" => { from: ["title"] },
+        "date_uploaded" => { from: ["date_created"] }, 
+        "institution" => { from: ["institution"] },
+        "extent" => { from: ["extent"] },
+        "resource_type" => { from: ["type"], parsed: true },
+        "creator" => { from: ["creator"], split: '\|\|\|' },      
+        "contributor" => { from: ["contributor"], split: '\|\|\|' },
+        "description" => { from: ["description"] },
+        "date_created" => { from: ["date"] },
+        "description" => { from: ["description"] },
+        "rights_statement" => { from: ["rights_statement"] },
+        "date_created" => { from: ["date_created"] },
+        "subject" => { from: ["subject"], split: '\|\|\|', parsed: true },
+        "language" => { from: ["language"], parsed: true },
+        "source" => { from: ['source'] },
+    }
+  }
 
   # Add to, or change existing mappings as follows
   #   e.g. to exclude date
   #   config.field_mappings["Bulkrax::OaiDcParser"]["date"] = { from: ["date"], excluded: true  }
-    config.field_mappings["Bulkrax::CsvParser"]["subject"] = { from: ['subject'], split: '\|\|\|'  }
-    config.field_mappings["Bulkrax::CsvParser"]["creator"] = { from: ['creator'], split: '\|\|\|'  }
-    config.field_mappings["Bulkrax::CsvParser"]["contributor"] = { from: ['contributor'], split: '\|\|\|' }
   #
   #   e.g. to import parent-child relationships
     config.field_mappings['Bulkrax::CsvParser']['parents'] = { from: ['parents'], related_parents_field_mapping: true }
@@ -55,7 +66,7 @@ Bulkrax.setup do |config|
   #   (For more info on importing relationships, see Bulkrax Wiki: https://github.com/samvera-labs/bulkrax/wiki/Configuring-Bulkrax#parent-child-relationship-field-mappings)
   #
   # #   e.g. to add the required source_identifier field
-  config.field_mappings["Bulkrax::CsvParser"]["identifier"] = { from: ["source_identifier"], source_identifier: true  }
+  #   #   config.field_mappings["Bulkrax::CsvParser"]["source_id"] = { from: ["old_source_id"], source_identifier: true  }
   # If you want Bulkrax to fill in source_identifiers for you, see below
 
   # To duplicate a set of mappings from one parser to another
@@ -65,8 +76,8 @@ Bulkrax.setup do |config|
   # Should Bulkrax make up source identifiers for you? This allow round tripping
   # and download errored entries to still work, but does mean if you upload the
   # same source record in two different files you WILL get duplicates.
-  # It is given two aruguments, self at the time of call and the index of the reocrd
-  #    config.fill_in_blank_source_identifiers = ->(parser, index) { "b-#{parser.importer.id}-#{index}"}
+  # It is given two aruguments, self at the time of call and the index of the record
+  # config.fill_in_blank_source_identifiers = ->(parser, index) { "b-#{parser.importer.id}-#{index}"}
   # or use a uuid
   #    config.fill_in_blank_source_identifiers = ->(parser, index) { SecureRandom.uuid }
 
@@ -88,18 +99,20 @@ Bulkrax.setup do |config|
 end
 
 # Sidebar for hyrax 3+ support
-Hyrax::DashboardController.sidebar_partials[:repository_content] << "hyrax/dashboard/sidebar/bulkrax_sidebar_additions" if Object.const_defined?(:Hyrax) && ::Hyrax::DashboardController&.respond_to?(:sidebar_partials)
+if Object.const_defined?(:Hyrax) && ::Hyrax::DashboardController&.respond_to?(:sidebar_partials)
+  Hyrax::DashboardController.sidebar_partials[:repository_content] << 'hyrax/dashboard/sidebar/bulkrax_sidebar_additions'
+end
 
-# Bulkrax::ScheduleRelationshipsJob.class_eval do
-#   def perform(importer_id:)
-#     importer = ::Bulkrax::Importer.find(importer_id)
-#     pending_num = importer.entries.left_outer_joins(:latest_status)
-#                           .where('bulkrax_statuses.status_message IS NULL ').count
-#     return reschedule(importer_id) unless pending_num.zero?
+Bulkrax::ScheduleRelationshipsJob.class_eval do
+  def perform(importer_id:)
+    importer = ::Bulkrax::Importer.find(importer_id)
+    pending_num = importer.entries.left_outer_joins(:latest_status)
+                          .where('bulkrax_statuses.status_message IS NULL ').count
+    return reschedule(importer_id) unless pending_num.zero?
 
-#     ::AssociateFilesetsWithWorkJob.perform_later(importer)
-#     importer.last_run.parents.each do |parent_id|
-#       ::Bulkrax::CreateRelationshipsJob.perform_later(parent_identifier: parent_id, importer_run_id: importer.last_run.id)
-#     end
-#   end
-# end
+    ::AssociateFilesetsWithWorkJob.perform_later(importer)
+    importer.last_run.parents.each do |parent_id|
+      ::Bulkrax::CreateRelationshipsJob.perform_later(parent_identifier: parent_id, importer_run_id: importer.last_run.id)
+    end
+  end
+end
