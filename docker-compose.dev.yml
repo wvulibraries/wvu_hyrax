@@ -10,7 +10,7 @@ services:
     volumes:
       - ./hyrax:/home/hyrax
       - ./scripts:/home/hyrax/scripts
-      - ./data/logs:/home/hyrax/log         	      
+      - ./data/logs:/home/hyrax/log    	      
       - imports:/home/hyrax/tmp/imports
       - exports:/home/hyrax/tmp/exports
       - uploads:/home/hyrax/tmp/uploads

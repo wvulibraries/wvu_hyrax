@@ -20,7 +20,7 @@ Rails.application.configure do
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
 
-    config.cache_store = :memory_store
+    config.cache_store = :redis_cache_store, {url: "redis://#{ENV['REDIS_HOST']}:#{ENV['REDIS_PORT']}/12", password: ENV['REDIS_PASSWORD']}
     config.public_file_server.headers = {
       'Cache-Control' => "public, max-age=#{2.days.to_i}"
     }
@@ -73,6 +73,15 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+
+  config.session_store :redis_store, {
+    servers: [
+      { host: ENV['REDIS_HOST'], port: ENV['REDIS_PORT'], db: 12, password: ENV['REDIS_PASSWORD'] },
+    ],
+    key: "_#{Rails.application.class.module_parent_name.downcase}_session",
+    threadsafe: false,
+    secure: false
+  }
 
   config.hosts.clear
 end

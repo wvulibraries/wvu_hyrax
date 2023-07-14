@@ -2,7 +2,6 @@ Rails.application.routes.draw do
   mount Bulkrax::Engine, at: '/'
   mount Riiif::Engine => 'images', as: :riiif if Hyrax.config.iiif_image_server?
   mount BrowseEverything::Engine => '/browse'
-
   mount Blacklight::Engine => '/'
   
   concern :searchable, Blacklight::Routes::Searchable.new
@@ -10,7 +9,9 @@ Rails.application.routes.draw do
   resource :catalog, only: [:index], as: 'catalog', path: '/catalog', controller: 'catalog' do
     concerns :searchable
   end
+
   devise_for :users
+
   mount Hydra::RoleManagement::Engine => '/'
 
   mount Qa::Engine => '/authorities'

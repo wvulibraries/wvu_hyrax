@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-#require_relative './user_seeding'
+require_relative './user_seeding'
 
 ActiveFedora.fedora.connection.send(:init_base_path)
 
@@ -31,17 +31,4 @@ AdminSet.find(admin_set_id).update_index
 Role.first_or_create!(name: 'admin')
 
 puts "\n== Creating admin users"
-# seed_users
-
-# if Rails.env == 'development' || Rails.env == 'test'
-#   Rake::Task['hyrax:default_admin_set:create'].invoke
-#   Rake::Task['hyrax:default_collection_types:create'].invoke
-#   Rake::Task['hyrax:workflow:load'].invoke
-# end
-  
-if Rails.env == 'development'
-  user = User.first_or_create!(email: 'changeme@mail.wvu.edu', password: 'password', first_name: 'Change', last_name: 'Me', username: 'changeme')
-  role = Role.first_or_create!(name: 'admin')
-  role.users << user
-  role.save
-end
+seed_users

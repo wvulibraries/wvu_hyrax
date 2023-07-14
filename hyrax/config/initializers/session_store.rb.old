@@ -1,0 +1,25 @@
+SESSION_KEY = "_#{Rails.application.class.module_parent_name.downcase}_session"
+file_path = Rails.root.join('config', 'redis.yml')
+if File.exists?(file_path)
+  REDIS_SERVER = YAML.load_file(file_path)["session"]
+  if REDIS_SERVER.nil?
+    raise "Redis Session Store not configured"
+  end
+Hyrax::Application.config.session_store :redis_store, {
+    key: SESSION_KEY,
+    redis: {
+      expire_after: 1.day,
+      key_prefix: 'Hyrax:session:',
+      url: REDIS_SERVER,
+    }
+  }
+else
+# fallback cookie store
+end
+
+# config.session_store :redis_store,
+# servers: ["#{ENV['REDIS_URL_SIDEKIQ']}/session"],
+# password: ENV['REDIS_PASSWORD'],
+# expire_after: 1.day,
+# key: "_#{Rails.application.class.module_parent_name.downcase}_session",
+# secure: Rails.env.production?

@@ -27,5 +27,11 @@ class Ability
   
   def can_import_works?
     can_create_any_work?
+    #current_user.admin?
+  end
+
+  def can_export_works?
+    #can_export_any_work?
+    current_user.admin?
   end
 end
