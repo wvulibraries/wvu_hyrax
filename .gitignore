@@ -1,5 +1,8 @@
 .DS_Store
 data
 data/*
+env
+env/.*
+env/*
 hyrax/fits.log
 hyrax/config/application.rb
