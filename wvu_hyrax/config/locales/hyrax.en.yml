@@ -57,4 +57,10 @@ en:
     department_name: Libraries
     product_name: WVU Libraries Digital Repository
     product_twitter_handle: "@wvuLibraries"
+  samvera:
+    breadcrumbs:
+      persona:
+        users:
+          index:
+            title: Persona
   

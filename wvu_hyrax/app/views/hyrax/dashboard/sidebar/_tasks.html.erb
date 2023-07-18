@@ -5,10 +5,10 @@
     <% end %>
   <% end %>
 
-  <% if can? :manage, User %>
-    <%= menu.nav_link(hyrax.admin_users_path) do %>
+  <%# if can? :manage, User 
+    <%= menu.nav_link(hyrax.admin_users_path) do 
       <span class="fa fa-user" aria-hidden="true"></span> <span class="sidebar-action-text">View User Profile</span>
-    <% end %>
+    <% end 
   <% end %>
 
   <% if can? :read, :admin_dashboard %>
@@ -34,7 +34,7 @@
 <% if defined?(Samvera::Persona) %>
   <% if can? :manage, User %>
     <%= menu.nav_link('/persona/users',  data: { turbolinks: false }) do %>
-      <span class="fa fa-user" aria-hidden="true"></span><span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.users') %></span>
+      <span class="fa fa-users" aria-hidden="true"></span><span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.users') %></span>
       <% end %>
   <% end %>
 <% end %>
