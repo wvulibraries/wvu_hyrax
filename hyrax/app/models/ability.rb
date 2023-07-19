@@ -21,7 +21,7 @@ class Ability
     
     #default cancan abilities
     if current_user.admin?
-      can [:create, :show, :add_user, :remove_user, :index, :edit, :update, :destroy], Role
+      can [:create, :show, :add_user, :remove_user, :index, :edit, :update, :destroy, :manage], [Role, User]
     end
   end
   

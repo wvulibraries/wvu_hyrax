@@ -5,9 +5,11 @@
     <% end %>
   <% end %>
 
-  <% if can? :manage, User %>
-    <%= menu.nav_link(hyrax.admin_users_path) do %>
-      <span class="fa fa-user" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.users') %></span>
+  <% if defined?(Samvera::Persona) %>
+    <% if can? :manage, User %>
+      <%= menu.nav_link('/persona/users',  data: { turbolinks: false }) do %>
+        <span class="fa fa-user" aria-hidden="true"></span><span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.users') %></span>
+        <% end %>
     <% end %>
   <% end %>
 
@@ -23,10 +25,6 @@
 
   <%= menu.nav_link('/sidekiq',  data: { turbolinks: false }) do %>
     <span class="fa fa-flag"></span> <span class="sidebar-action-text">Manage Jobs</span>
-  <% end %>
-
-  <%= menu.nav_link('/admin/users',  data: { turbolinks: false }) do %>
-      <span class="fa fa-users"></span> <span class="sidebar-action-text">Manage Users</span>
   <% end %>
 
   <%= menu.nav_link('/users/new',  data: { turbolinks: false }) do %>

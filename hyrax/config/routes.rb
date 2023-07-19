@@ -10,7 +10,11 @@ Rails.application.routes.draw do
     concerns :searchable
   end
 
-  devise_for :users
+  mount Samvera::Persona::Engine => '/'
+
+  devise_for :users, controllers: {
+    sessions: 'users/sessions'
+  }
 
   mount Hydra::RoleManagement::Engine => '/'
 
