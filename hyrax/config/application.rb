@@ -29,8 +29,5 @@ module Hyrax
 
     #config.action_controller.perform_caching = true
     #config.cache_store = :redis_store, ENV['REDIS_URL_SIDEKIQ']
-
-    # add missing paths
-    config.paths.add 'app/forms', eager_load: true
   end
 end
