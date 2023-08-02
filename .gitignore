@@ -4,5 +4,7 @@ data/*
 env
 env/.*
 env/*
+hyrax/vendor
+hyrax/vendor/*
 hyrax/fits.log
 hyrax/config/application.rb

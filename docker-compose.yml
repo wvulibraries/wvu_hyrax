@@ -1,60 +1,183 @@
-version: '3.7'
+version: '3.4'
 # used for local testing
-# note only have either mfcs_export or mnt not both for conversions or hyrax.
 services:
-  hyrax:
+  app:
     build: 
       context: ./
-      dockerfile: Dockerfile
-    container_name: wvu_hyrax
+      dockerfile: Dockerfile.dev
     env_file:
-      - './env/.env.hyrax'       
-    restart: on-failure           
+      - './env/env.hyrax' 
+    volumes:
+      - ./hyrax:/home/hyrax
+      - ./scripts:/home/hyrax/scripts
+      - ./data/logs:/home/hyrax/log    	      
+      - imports:/home/hyrax/tmp/imports
+      - exports:/home/hyrax/tmp/exports
+      - uploads:/home/hyrax/tmp/uploads
+      - derivatives:/home/hyrax/tmp/derivatives
+      # added because we were using exports with bulkrax for testing atm
+      - ./data/hyrax-exports:/home/hyrax/imports      
+      # folders that contain data not included in the git repo
+      # add seed csv files to db folder in a subfolder called data
+      - ./data/seed_files:/home/hyrax/db/data    
+      - ./data/bundle_data:/usr/local/bundle
+      - node_modules_data:/home/hyrax/node_modules    
+      - packs_data:/app/public/packs
+      # don't mount tmp directory  
+      - /home/hyrax/tmp 
+    networks:
+      - hyrax         
+
+  web:
+    extends: app
+    container_name: hyrax
+    command: bash -c "bundle install; sh ./scripts/startup.sh"
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    healthcheck:
+       test: curl --fail -s http://localhost:3000/ || exit 1
+       interval: 30s
+       timeout: 60s
+       retries: 5
+       start_period: 80s        
     depends_on:
+      redis:
+        condition: service_started
+      db:
+        condition: service_started
+      fcrepo:
+        condition: service_started
+      solr:
+        condition: service_started
+      workers:
+        condition: service_started
+  #     migrate:
+  #       condition: service_completed_successfully
+
+  # migrate:
+  #   extends: app
+  #   container_name: migrate
+  #   command: bash -c "sh ./scripts/setup.sh"
+  #   depends_on:
+  #     - redis
+  #     - solr
+  #     - fcrepo
+  #     - db
+  
+  workers:
+    extends: app
+    container_name: sidekiq
+    command: bash -c "bundle exec sidekiq -C config/sidekiq.yml"
+    depends_on:
+      - redis
+      - solr
       - fcrepo
       - db
-      - solr
+    stdin_open: true
+    tty: true
+
+  webpacker:
+    extends: app
+    container_name: webpack
+    env_file:
+      - './env/env.webpacker'
+    command: bundle exec ./bin/webpack-dev-server --inline true      
     ports:
-      - 3000:3000
+      - '3035:3035'
+    networks:
+      - hyrax    
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    env_file:
+      - './env/env.redis' 
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"
+    expose:
+      - "6379"
     volumes:
-      - ./hyrax:/home/hyrax 
-      - ./mnt/nfs-exports/hyrax-exports:/home/hyrax/imports                    
+      - redis:/var/lib/redis/data
+    restart: always  
+    healthcheck:
+      test: redis-cli -h redis ping
+      interval: 30s
+      timeout: 3s
+      retries: 3                 
+    networks:
+      - hyrax                                
 
   fcrepo:
-    image: ghcr.io/samvera/fcrepo4:4.7.5
-    container_name: wvu_fcrepo
-    restart: on-failure    
-    volumes:
-      - ./fedora/data:/data:cached
+    image: ghcr.io/scientist-softserv/docker-fcrepo:4.7.6-SNAPSHOT2
+    container_name: fcrepo
+    depends_on:
+      - db        
+    env_file:
+      - './env/env.fedora' 
     ports:
-      - "8080:8080"  
+      - "8080:8080"
+    volumes:
+      - fcrepo:/data:cached  
+    restart: unless-stopped
+    healthcheck:
+       test: curl --fail -s http://localhost:8080/ || exit 1
+       interval: 30s
+       timeout: 60s
+       retries: 5
+       start_period: 80s                 
+    networks:
+      - hyrax
       
   solr:
+    container_name: solr  
     image: solr:8.11.1
-    container_name: wvu_solr
     restart: on-failure
     ports:
-      - 8983:8983
+      - "8983"
     command:
       - sh
       - "-c"
-      - "solr-precreate hyrax_prod /opt/solr/server/configsets/hyraxconf"
+      - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax_dev /opt/solr/server/configsets/hyraxconf"
     volumes:
-      - ./solr/data:/var/solr/data:cached
-      - ./hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf    
+      - solr:/var/solr/data:cached
+      - ./hyrax/solr/conf:/opt/solr/server/configsets/hyraxconf
+    networks:
+      - hyrax 
 
   db:
-    container_name: hyrax_db
-    image: postgres:14-alpine
-    ports:
-      - "5432:5432"
+    container_name: db
+    image: postgres:15.2-alpine
+    expose:
+      - "5432"
     env_file:
-      - './env/.env.prod.db'       
+      - './env/env.db'       
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-        test: pg_isready -U postgres -h postgres
-        interval: 30s
-        timeout: 3s
-        retries: 3  
+      test: ["CMD-SHELL", "pg_isready", "-d", "postgres"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s  
+    networks:
+      - hyrax 
+
+volumes:
+  uploads:
+  imports:
+  exports: 
+  postgres:
+  redis:
+  solr:
+  derivatives:
+  fcrepo:
+  bundle_data:
+  node_modules_data:
+  packs_data:
+
+networks:
+  hyrax:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-hyrax 

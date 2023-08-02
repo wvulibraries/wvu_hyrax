@@ -20,9 +20,9 @@ services:
       # folders that contain data not included in the git repo
       # add seed csv files to db folder in a subfolder called data
       - ./data/seed_files:/home/hyrax/db/data    
-      - bundle_data:/usr/local/bundle
-      - node_modules_data:/home/hyrax/node_modules    
-      - packs_data:/app/public/packs
+      - ./data/bundle_data:/home/hyrax/vendor
+      - ./data/node_modules:/home/hyrax/node_modules    
+      - ./data/packs:/app/public/packs
       # don't mount tmp directory  
       - /home/hyrax/tmp 
     networks:
@@ -52,18 +52,18 @@ services:
         condition: service_started
       workers:
         condition: service_started
-      migrate:
-        condition: service_completed_successfully
+  #     migrate:
+  #       condition: service_completed_successfully
 
-  migrate:
-    extends: app
-    container_name: migrate
-    command: bash -c "bundle install; sh ./scripts/setup.sh"
-    depends_on:
-      - redis
-      - solr
-      - fcrepo
-      - db
+  # migrate:
+  #   extends: app
+  #   container_name: migrate
+  #   command: bash -c "bundle install; sh ./scripts/setup.sh"
+  #   depends_on:
+  #     - redis
+  #     - solr
+  #     - fcrepo
+  #     - db
   
   workers:
     extends: app
@@ -73,7 +73,7 @@ services:
       - redis
       - solr
       - fcrepo
-      - memcached 
+      # - memcached 
       - db
     stdin_open: true
     tty: true
@@ -86,23 +86,23 @@ services:
     env_file:
       - './env/env.dev.webpacker'
     command: bundle exec ./bin/webpack-dev-server --inline true
-    volumes:
-      - .:/home/hyrax:cached
-      - bundle_data:/usr/local/bundle
-      - node_modules_data:/home/hyrax/node_modules
-      - packs_data:/app/public/packs      
+    # volumes:
+    #   - .:/home/hyrax:cached
+    #   - bundle_data:/usr/local/bundle
+    #   - node_modules_data:/home/hyrax/node_modules
+    #   - packs_data:/app/public/packs      
     ports:
       - '3035:3035'
     networks:
       - hyrax    
 
-  memcached:
-    image: bitnami/memcached
-    container_name: memcached
-    ports:
-      - "11211"
-    networks:
-      - hyrax
+  # memcached:
+  #   image: bitnami/memcached
+  #   container_name: memcached
+  #   ports:
+  #     - "11211"
+  #   networks:
+  #     - hyrax
 
   redis:
     image: redis:alpine

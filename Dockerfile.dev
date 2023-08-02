@@ -1,11 +1,12 @@
 FROM ruby:2.7.8
 
-# ENV BUNDLER_VERSION=2.4.7
-ENV RAILS_VERSION=6.1.6.1
+ENV BUNDLER_VERSION=2.4.7
 ENV FITS_VERSION=1.6.0
 ENV NODE_VERSION=18
 # should match local folder of our application
 ENV PROJECT_PATH hyrax
+ENV BUNDLE_PATH=/home/${PROJECT_PATH}/vendor/bundle
+ENV GEM_HOME=/home/${PROJECT_PATH}/vendor/bundle
 ENV TZ="America/New_York"
 
 USER root
@@ -59,5 +60,10 @@ ADD ./${PROJECT_PATH} /home/${PROJECT_PATH}
 
 RUN \
   gem update --system --quiet && \
-#   gem install bundler -v ${BUNDLER_VERSION} && \
+  gem install bundler -v ${BUNDLER_VERSION} && \
+  bundle config set --local path ${BUNDLE_PATH} && \
   bundle install --jobs=4 --retry=3
+
+EXPOSE 3000
+
+

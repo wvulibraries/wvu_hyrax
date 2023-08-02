@@ -28,4 +28,4 @@ fi
 # symlink /home/hyrax/fits.log to /home/hyrax/log/fits.log
 ln -s /home/hyrax/log/fits.log /home/hyrax/fits.log
 
-bundle exec rails s -p 3000 -b 0.0.0.0
+bundle exec rails s -p 3000 -b '0.0.0.0'
