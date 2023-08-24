@@ -10,3 +10,11 @@ every 1.day do
   command "cd #{path} && rake log:clear"
   command "cd #{path} && bin/rails tmp:clear"
 end
+
+fixity_audit:
+  cron: "05 01 * * 6"
+  class: FixityAuditJob
+  rails_env: development
+  queue: fixity
+  description: "Run weekly fixity checks on all files in the repository"
+  

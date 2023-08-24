@@ -22,7 +22,7 @@ services:
       - ./data/seed_files:/home/hyrax/db/data    
       - ./data/bundle_data:/home/hyrax/vendor
       - ./data/node_modules:/home/hyrax/node_modules    
-      - ./data/packs:/app/public/packs
+      - ./data/packs:/home/hyrax/app/public/packs
       # don't mount tmp directory  
       - /home/hyrax/tmp 
     networks:
@@ -78,23 +78,23 @@ services:
     stdin_open: true
     tty: true
 
-  webpacker:
-    build: 
-      context: ./
-      dockerfile: Dockerfile.dev
-    container_name: webpack
-    env_file:
-      - './env/env.dev.webpacker'
-    command: bundle exec ./bin/webpack-dev-server --inline true
-    # volumes:
-    #   - .:/home/hyrax:cached
-    #   - bundle_data:/usr/local/bundle
-    #   - node_modules_data:/home/hyrax/node_modules
-    #   - packs_data:/app/public/packs      
-    ports:
-      - '3035:3035'
-    networks:
-      - hyrax    
+  # webpacker:
+  #   build: 
+  #     context: ./
+  #     dockerfile: Dockerfile.dev
+  #   container_name: webpack
+  #   env_file:
+  #     - './env/env.dev.webpacker'
+  #   command: bundle exec ./bin/webpack-dev-server --inline true
+  #   # volumes:
+  #   #   - .:/home/hyrax:cached
+  #   #   - bundle_data:/usr/local/bundle
+  #   #   - node_modules_data:/home/hyrax/node_modules
+  #   #   - packs_data:/app/public/packs      
+  #   ports:
+  #     - '3035:3035'
+  #   networks:
+  #     - hyrax    
 
   # memcached:
   #   image: bitnami/memcached

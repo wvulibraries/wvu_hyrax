@@ -16,7 +16,7 @@ class ChecksumsController < ApplicationController
     add_breadcrumb t(:'hyrax.controls.home'), main_app.root_path
     add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
     add_breadcrumb 'Checksum Audits', checksums_path
-    @checksums = Checksum.sorted
+    @checksums = Checksum.all
   end
 
   def create

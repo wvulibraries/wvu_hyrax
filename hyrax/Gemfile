@@ -64,7 +64,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 # Hydra Dependencies
 # =====================================================
 gem 'hydra-role-management'
-gem 'hydra-editor'
+gem 'hydra-editor', git: 'https://github.com/wvulibraries/hydra-editor', branch: 'main'
 
 # Hyrax Dependencies
 # =====================================================
