@@ -7,7 +7,7 @@ FactoryBot.define do
     username { Faker::Internet.username(specifier: 2..20) }
 
     # will not need password after moving to sso
-    password { Faker::Internet.password(min_length: 8) }
+    # password { Faker::Internet.password(min_length: 8) }
 
     transient do
       # Allow for custom groups when a user is instantiated.

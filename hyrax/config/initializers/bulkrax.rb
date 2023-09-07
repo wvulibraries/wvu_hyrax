@@ -37,6 +37,7 @@ Bulkrax.setup do |config|
     config.field_mappings = {
       'Bulkrax::CsvParser' => {
         "identifier" => { from: ["identifier"], source_identifier: true },
+        "collection" => { from: ["collection"] },
         "depositor" => { from: ["depositor"] }, 
         "title" => { from: ["title"] },
         "date_uploaded" => { from: ["date_created"] }, 
@@ -45,8 +46,6 @@ Bulkrax.setup do |config|
         "resource_type" => { from: ["type"], parsed: true },
         "creator" => { from: ["creator"], split: '\|\|\|' },      
         "contributor" => { from: ["contributor"], split: '\|\|\|' },
-        "description" => { from: ["description"] },
-        "date_created" => { from: ["date"] },
         "description" => { from: ["description"] },
         "rights_statement" => { from: ["rights_statement"] },
         "date_created" => { from: ["date_created"] },
@@ -61,8 +60,8 @@ Bulkrax.setup do |config|
   #   config.field_mappings["Bulkrax::OaiDcParser"]["date"] = { from: ["date"], excluded: true  }
   #
   #   e.g. to import parent-child relationships
-    config.field_mappings['Bulkrax::CsvParser']['parents'] = { from: ['parents'], related_parents_field_mapping: true }
-    config.field_mappings['Bulkrax::CsvParser']['children'] = { from: ['children'], related_children_field_mapping: true }
+    # config.field_mappings['Bulkrax::CsvParser']['parents'] = { from: ['parents'], related_parents_field_mapping: true }
+    # config.field_mappings['Bulkrax::CsvParser']['children'] = { from: ['children'], related_children_field_mapping: true }
   #   (For more info on importing relationships, see Bulkrax Wiki: https://github.com/samvera-labs/bulkrax/wiki/Configuring-Bulkrax#parent-child-relationship-field-mappings)
   #
   # #   e.g. to add the required source_identifier field
